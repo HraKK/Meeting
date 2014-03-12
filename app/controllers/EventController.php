@@ -5,7 +5,7 @@ class EventController extends \Phalcon\Mvc\Controller
 
     public function indexAction()
     {
-        echo "<h1>Hello!</h1>";
+        echo "<h1>Events</h1>";
     }
 
 }
