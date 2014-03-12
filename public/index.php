@@ -12,12 +12,8 @@ try {
     //Create a DI
     $di = new Phalcon\DI\FactoryDefault();
 
-    $di->set('mydb_con', function()  {
-        return mysqli_connect(
-            $config['host'],
-            $config['username'],
-            $config['password'],
-            $config['dbname']);
+    $di->set('mydb_con', function() use ($config){
+        return new \Phalcon\Db\Adapter\Pdo\Postgresql($config);
     });
     
     //Setup the view component
