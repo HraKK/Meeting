@@ -1,4 +1,5 @@
 <?php
+//print_r($_SERVER['REQUEST_URI'] ); exit;
 try {
     require_once '../app/config.php';
     
@@ -14,6 +15,18 @@ try {
 
     $di->set('mydb_con', function() use ($config){
         return new \Phalcon\Db\Adapter\Pdo\Postgresql($config);
+    });
+    
+    $di->set('router', function () {
+
+        $router = new \Phalcon\Mvc\Router();
+        $router->setUriSource(\Phalcon\Mvc\Router::URI_SOURCE_SERVER_REQUEST_URI);
+        $router->add("/test", array(
+            'controller' => 'User',
+            'action'     => 'test',
+        ));
+
+        return $router;
     });
     
     //Setup the view component

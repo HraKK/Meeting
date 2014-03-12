@@ -3,7 +3,7 @@
 class UserController extends \Phalcon\Mvc\Controller
 {
 
-    public function indexAction()
+    public function testAction()
     {
         echo "<h1>Hello!</h1>";
     }
