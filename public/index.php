@@ -1,6 +1,7 @@
 <?php
 try {
-
+    require_once '../app/config.php';
+    
     //Register an autoloader
     $loader = new \Phalcon\Loader();
     $loader->registerDirs(array(
@@ -11,6 +12,14 @@ try {
     //Create a DI
     $di = new Phalcon\DI\FactoryDefault();
 
+    $di->set('mydb_con', function()  {
+        return mysqli_connect(
+            $config['host'],
+            $config['username'],
+            $config['password'],
+            $config['dbname']);
+    });
+    
     //Setup the view component
     $di->set('view', function(){
         $view = new \Phalcon\Mvc\View();
@@ -21,7 +30,7 @@ try {
     //Setup a base URI so that all generated URIs include the "tutorial" folder
     $di->set('url', function(){
         $url = new \Phalcon\Mvc\Url();
-        $url->setBaseUri('/tutorial/');
+        $url->setBaseUri('/');
         return $url;
     });
 
