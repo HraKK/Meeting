@@ -58,9 +58,9 @@ Ext.define('Ext.calendar.App', {
                             {
                                 xtype: 'container',
                                 html: '<div id="app-logo">' +
-                                        '<div class="logo-top">&nbsp;</div>' +
-                                        '<div id="logo-body">' + new Date().getDate() + '</div>' +
-                                        '<div class="logo-bottom">&nbsp;</div>' +
+                                    '<div class="logo-top">&nbsp;</div>' +
+                                    '<div id="logo-body">' + new Date().getDate() + '</div>' +
+                                    '<div class="logo-bottom">&nbsp;</div>' +
                                     '</div>' +
                                     '<h1>Meeting Room 2.0</h1>'
                             },
@@ -103,6 +103,7 @@ Ext.define('Ext.calendar.App', {
                                 items: [
                                     {
                                         xtype: 'datepicker',
+                                        startDay: 1,
                                         id: 'app-nav-picker',
                                         cls: 'ext-cal-nav-picker',
                                         listeners: {
@@ -116,6 +117,7 @@ Ext.define('Ext.calendar.App', {
                                     }
                                 ]
                             },
+                            {},
                             {
                                 xtype: 'calendarpanel',
                                 eventStore: this.eventStore,
