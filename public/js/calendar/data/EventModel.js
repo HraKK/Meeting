@@ -63,19 +63,19 @@ Ext.define('Ext.calendar.data.EventModel', {
                 // is used elsewhere in the data package to match records on CRUD actions:
                 proto.idProperty = Mappings.EventId.name || 'id';
 
-                for(prop in Mappings){
-                    if(Mappings.hasOwnProperty(prop)){
+                for (prop in Mappings) {
+                    if (Mappings.hasOwnProperty(prop)) {
                         fields.push(Mappings[prop]);
                     }
                 }
                 proto.fields.clear();
-                for(var i = 0, len = fields.length; i < len; i++){
+                for (var i = 0, len = fields.length; i < len; i++) {
                     proto.fields.add(Ext.create('Ext.data.Field', fields[i]));
                 }
                 return Data.EventModel;
             }
         }
     },
-    function(){
+    function() {
         Ext.calendar.data.EventModel.reconfigure();
     });

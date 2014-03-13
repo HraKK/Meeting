@@ -94,7 +94,7 @@ Ext.define('Ext.calendar.CalendarPanel', {
         this.tbar = {
             cls: 'ext-cal-toolbar',
             border: true,
-            items: ['->',{
+            items: ['->', {
                 id: this.id + '-tb-prev',
                 handler: this.onPrevClick,
                 scope: this,
@@ -144,7 +144,7 @@ Ext.define('Ext.calendar.CalendarPanel', {
         this.tbar.items.push('->');
 
         var idx = this.viewCount - 1;
-        this.activeItem = this.activeItem === undefined ? idx: (this.activeItem > idx ? idx: this.activeItem);
+        this.activeItem = this.activeItem === undefined ? idx : (this.activeItem > idx ? idx : this.activeItem);
 
         if (this.showNavBar === false) {
             delete this.tbar;
@@ -447,21 +447,21 @@ Ext.define('Ext.calendar.CalendarPanel', {
     },
 
     // private
-    setActiveView: function(id){
+    setActiveView: function(id) {
         var l = this.layout,
             tb = this.getDockedItems('toolbar')[0];
 
         // show/hide the toolbar first so that the layout will calculate the correct item size
         if (tb) {
-            tb[id === this.id+'-edit' ? 'hide' : 'show']();
+            tb[id === this.id + '-edit' ? 'hide' : 'show']();
         }
 
         l.setActiveItem(id);
         this.doComponentLayout();
         this.activeView = l.getActiveItem();
 
-        if(id !== this.id+'-edit'){
-            if(id !== this.preEditView){
+        if (id !== this.id + '-edit') {
+            if (id !== this.preEditView) {
                 l.activeItem.setStartDate(this.startDate, true);
             }
             this.updateNavState();
@@ -480,7 +480,8 @@ Ext.define('Ext.calendar.CalendarPanel', {
                     viewStart: vb.start,
                     viewEnd: vb.end
                 };
-            };
+            }
+            ;
             this.fireEvent('viewchange', this, view, info);
         }
     },

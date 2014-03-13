@@ -262,14 +262,14 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
             var hd = this.el.down('.ext-cal-hd-ct'),
                 bd = this.el.down('.ext-cal-body-ct');
 
-            if (bd==null || hd==null) {
+            if (bd == null || hd == null) {
                 return;
             }
 
             var headerHeight = hd.getHeight(),
                 sz = this.el.parent().getSize();
 
-            bd.setHeight(sz.height-headerHeight);
+            bd.setHeight(sz.height - headerHeight);
         }
     },
 
@@ -289,10 +289,14 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         var lastInMonth = Ext.Date.getLastDateOfMonth(this.startDate),
             w = 0, d,
             dt = Ext.Date.clone(this.viewStart),
-            weeks = this.weekCount < 1 ? 6: this.weekCount;
+            weeks = this.weekCount < 1 ? 6 : this.weekCount;
 
-        this.eventGrid = [[]];
-        this.allDayGrid = [[]];
+        this.eventGrid = [
+            []
+        ];
+        this.allDayGrid = [
+            []
+        ];
         this.evtMaxCount = [];
 
         var evtsInView = this.store.queryBy(function(rec) {
@@ -333,7 +337,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     prepareEventGrid: function(evts, w, d) {
         var me = this,
             row = 0,
-            max = me.maxEventsPerDay ? me.maxEventsPerDay: 999;
+            max = me.maxEventsPerDay ? me.maxEventsPerDay : 999;
 
         evts.each(function(evt) {
             var M = Ext.calendar.data.EventMappings,
@@ -409,7 +413,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
 
     // private
     findEmptyRowIndex: function(w, d, allday) {
-        var grid = allday ? this.allDayGrid: this.eventGrid,
+        var grid = allday ? this.allDayGrid : this.eventGrid,
             day = grid[w] ? grid[w][d] || [] : [],
             i = 0,
             ln = day.length;
@@ -565,7 +569,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     highlightEvent: function(els, color, o) {
         if (this.enableFx) {
             var c;
-            ! (Ext.isIE || Ext.isOpera) ?
+            !(Ext.isIE || Ext.isOpera) ?
                 els.highlight(color, o) :
                 // Fun IE/Opera handling:
                 els.each(function(el) {
@@ -615,7 +619,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * @return {String} The selector class
      */
     getEventSelectorCls: function(eventId, forSelect) {
-        var prefix = forSelect ? '.': '';
+        var prefix = forSelect ? '.' : '';
         return prefix + this.id + this.eventElIdDelimiter + this.getEventId(eventId);
     },
 
@@ -668,8 +672,8 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
 
     // private
     isOverlapping: function(evt1, evt2) {
-        var ev1 = evt1.data ? evt1.data: evt1,
-            ev2 = evt2.data ? evt2.data: evt2,
+        var ev1 = evt1.data ? evt1.data : evt1,
+            ev2 = evt2.data ? evt2.data : evt2,
             M = Ext.calendar.data.EventMappings,
             start1 = ev1[M.StartDate.name].getTime(),
             end1 = Ext.calendar.util.Date.add(ev1[M.EndDate.name], {seconds: -1}).getTime(),
@@ -736,12 +740,12 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         switch (this.weekCount) {
             case 0:
             case 1:
-                this.viewStart = this.dayCount < 7 ? start: Dt.add(start, {days: -offset, clearTime: true});
+                this.viewStart = this.dayCount < 7 ? start : Dt.add(start, {days: -offset, clearTime: true});
                 this.viewEnd = Dt.add(this.viewStart, {days: this.dayCount || 7});
                 this.viewEnd = Dt.add(this.viewEnd, {seconds: -1});
                 return;
 
-            case - 1:
+            case -1:
                 // auto by month
                 start = Ext.Date.getFirstDateOfMonth(start);
                 offset = start.getDay() - this.startDay;
@@ -787,7 +791,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
 
             // Always sort all day events before anything else
             if (a[M.IsAllDay.name]) {
-                return - 1;
+                return -1;
             }
             else if (b[M.IsAllDay.name]) {
                 return 1;
@@ -809,7 +813,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
                         }
                         return a[M.StartDate.name].getTime() - b[M.StartDate.name].getTime();
                     }
-                    return - 1;
+                    return -1;
                 }
                 else if (diff(b[M.StartDate.name], b[M.EndDate.name]) > 0) {
                     return 1;
@@ -856,7 +860,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      */
     movePrev: function(noRefresh) {
         var days = Ext.calendar.util.Date.diffDays(this.viewStart, this.viewEnd) + 1;
-        return this.moveDays( - days, noRefresh);
+        return this.moveDays(-days, noRefresh);
     },
 
     /**
@@ -992,7 +996,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
 
             if (this.eventOverClass) {
                 els = this.getEventEls(evtId);
-                els[type == 'over' ? 'addCls': 'removeCls'](this.eventOverClass);
+                els[type == 'over' ? 'addCls' : 'removeCls'](this.eventOverClass);
             }
             this.fireEvent('event' + type, this, this.getEventRecord(evtId), el);
             return true;
@@ -1017,13 +1021,13 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
                     relDate;
 
                 if (rel) {
-                    relTD = rel.is('td') ? rel: rel.up('td', 3);
+                    relTD = rel.is('td') ? rel : rel.up('td', 3);
                     relDate = relTD && relTD.id ? this.getDateFromId(relTD.id, this.dayElIdDelimiter) : '';
                 }
                 if (!rel || dt != relDate) {
                     var el = this.getDayEl(dt);
                     if (el && this.dayOverClass != '') {
-                        el[type == 'over' ? 'addCls': 'removeCls'](this.dayOverClass);
+                        el[type == 'over' ? 'addCls' : 'removeCls'](this.dayOverClass);
                     }
                     this.fireEvent('day' + type, this, Ext.Date.parseDate(dt, "Ymd"), el);
                 }
@@ -1037,10 +1041,10 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    destroy: function(){
+    destroy: function() {
         this.callParent(arguments);
 
-        if(this.el){
+        if (this.el) {
             this.el.un('contextmenu', this.onContextMenu, this);
         }
         Ext.destroy(

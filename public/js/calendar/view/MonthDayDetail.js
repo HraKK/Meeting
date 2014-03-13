@@ -14,7 +14,7 @@ Ext.define('Ext.calendar.view.MonthDayDetail', {
         'Ext.calendar.view.AbstractCalendar'
     ],
 
-    initComponent : function(){
+    initComponent: function() {
         this.callParent(arguments);
 
         this.addEvents({
@@ -87,8 +87,8 @@ Ext.define('Ext.calendar.view.MonthDayDetail', {
                 item._renderAsAllDay = item[M.IsAllDay.name] || Ext.calendar.util.Date.diffDays(item[M.StartDate.name], item[M.EndDate.name]) > 0;
                 item.spanLeft = Ext.calendar.util.Date.diffDays(item[M.StartDate.name], this.date) > 0;
                 item.spanRight = Ext.calendar.util.Date.diffDays(this.date, item[M.EndDate.name]) > 0;
-                item.spanCls = (item.spanLeft ? (item.spanRight ? 'ext-cal-ev-spanboth':
-                    'ext-cal-ev-spanleft') : (item.spanRight ? 'ext-cal-ev-spanright': ''));
+                item.spanCls = (item.spanLeft ? (item.spanRight ? 'ext-cal-ev-spanboth' :
+                    'ext-cal-ev-spanleft') : (item.spanRight ? 'ext-cal-ev-spanright' : ''));
 
                 templateData.push({
                     markup: eventTpl.apply(this.getTemplateEventData(item))

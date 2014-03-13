@@ -8,28 +8,28 @@ Ext.ns('Ext.calendar.data');
 
 Ext.calendar.data.CalendarMappings = {
     CalendarId: {
-        name:    'CalendarId',
+        name: 'CalendarId',
         mapping: 'id',
-        type:    'int'
+        type: 'int'
     },
     Title: {
-        name:    'Title',
+        name: 'Title',
         mapping: 'title',
-        type:    'string'
+        type: 'string'
     },
     Description: {
-        name:    'Description',
+        name: 'Description',
         mapping: 'desc',
-        type:    'string'
+        type: 'string'
     },
     ColorId: {
-        name:    'ColorId',
+        name: 'ColorId',
         mapping: 'color',
-        type:    'int'
+        type: 'int'
     },
     IsHidden: {
-        name:    'IsHidden',
+        name: 'IsHidden',
         mapping: 'hidden',
-        type:    'boolean'
+        type: 'boolean'
     }
 };

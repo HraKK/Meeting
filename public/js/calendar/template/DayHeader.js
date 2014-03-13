@@ -16,7 +16,7 @@ Ext.define('Ext.calendar.template.DayHeader', {
 
     requires: ['Ext.calendar.template.BoxLayout'],
 
-    constructor: function(config){
+    constructor: function(config) {
 
         Ext.apply(this, config);
 
@@ -25,20 +25,20 @@ Ext.define('Ext.calendar.template.DayHeader', {
 
         this.callParent([
             '<div class="ext-cal-hd-ct">',
-            '<table class="ext-cal-hd-days-tbl" cellspacing="0" cellpadding="0">',
-            '<tbody>',
-            '<tr>',
-            '<td class="ext-cal-gutter"></td>',
-            '<td class="ext-cal-hd-days-td"><div class="ext-cal-hd-ad-inner">{allDayTpl}</div></td>',
-            '<td class="ext-cal-gutter-rt"></td>',
-            '</tr>',
-            '</tobdy>',
-            '</table>',
+                '<table class="ext-cal-hd-days-tbl" cellspacing="0" cellpadding="0">',
+                    '<tbody>',
+                        '<tr>',
+                            '<td class="ext-cal-gutter"></td>',
+                            '<td class="ext-cal-hd-days-td"><div class="ext-cal-hd-ad-inner">{allDayTpl}</div></td>',
+                            '<td class="ext-cal-gutter-rt"></td>',
+                        '</tr>',
+                    '</tobdy>',
+                '</table>',
             '</div>'
         ]);
     },
 
-    applyTemplate : function(o){
+    applyTemplate: function(o) {
         return this.applyOut({
             allDayTpl: this.allDayTpl.apply(o)
         }, []).join('');

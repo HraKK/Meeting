@@ -133,29 +133,32 @@ Ext.define('Ext.calendar.form.EventDetails', {
             leftFields.splice(2, 0, this.calendarField);
         }
 
-        this.items = [{
-            id: 'left-col',
-            columnWidth: 0.65,
-            layout: 'anchor',
-            border: false,
-            items: leftFields
-        },
+        this.items = [
+            {
+                id: 'left-col',
+                columnWidth: 0.65,
+                layout: 'anchor',
+                border: false,
+                items: leftFields
+            },
             {
                 id: 'right-col',
                 columnWidth: 0.35,
                 layout: 'anchor',
                 border: false,
                 items: rightFields
-            }];
+            }
+        ];
 
-        this.fbar = [{
-            cls: 'ext-del-btn',
-            itemId: this.id+'-del-btn',
-            text: 'Delete Event',
-            scope: this,
-            handler: this.onDelete,
-            minWidth: 150
-        },
+        this.fbar = [
+            {
+                cls: 'ext-del-btn',
+                itemId: this.id + '-del-btn',
+                text: 'Delete Event',
+                scope: this,
+                handler: this.onDelete,
+                minWidth: 150
+            },
             {
                 text: 'Save',
                 scope: this,
@@ -165,18 +168,19 @@ Ext.define('Ext.calendar.form.EventDetails', {
                 text: 'Cancel',
                 scope: this,
                 handler: this.onCancel
-            }];
+            }
+        ];
 
         this.callParent(arguments);
     },
 
     // inherited docs
-    loadRecord: function(rec){
+    loadRecord: function(rec) {
         this.form.reset().loadRecord.apply(this.form, arguments);
         this.activeRecord = rec;
         this.dateRangeField.setValue(rec.data);
 
-        if(this.calendarStore){
+        if (this.calendarStore) {
             this.form.setValues({
                 'calendar': rec.data[Ext.calendar.data.EventMappings.CalendarId.name]
             });
@@ -194,7 +198,7 @@ Ext.define('Ext.calendar.form.EventDetails', {
     },
 
     // inherited docs
-    updateRecord: function(){
+    updateRecord: function() {
         var dates = this.dateRangeField.getValue(),
             M = Ext.calendar.data.EventMappings,
             rec = this.activeRecord,
@@ -210,16 +214,16 @@ Ext.define('Ext.calendar.form.EventDetails', {
         // does not map directly to the record values, so for now we'll duplicate
         // the setter logic here (we need to be able to pick up any custom-added 
         // fields generically). Need to revisit this later and come up with a better solution.
-        fs.each(function(f){
+        fs.each(function(f) {
             var field = this.form.findField(f.name);
-            if(field){
+            if (field) {
                 var value = field.getValue();
                 if (value.getGroupValue) {
                     value = value.getGroupValue();
                 }
                 else if (field.eachItem) {
                     value = [];
-                    field.eachItem(function(item){
+                    field.eachItem(function(item) {
                         value.push(item.getValue());
                     });
                 }
@@ -270,11 +274,11 @@ Ext.define('Ext.calendar.form.EventDetails', {
     },
 
     // private
-    onSave: function(){
-        if(!this.form.isValid()){
+    onSave: function() {
+        if (!this.form.isValid()) {
             return;
         }
-        if(!this.updateRecord()){
+        if (!this.updateRecord()) {
             this.onCancel();
             return;
         }

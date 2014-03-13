@@ -14,7 +14,7 @@ Ext.define('Ext.calendar.template.Month', {
 
     requires: ['Ext.calendar.template.BoxLayout'],
 
-    constructor: function(config){
+    constructor: function(config) {
 
         Ext.apply(this, config);
 
@@ -25,36 +25,36 @@ Ext.define('Ext.calendar.template.Month', {
 
         this.callParent([
             '<div class="ext-cal-inner-ct {extraClasses}">',
-            '<div class="ext-cal-hd-ct ext-cal-month-hd">',
-            weekLinkTpl,
-            '<table class="ext-cal-hd-days-tbl" cellpadding="0" cellspacing="0">',
-            '<tbody>',
-            '<tr>',
-            '<tpl for="days">',
-            '<th class="ext-cal-hd-day{[xindex==1 ? " ext-cal-day-first" : ""]}" title="{.:date("l, F j, Y")}">{.:date("D")}</th>',
-            '</tpl>',
-            '</tr>',
-            '</tbody>',
-            '</table>',
-            '</div>',
-            '<div class="ext-cal-body-ct">{weeks}</div>',
+                '<div class="ext-cal-hd-ct ext-cal-month-hd">',
+                    weekLinkTpl,
+                    '<table class="ext-cal-hd-days-tbl" cellpadding="0" cellspacing="0">',
+                        '<tbody>',
+                            '<tr>',
+                                '<tpl for="days">',
+                                    '<th class="ext-cal-hd-day{[xindex==1 ? " ext-cal-day-first" : ""]}" title="{.:date("l, F j, Y")}">{.:date("D")}</th>',
+                                '</tpl>',
+                            '</tr>',
+                        '</tbody>',
+                    '</table>',
+                '</div>',
+                '<div class="ext-cal-body-ct">{weeks}</div>',
             '</div>'
         ]);
     },
 
     // private
-    applyTemplate : function(o){
+    applyTemplate: function(o) {
         var days = [],
             weeks = this.weekTpl.apply(o),
             dt = o.viewStart,
             D = Ext.calendar.util.Date;
 
-        for(var i = 0; i < 7; i++){
+        for (var i = 0; i < 7; i++) {
             days.push(D.add(dt, {days: i}));
         }
 
         var extraClasses = this.showHeader === true ? '' : 'ext-cal-noheader';
-        if(this.showWeekLinks){
+        if (this.showWeekLinks) {
             extraClasses += ' ext-cal-week-links';
         }
 

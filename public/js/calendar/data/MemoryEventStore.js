@@ -34,13 +34,15 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
     },
 
     // private
-    constructor: function(config){
+    constructor: function(config) {
         this.callParent(arguments);
 
-        this.sorters = this.sorters || [{
-            property: Ext.calendar.data.EventMappings.StartDate.name,
-            direction: 'ASC'
-        }];
+        this.sorters = this.sorters || [
+            {
+                property: Ext.calendar.data.EventMappings.StartDate.name,
+                direction: 'ASC'
+            }
+        ];
 
         this.idProperty = this.idProperty || Ext.calendar.data.EventMappings.EventId.mapping || 'id';
         this.fields = Ext.calendar.data.EventModel.prototype.fields.getRange();
@@ -64,8 +66,8 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
 
     // If the store started with preloaded inline data, we have to make sure the records are set up
     // properly as valid "saved" records otherwise they may get "added" on initial edit.
-    initRecs: function(){
-        this.each(function(rec){
+    initRecs: function() {
+        this.each(function(rec) {
             rec.store = this;
             rec.phantom = false;
         }, this);

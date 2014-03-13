@@ -58,11 +58,11 @@ Ext.define('Ext.calendar.App', {
                             {
                                 xtype: 'container',
                                 html: '<div id="app-logo">' +
-                                    '<div class="logo-top">&nbsp;</div>' +
-                                    '<div id="logo-body">' + new Date().getDate() + '</div>' +
-                                    '<div class="logo-bottom">&nbsp;</div>' +
-                                '</div>' +
-                                '<h1>Meeting Room 2.0</h1>'
+                                        '<div class="logo-top">&nbsp;</div>' +
+                                        '<div id="logo-body">' + new Date().getDate() + '</div>' +
+                                        '<div class="logo-bottom">&nbsp;</div>' +
+                                    '</div>' +
+                                    '<h1>Meeting Room 2.0</h1>'
                             },
                             {
                                 xtype: 'container',
