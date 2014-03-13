@@ -37,11 +37,16 @@ try {
         
         $router->add("/:controller/:action/:params",
             array(
-                "namespace" => "Meetingroom\Controllers",
                 "controller" => 1,
                 "action"     => 2,
                 "params"     => 3,
             ));
+        
+        $router->setDefaults(array(
+            'namespace' => 'Meetingroom\Controllers',
+            'controller' => 'index',
+            'action' => 'index'
+        ));
         
         return $router;
     });
