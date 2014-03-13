@@ -1,5 +1,7 @@
 <?php
 
+namespace Meetingroom\Controllers;
+
 class EventController extends \Phalcon\Mvc\Controller
 {
 

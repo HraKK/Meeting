@@ -1,14 +1,22 @@
 <?php
 //print_r($_SERVER['REQUEST_URI'] ); exit;
 try {
-    require_once '../app/config.php';
+    require_once '../Meetingroom/config.php';
     
-    //Register an autoloader
     $loader = new \Phalcon\Loader();
+    
+    $loader->registerNamespaces(
+        array(
+           'Meetingroom\Controllers'    => "../Meetingroom/Controllers/",
+           'Meetingroom\Models'    => "../Meetingroom/Models/",
+        )
+    );
+    
     $loader->registerDirs(array(
-        '../app/controllers/',
-        '../app/models/'
-    ))->register();
+        '../Meetingroom/',
+    ));
+    
+    $loader->register();
 
     //Create a DI
     $di = new Phalcon\DI\FactoryDefault();
@@ -21,18 +29,23 @@ try {
 
         $router = new \Phalcon\Mvc\Router();
         $router->setUriSource(\Phalcon\Mvc\Router::URI_SOURCE_SERVER_REQUEST_URI);
+        $router->add("/", array(
+            'controller' => '\Meetingroom\Controllers\Index',
+            'action'     => 'index',
+        ));
+        
         $router->add("/test", array(
-            'controller' => 'User',
+            'controller' => '\Meetingroom\Controllers\User',
             'action'     => 'test',
         ));
-
+        
         return $router;
     });
     
     //Setup the view component
     $di->set('view', function(){
         $view = new \Phalcon\Mvc\View();
-        $view->setViewsDir('../app/views/');
+        $view->setViewsDir('../Meetingroom/Views/');
         return $view;
     });
 
