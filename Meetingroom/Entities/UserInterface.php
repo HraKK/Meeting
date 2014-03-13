@@ -1,6 +1,6 @@
 <?php
 
-namespace Meetingroom\Models;
+namespace Meetingroom\Entities;
 
 interface UserInterface
 {

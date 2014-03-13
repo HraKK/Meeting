@@ -6,14 +6,14 @@ class UserController extends \Phalcon\Mvc\Controller
 {
     public function indexAction($page, $asd) 
     {
-       print_r(func_get_args());
+        print_r(func_get_args());
     }
     
     public function loadAction($username) 
     {
-        $userFactory = new \Meetingroom\UserFactory();
+        $userFactory = new \Meetingroom\Entities\UserFactory();
         $user = $userFactory->loadUser($username);
-        $user->test();
+        var_dump($user->getId());
     }
 
 

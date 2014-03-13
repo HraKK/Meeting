@@ -2,22 +2,17 @@
 
 namespace Meetingroom\Models;
 
-class UserModel extends AbstractModel implements UserInterface
+class UserModel extends AbstractModel
 {
-    protected $userName = NULL;
- 
-    public function test() 
+    public function getId($username) 
     {
-        $result = $this->db->query("SELECT * FROM users WHERE name = ?", [$this->userName]);
+        $result = $this->db->query("SELECT * FROM users WHERE name = ? LIMIT 1", [$username]);
         $result->setFetchMode(\Phalcon\Db::FETCH_OBJ);
         while ($robot = $result->fetch()) {
-            echo $robot->id;
-        }
-    }
-
-    public function load($username) {
-        $this->userName = $username;
-        return $this;
+            return $robot->id;
+        } 
+        
+        return FALSE;
     }
 
     /**
