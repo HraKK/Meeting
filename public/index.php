@@ -7,8 +7,9 @@ try {
     
     $loader->registerNamespaces(
         array(
-           'Meetingroom\Controllers'    => "../Meetingroom/Controllers/",
-           'Meetingroom\Models'    => "../Meetingroom/Models/",
+            'Meetingroom'    => "../Meetingroom/",
+            'Meetingroom\Controllers'    => "../Meetingroom/Controllers/",
+            'Meetingroom\Models'    => "../Meetingroom/Models/",
         )
     );
     
@@ -67,6 +68,37 @@ try {
 
     //Handle the request
     $application = new \Phalcon\Mvc\Application($di);
+
+    // ###### ACL
+    $di->setShared('acl', function(){
+        $acl = new \Phalcon\Acl\Adapter\Memory();
+        $acl->setDefaultAction(Phalcon\Acl::DENY);
+        $roleUsers = new \Phalcon\Acl\Role("Users");
+        $roleGuests = new \Phalcon\Acl\Role("Guests");
+        $acl->addRole($roleGuests);
+        $acl->addRole($roleUsers);
+        $userResource = new \Phalcon\Acl\Resource("User");
+        $acl->addResource($userResource, ['index','test']);
+
+        $acl->allow("Guests", "User", "index");
+        $acl->allow("Users", "User", "test");
+        return $acl;
+    });
+
+
+
+
+    //### SESSION
+    // Регистрация сервиса сессий, как "always shared"
+    //    $session = $di->get('session'); // Locates the service for the first time
+    //    $session = $di->getSession(); // Returns the first instantiated object
+    $di->setShared('session', function() {
+        $session = new Phalcon\Session\Adapter\Files();
+        $session->start();
+        return $session;
+    });
+
+
 
     echo $application->handle()->getContent();
 

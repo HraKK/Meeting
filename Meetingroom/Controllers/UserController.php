@@ -8,6 +8,14 @@ class UserController extends \Phalcon\Mvc\Controller
     {
        print_r(func_get_args());
     }
+    
+    public function loadAction($username) 
+    {
+        $userFactory = new \Meetingroom\UserFactory();
+        $user = $userFactory->loadUser($username);
+        $user->test();
+    }
+
 
     public function testAction()
     {
@@ -16,6 +24,16 @@ class UserController extends \Phalcon\Mvc\Controller
         $user = new \Meetingroom\Models\UserModel();
         $info = $user->getUserLDAPInfo('sysgstats','pgGZErgMkNXF');
         var_dump('<pre>',$info);
+
+
+        $acl= $this->getDI()->get('acl');
+
+        //test
+        if ($acl->isAllowed("Guest", "User", "test")) {
+            echo "Access granted!";
+        } else {
+            echo "Access denied :(";
+        }
     }
 
 
