@@ -30,14 +30,18 @@ try {
         $router = new \Phalcon\Mvc\Router();
         $router->setUriSource(\Phalcon\Mvc\Router::URI_SOURCE_SERVER_REQUEST_URI);
         $router->add("/", array(
-            'controller' => '\Meetingroom\Controllers\Index',
+            'namespace' => 'Meetingroom\Controllers',
+            'controller' => 'Index',
             'action'     => 'index',
         ));
         
-        $router->add("/test", array(
-            'controller' => '\Meetingroom\Controllers\User',
-            'action'     => 'test',
-        ));
+        $router->add("/:controller/:action/:params",
+            array(
+                "namespace" => "Meetingroom\Controllers",
+                "controller" => 1,
+                "action"     => 2,
+                "params"     => 3,
+            ));
         
         return $router;
     });
