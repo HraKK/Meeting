@@ -8,6 +8,6 @@ class AbstractModel extends \Phalcon\Mvc\Model
     
     public function beforeExecuteRoute($dispatcher)
     {
-        $this->db = \Phalcon\DI::getDefault()->get('mydb_con');
+        $this->db =  $this->getDI()->get('mydb_con');
     }
 }
