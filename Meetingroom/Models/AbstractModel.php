@@ -6,8 +6,8 @@ class AbstractModel extends \Phalcon\Mvc\Model
 {
     protected  $db;
     
-    public function beforeExecuteRoute($dispatcher)
+    public function onConstruct()
     {
-        $this->db =  $this->getDI()->get('mydb_con');
+        $this->db = $this->getDI()->getShared('mydb_con');
     }
 }

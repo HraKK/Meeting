@@ -8,6 +8,14 @@ class UserController extends \Phalcon\Mvc\Controller
     {
        print_r(func_get_args());
     }
+    
+    public function loadAction($username) 
+    {
+        $userFactory = new \Meetingroom\UserFactory();
+        $user = $userFactory->loadUser($username);
+        $user->test();
+    }
+
 
     public function testAction()
     {

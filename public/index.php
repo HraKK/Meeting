@@ -7,8 +7,9 @@ try {
     
     $loader->registerNamespaces(
         array(
-           'Meetingroom\Controllers'    => "../Meetingroom/Controllers/",
-           'Meetingroom\Models'    => "../Meetingroom/Models/",
+            'Meetingroom'    => "../Meetingroom/",
+            'Meetingroom\Controllers'    => "../Meetingroom/Controllers/",
+            'Meetingroom\Models'    => "../Meetingroom/Models/",
         )
     );
     

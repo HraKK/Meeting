@@ -2,18 +2,23 @@
 
 namespace Meetingroom\Models;
 
-class UserModel extends AbstractModel
+class UserModel extends AbstractModel implements UserInterface
 {
+    protected $userName = NULL;
+ 
     public function test() 
     {
-        $this->beforeExecuteRoute();
-        $result = $this->db->query("SELECT * FROM users ORDER BY name");
+        $result = $this->db->query("SELECT * FROM users WHERE name = ?", [$this->userName]);
         $result->setFetchMode(\Phalcon\Db::FETCH_OBJ);
         while ($robot = $result->fetch()) {
-            echo $robot->name;
+            echo $robot->id;
         }
     }
 
+    public function load($username) {
+        $this->userName = $username;
+        return $this;
+    }
 
     /**
      * Method search LDAP user and return full info
