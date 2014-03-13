@@ -6,8 +6,8 @@ class IndexController extends AbstractController
 {
     public function indexAction()
     {
-        $user = new \Meetingroom\Models\UserModel();
-        $user->test();
+        $this->view->setVar("param", 'HELLO WORLD');
+        $this->view->pick("user/show");
     }
 
 }
