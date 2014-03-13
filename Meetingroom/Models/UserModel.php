@@ -2,10 +2,11 @@
 
 namespace Meetingroom\Models;
 
-class User extends \Phalcon\Mvc\Model
+class UserModel extends AbstractModel
 {
     public function test() 
     {
+        $this->beforeExecuteRoute();
         $result = $this->db->query("SELECT * FROM users ORDER BY name");
         $result->setFetchMode(\Phalcon\Db::FETCH_OBJ);
         while ($robot = $result->fetch()) {

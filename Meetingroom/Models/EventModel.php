@@ -2,7 +2,7 @@
 
 namespace Meetingroom\Models;
 
-class Room extends \Phalcon\Mvc\Model
+class RoomModel extends AbstractModel
 {
 
 }
