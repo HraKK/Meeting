@@ -4,6 +4,10 @@ namespace Meetingroom\Controllers;
 
 class UserController extends \Phalcon\Mvc\Controller
 {
+    public function indexAction($page, $asd) 
+    {
+       print_r(func_get_args());
+    }
 
     public function testAction()
     {
