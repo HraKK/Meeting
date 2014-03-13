@@ -2,7 +2,7 @@
 
 namespace Meetingroom\Controllers;
 
-class IndexController extends \Phalcon\Mvc\Controller
+class IndexController extends AbstractController
 {
     public function indexAction()
     {

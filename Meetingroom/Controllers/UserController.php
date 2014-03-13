@@ -2,8 +2,12 @@
 
 namespace Meetingroom\Controllers;
 
-class UserController extends \Phalcon\Mvc\Controller
+class UserController extends AbstractController
 {
+    public function indexAction($page, $asd) 
+    {
+       print_r(func_get_args());
+    }
 
     public function testAction()
     {
@@ -29,7 +33,7 @@ class UserController extends \Phalcon\Mvc\Controller
 
             echo "Поиск (sn=S*) ...";
             // Поиск по фамилиям записей
-            $sr=ldap_search($ds, "ou=people,dc=syneforge,dc=com", "uid=denkin");
+            $sr=ldap_search($ds, "ou=people,dc=syneforge,dc=com", "uid=barif");
             echo "Результат поиска: " . $sr . "<br />";
 
             echo "Получено количество записей " . ldap_count_entries($ds, $sr) . "<br />";

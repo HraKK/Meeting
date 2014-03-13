@@ -2,7 +2,7 @@
 
 namespace Meetingroom\Controllers;
 
-class EventController extends \Phalcon\Mvc\Controller
+class EventController extends AbstractController
 {
 
     public function indexAction()
