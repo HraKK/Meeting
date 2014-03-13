@@ -1,12 +1,52 @@
+<!doctype html>
 <html>
-    <head>
-        <title>Example</title>
-    </head>
-    <body>
+<head>
 
-        <h1>This is main layout!</h1>
+    <meta charset="utf-8">
+    <title>Meeting Room 2.0</title>
 
-        <?php echo $this->getContent() ?>
+    <link rel="stylesheet" type="text/css" href="/js/extjs/resources/css/ext-all-neptune.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/calendar.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/examples.css"/>
 
-    </body>
+    <script type="text/javascript" src="/js/extjs/ext-all.js"></script>
+    <script type="text/javascript">
+        Ext.Loader.setConfig({
+            enabled: true,
+            paths: {
+                'Ext.calendar': '/js/calendar'
+            }
+        });
+        Ext.require([
+            //'Ext.diag.layout.Context',
+            //'Ext.diag.layout.ContextItem',
+            'Ext.calendar.App'
+        ]);
+        Ext.onReady(function() {
+            // launch the app:
+            Ext.create('Ext.calendar.App');
+
+            // update the header logo date:
+            document.getElementById('logo-body').innerHTML = new Date().getDate();
+        });
+    </script>
+
+</head>
+<body>
+
+<div style="display:none;">
+    <div id="app-header-content">
+        <div id="app-logo">
+            <div class="logo-top">&nbsp;</div>
+            <div id="logo-body">&nbsp;</div>
+            <div class="logo-bottom">&nbsp;</div>
+        </div>
+        <h1>Ext JS Calendar</h1>
+        <span id="app-msg" class="x-hidden"></span>
+    </div>
+</div>
+
+<?php //echo $this->getContent() ?>
+
+</body>
 </html>
