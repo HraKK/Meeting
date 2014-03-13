@@ -21,7 +21,7 @@ class UserController extends \Phalcon\Mvc\Controller
         $acl= $this->getDI()->get('acl');
 
         //test
-        if ($acl->isAllowed("Users", "User", "test")) {
+        if ($acl->isAllowed("Guest", "User", "test")) {
             echo "Access granted!";
         } else {
             echo "Access denied :(";
