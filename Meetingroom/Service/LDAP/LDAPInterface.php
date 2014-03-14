@@ -2,7 +2,8 @@
 namespace Meetingroom\Service\LDAP;
 
 
-interface LDAPInterface{
+interface LDAPInterface
+{
 
     /**
      * Return established connection
@@ -39,9 +40,4 @@ interface LDAPInterface{
     public function close();
 
 
-
-
-
-
-
-} 
+}
