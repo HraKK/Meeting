@@ -49,6 +49,7 @@ class Room extends \Meetingroom\Entity\AbstractEntity
                 ));
             }
         }
+        $this->loaded = true;
         return $this;
     }
 
@@ -72,9 +73,4 @@ class Room extends \Meetingroom\Entity\AbstractEntity
         return property_exists(__CLASS__, $field);
     }
 
-
-    public function save()
-    {
-
-    }
 }

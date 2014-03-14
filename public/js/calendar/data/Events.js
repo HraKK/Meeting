@@ -41,7 +41,7 @@ Ext.define('Ext.calendar.data.Events', {
                     },
                     {
                         "id": 1004,
-                        "cid": 1,
+                        "cid": 4,
                         "title": "Sarah's birthday",
                         "start": today,
                         "end": today,
@@ -50,7 +50,7 @@ Ext.define('Ext.calendar.data.Events', {
                     },
                     {
                         "id": 1005,
-                        "cid": 2,
+                        "cid": 5,
                         "title": "A long one...",
                         "start": makeDate(-12),
                         "end": makeDate(10, 0, 0, -1),
@@ -58,7 +58,7 @@ Ext.define('Ext.calendar.data.Events', {
                     },
                     {
                         "id": 1006,
-                        "cid": 3,
+                        "cid": 4,
                         "title": "School holiday",
                         "start": makeDate(5),
                         "end": makeDate(7, 0, 0, -1),
@@ -67,7 +67,7 @@ Ext.define('Ext.calendar.data.Events', {
                     },
                     {
                         "id": 1007,
-                        "cid": 1,
+                        "cid": 3,
                         "title": "Haircut",
                         "start": makeDate(0, 9),
                         "end": makeDate(0, 9, 30),
@@ -75,7 +75,7 @@ Ext.define('Ext.calendar.data.Events', {
                     },
                     {
                         "id": 1008,
-                        "cid": 3,
+                        "cid": 2,
                         "title": "An old event",
                         "start": makeDate(-30),
                         "end": makeDate(-28),
@@ -83,7 +83,7 @@ Ext.define('Ext.calendar.data.Events', {
                     },
                     {
                         "id": 1009,
-                        "cid": 2,
+                        "cid": 1,
                         "title": "Board meeting",
                         "start": makeDate(-2, 13),
                         "end": makeDate(-2, 18),
@@ -92,7 +92,7 @@ Ext.define('Ext.calendar.data.Events', {
                     },
                     {
                         "id": 1010,
-                        "cid": 3,
+                        "cid": 2,
                         "title": "Jenny's final exams",
                         "start": makeDate(-2),
                         "end": makeDate(3, 0, 0, -1),
@@ -100,7 +100,7 @@ Ext.define('Ext.calendar.data.Events', {
                     },
                     {
                         "id": 1011,
-                        "cid": 1,
+                        "cid": 3,
                         "title": "Movie night",
                         "start": makeDate(2, 19),
                         "end": makeDate(2, 23),
