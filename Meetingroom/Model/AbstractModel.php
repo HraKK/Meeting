@@ -1,13 +1,14 @@
 <?php
 
-namespace Meetingroom\Models;
+namespace Meetingroom\Model;
 
 abstract class AbstractModel extends \Phalcon\Mvc\Model
 {
-    protected  $db;
-    
+    protected $db;
+
     public function onConstruct()
     {
         $this->db = $this->getDI()->getShared('mydb_con');
     }
+
 }

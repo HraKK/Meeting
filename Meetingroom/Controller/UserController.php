@@ -1,33 +1,33 @@
 <?php
 
-namespace Meetingroom\Controllers;
+namespace Meetingroom\Controller;
 
 class UserController extends \Phalcon\Mvc\Controller
 {
-    public function indexAction($page, $asd) 
+    public function indexAction($page, $asd)
     {
         print_r(func_get_args());
-    }
-    
-    public function loadAction($username) 
-    {
-        $userFactory = new \Meetingroom\Entities\User\UserFactory();
-        $user = $userFactory->getUser($username);
-        var_dump($user->getId());
         exit;
     }
 
+    public function loadAction($username)
+    {
+        $userFactory = new \Meetingroom\Entity\User\UserFactory();
+        $user = $userFactory->getUser($username);
+        var_dump($user->getRole());
+        exit;
+    }
 
     public function testAction()
     {
         echo "<h1>User2!</h1>";
 
-        $user = new \Meetingroom\Models\UserModel();
-        $info = $user->getUserLDAPInfo('sysgstats','pgGZErgMkNXF');
-        var_dump('<pre>',$info);
+        $user = new \Meetingroom\Model\UserModel();
+        $info = $user->getUserLDAPInfo('sysgstats', 'pgGZErgMkNXF');
+        var_dump('<pre>', $info);
 
 
-        $acl= $this->getDI()->get('acl');
+        $acl = $this->getDI()->get('acl');
 
         //test
         if ($acl->isAllowed("Users", "User", "test")) {
@@ -36,6 +36,5 @@ class UserController extends \Phalcon\Mvc\Controller
             echo "Access denied :(";
         }
     }
-
 
 }

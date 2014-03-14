@@ -1,6 +1,6 @@
 <?php
 
-namespace Meetingroom\Controllers;
+namespace Meetingroom\Controller;
 
 class IndexController extends AbstractController
 {
@@ -10,7 +10,7 @@ class IndexController extends AbstractController
         echo 123;
 //        $this->view->pick("user/show");
     }
-    
+
     public function showAction()
     {
         $this->view->setVar("param", 'HELLO WORLD');
