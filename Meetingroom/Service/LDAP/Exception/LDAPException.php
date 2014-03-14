@@ -2,6 +2,7 @@
 namespace Meetingroom\Service\LDAP;
 
 
-class LDAPException extends \Exception{
+class LDAPException extends \Exception
+{
 
 } 

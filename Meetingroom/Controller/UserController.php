@@ -22,10 +22,15 @@ class UserController extends \Phalcon\Mvc\Controller
         echo "<h1>User2!</h1>";
 
         //$user = new \Meetingroom\Models\UserModel();
-        $ldap = new \Meetingroom\Services\Ldap\Ldap();
+        $ldap = new \Meetingroom\Service\LDAP\LDAP();
 
-        $info = $ldap->getUserInfo('sysgstats', 'pgGZErgMkNXF');
-        var_dump('<pre>', $info);
+        $LDAPUser = $ldap->getUserInfo('sysgstats', 'pgGZErgMkNXF');
+
+
+        print "Nickname: " . $LDAPUser->getNickname() . "<br />";
+        print "Name: " . $LDAPUser->getName() . "<br />";
+        print "Email: " . $LDAPUser->getEmail() . "<br />";
+        print "Position: " . $LDAPUser->getPosition() . "<br />";
 
 
         $acl = $this->getDI()->get('acl');

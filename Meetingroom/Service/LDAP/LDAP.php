@@ -14,7 +14,7 @@ class LDAP implements LDAPInterface
     /**
      * @var connection to LDAP
      */
-    protected  $connection;
+    protected $connection;
 
     /**
      * Create connection to LDAP server
@@ -37,17 +37,13 @@ class LDAP implements LDAPInterface
     /**
      * Return established connection
      *
-     * @throws Meetingroom\Service\LDAP\LDAPException
+     * @throws Exception\LDAPException
      * @return resource
      */
     public function getConnection()
     {
-        if (!is_resource($this->connection)) {
-            try {
-                $this->connect('ldap.syneforge.com', 389);
-            } catch (Exception\LDAPException $e) {
-                throw $e;
-            }
+        if (null == $this->connection) {
+            $this->connect('ldap.syneforge.com', 389);
         }
         return $this->connection;
     }
@@ -78,11 +74,11 @@ class LDAP implements LDAPInterface
         $searchResult = ldap_search($this->getConnection(), "ou=people,dc=syneforge,dc=com", "uid=" . $nickname);
         $data = ldap_get_entries($this->getConnection(), $searchResult);
 
-        return [
-            'cn' => $data[0]["cn"][0],
-            'email' => $data[0]["mail"][0],
-            'position' => $data[0]["title"][0],
-        ];
+        $name = $data[0]["cn"][0];
+        $email = $data[0]["mail"][0];
+        $position = $data[0]["title"][0];
+
+        return new LDAPUser($nickname, $name, $email, $position);
     }
 
 
@@ -114,7 +110,6 @@ class LDAP implements LDAPInterface
         try {
 
             $access = $this->checkAccess($nickname, $password);
-
 
             if (FALSE == $access) {
                 return FALSE;
