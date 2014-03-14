@@ -104,8 +104,10 @@ Ext.define('Ext.calendar.App', {
 
                                 // fill tab
                                 scope.calendarStore.each(function(record, index) {
+                                    console.log(record);
                                     tabpanel.add({
-                                        title: record.get('Title')
+                                        title: record.get('Title'),
+                                        iconCls: 'room-tab-icon room-tab-icon-' + record.get('CalendarId')
                                     });
                                 });
 
