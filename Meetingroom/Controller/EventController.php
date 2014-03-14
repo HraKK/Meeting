@@ -13,7 +13,10 @@ class EventController extends AbstractController
     {
         $eventManager = new EventManager();
         $events = $eventManager->loadEvents();
-        var_dump($events);
+//        $events[1]->id = 3;
+//        $id = $events[1]->id;
+//        
+//        var_dump($id);
         exit;
     }
 

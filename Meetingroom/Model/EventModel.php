@@ -14,7 +14,7 @@ class EventModel extends AbstractModel
     {
         $result = $this->db->query("SELECT * FROM events WHERE id = ? LIMIT 1", [$id]);
         $result->setFetchMode(\Phalcon\Db::FETCH_OBJ);
-        return $result->numRows() === 0 ? false : $result->fetch();
+        return $result->numRows() === 0 ? [] : $result->fetch();
     }
     
     public function getUserIdByEventId($id) 
