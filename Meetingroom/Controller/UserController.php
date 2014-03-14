@@ -7,14 +7,13 @@ class UserController extends \Phalcon\Mvc\Controller
     public function indexAction($page, $asd)
     {
         print_r(func_get_args());
-        exit;
     }
 
     public function loadAction($username)
     {
         $userFactory = new \Meetingroom\Entity\User\UserFactory();
         $user = $userFactory->getUser($username);
-        var_dump($user->getRole());
+        var_dump($user->getId());
         exit;
     }
 
@@ -22,8 +21,10 @@ class UserController extends \Phalcon\Mvc\Controller
     {
         echo "<h1>User2!</h1>";
 
-        $user = new \Meetingroom\Model\UserModel();
-        $info = $user->getUserLDAPInfo('sysgstats', 'pgGZErgMkNXF');
+        //$user = new \Meetingroom\Models\UserModel();
+        $ldap = new \Meetingroom\Services\Ldap\Ldap();
+
+        $info = $ldap->getUserInfo('sysgstats', 'pgGZErgMkNXF');
         var_dump('<pre>', $info);
 
 
@@ -35,6 +36,7 @@ class UserController extends \Phalcon\Mvc\Controller
         } else {
             echo "Access denied :(";
         }
+        die();
     }
 
 }
