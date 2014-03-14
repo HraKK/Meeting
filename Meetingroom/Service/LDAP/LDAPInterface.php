@@ -1,5 +1,5 @@
 <?php
-namespace Meetingroom\Services\LDAP;
+namespace Meetingroom\Service\LDAP;
 
 
 interface LDAPInterface{

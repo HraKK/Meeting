@@ -1,11 +1,11 @@
 <?php
-namespace Meetingroom\Services\LDAP;
+namespace Meetingroom\Service\LDAP;
 
 /**
  * Class LDAP
  *
  * @author Denis Maximovskikh <denkin@syneforge.com.ua>
- * @package Meetingroom\Services
+ * @package Meetingroom\Service
  */
 class LDAP implements LDAPInterface
 {
@@ -37,7 +37,7 @@ class LDAP implements LDAPInterface
     /**
      * Return established connection
      *
-     * @throws Meetingroom\Services\LDAP\LDAPException
+     * @throws Meetingroom\Service\LDAP\LDAPException
      * @return resource
      */
     public function getConnection()
@@ -124,7 +124,7 @@ class LDAP implements LDAPInterface
 
             return $data;
 
-        } catch (Meetingroom\Services\LDAP\LDAPException $e) {
+        } catch (Meetingroom\Service\LDAP\LDAPException $e) {
             throw $e;
         }
     }
