@@ -10,6 +10,7 @@ try {
             'Meetingroom'    => "../Meetingroom/",
             'Meetingroom\Controllers'    => "../Meetingroom/Controllers/",
             'Meetingroom\Models'    => "../Meetingroom/Models/",
+            'Meetingroom\Services'    => "../Meetingroom/Services/"
         )
     );
     

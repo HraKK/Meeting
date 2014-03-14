@@ -21,8 +21,10 @@ class UserController extends \Phalcon\Mvc\Controller
     {
         echo "<h1>User2!</h1>";
 
-        $user = new \Meetingroom\Models\UserModel();
-        $info = $user->getUserLDAPInfo('sysgstats','pgGZErgMkNXF');
+        //$user = new \Meetingroom\Models\UserModel();
+        $ldap = new \Meetingroom\Services\Ldap\Ldap();
+
+        $info = $ldap->getUserInfo('sysgstats','pgGZErgMkNXF');
         var_dump('<pre>',$info);
 
 
@@ -34,6 +36,7 @@ class UserController extends \Phalcon\Mvc\Controller
         } else {
             echo "Access denied :(";
         }
+        die();
     }
 
 
