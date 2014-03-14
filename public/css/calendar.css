@@ -214,7 +214,7 @@
 
 .x-ie .ext-cal-dayview .ext-cal-bg-rows-inner,
 .x-gecko .ext-cal-dayview .ext-cal-bg-rows-inner {
-    top: -1; /* row line alignment fix */
+    top: -1px; /* row line alignment fix */
 }
 
 .ext-cal-dayview .ext-cal-bg-row {
@@ -785,7 +785,7 @@ td.ext-cal-dtitle-today div {
 .ext-color-1,
 .x-ie .ext-color-1-ad,
 .x-opera .ext-color-1-ad {
-    color: #306da6;
+    color: #ffd418;
 }
 
 .ext-cal-day-col .ext-color-1,
@@ -794,21 +794,15 @@ td.ext-cal-dtitle-today div {
 .ext-color-1-ad .ext-cal-evm,
 .ext-color-1 .ext-cal-picker-icon,
 .ext-color-1-x dl,
-.ext-color-1-x .ext-cal-evb {
-    background: #306da6;
-}
-
 .ext-color-1-x .ext-cal-evb,
-.ext-color-1-ad .ext-cal-evm,
-.ext-color-1-ad,
-.ext-color-1-x dl {
-    border-color: #306da6;
+.room-tab-icon-1 {
+    background: #ffd418;
 }
 
 .ext-color-2,
 .x-ie .ext-color-2-ad,
 .x-opera .ext-color-2-ad {
-    color: #86a723;
+    color: #00d728;
 }
 
 .ext-cal-day-col .ext-color-2,
@@ -817,21 +811,15 @@ td.ext-cal-dtitle-today div {
 .ext-color-2-ad .ext-cal-evm,
 .ext-color-2 .ext-cal-picker-icon,
 .ext-color-2-x dl,
-.ext-color-2-x .ext-cal-evb {
-    background: #86a723;
-}
-
 .ext-color-2-x .ext-cal-evb,
-.ext-color-2-ad .ext-cal-evm,
-.ext-color-2-ad,
-.ext-color-2-x dl {
-    border-color: #86a723;
+.room-tab-icon-2 {
+    background: #00d728;
 }
 
 .ext-color-3,
 .x-ie .ext-color-3-ad,
 .x-opera .ext-color-3-ad {
-    color: #b6a980;
+    color: #ff5c36;
 }
 
 .ext-cal-day-col .ext-color-3,
@@ -840,15 +828,61 @@ td.ext-cal-dtitle-today div {
 .ext-color-3-ad .ext-cal-evm,
 .ext-color-3 .ext-cal-picker-icon,
 .ext-color-3-x dl,
-.ext-color-3-x .ext-cal-evb {
-    background: #b6a980;
+.ext-color-3-x .ext-cal-evb,
+.room-tab-icon-3 {
+    background: #ff5c36;
+    background: -moz-linear-gradient(top, #ff5c36 0%, #ff1861 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ff5c36), color-stop(100%, #ff1861));
+    background: -webkit-linear-gradient(top, #ff5c36 0%, #ff1861 100%);
+    background: -o-linear-gradient(top, #ff5c36 0%, #ff1861 100%);
+    background: -ms-linear-gradient(top, #ff5c36 0%, #ff1861 100%);
+    background: linear-gradient(to bottom, #ff5c36 0%, #ff1861 100%);
 }
 
-.ext-color-3-x .ext-cal-evb,
-.ext-color-3-ad .ext-cal-evm,
-.ext-color-3-ad,
-.ext-color-3-x dl {
-    border-color: #b6a980;
+.ext-color-4,
+.x-ie .ext-color-4-ad,
+.x-opera .ext-color-4-ad {
+    color: #5a4bd6;
+}
+
+.ext-cal-day-col .ext-color-4,
+.ext-dd-drag-proxy .ext-color-4,
+.ext-color-4-ad,
+.ext-color-4-ad .ext-cal-evm,
+.ext-color-4 .ext-cal-picker-icon,
+.ext-color-4-x dl,
+.ext-color-4-x .ext-cal-evb,
+.room-tab-icon-4 {
+    background: #c71efa;
+    background: -moz-linear-gradient(top, #c71efa 0%, #5a4bd6 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #c71efa), color-stop(100%, #5a4bd6));
+    background: -webkit-linear-gradient(top, #c71efa 0%, #5a4bd6 100%);
+    background: -o-linear-gradient(top, #c71efa 0%, #5a4bd6 100%);
+    background: -ms-linear-gradient(top, #c71efa 0%, #5a4bd6 100%);
+    background: linear-gradient(to bottom, #c71efa 0%, #5a4bd6 100%);
+}
+
+.ext-color-5,
+.x-ie .ext-color-5-ad,
+.x-opera .ext-color-5-ad {
+    color: #0855ef;
+}
+
+.ext-cal-day-col .ext-color-5,
+.ext-dd-drag-proxy .ext-color-5,
+.ext-color-5-ad,
+.ext-color-5-ad .ext-cal-evm,
+.ext-color-5 .ext-cal-picker-icon,
+.ext-color-5-x dl,
+.ext-color-5-x .ext-cal-evb,
+.room-tab-icon-5 {
+    background: #00d3fd;
+    background: -moz-linear-gradient(top, #00d3fd 0%, #0855ef 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #00d3fd), color-stop(100%, #0855ef));
+    background: -webkit-linear-gradient(top, #00d3fd 0%, #0855ef 100%);
+    background: -o-linear-gradient(top, #00d3fd 0%, #0855ef 100%);
+    background: -ms-linear-gradient(top, #00d3fd 0%, #0855ef 100%);
+    background: linear-gradient(to bottom, #00d3fd 0%, #0855ef 100%);
 }
 
 .ext-cal-day-col .ext-cal-evt {
@@ -908,8 +942,7 @@ td.ext-cal-dtitle-today div {
  *
  ******************************************/
 .ext-cal-nav-picker {
-    border-style: none none solid;
-    border-color: #99BBE8;
+    border: none;
 }
 
 .ext-cal-nav-picker .x-datepicker-header {
@@ -960,8 +993,7 @@ td.ext-cal-dtitle-today div {
 }
 
 .ext-cal-nav-picker .x-monthpicker {
-    border: 0;
-    border-bottom: 1px solid #99BBE8;
+    border: none;
     top: 0 !important;
     left: 0 !important;
 }
