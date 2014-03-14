@@ -25,6 +25,8 @@ Ext.define('Ext.calendar.App', {
         ],
 
         constructor: function() {
+            var scope = this;
+
             // Minor workaround for OSX Lion scrollbars
             this.checkScrollOffset();
 
@@ -54,6 +56,7 @@ Ext.define('Ext.calendar.App', {
                         region: 'north',
                         height: 40,
                         padding: 0,
+                        border: false,
                         items: [
                             {
                                 xtype: 'container',
@@ -73,6 +76,8 @@ Ext.define('Ext.calendar.App', {
                             },
                             {
                                 xtype: 'tbtext',
+                                width: 172,
+                                cls: 'user-name',
                                 text: 'username'
                             },
                             {
@@ -85,21 +90,43 @@ Ext.define('Ext.calendar.App', {
                         ]
                     },
                     {
+                        xtype: 'tabpanel',
+                        region: 'north',
+                        cls: 'room-tabs',
+                        height: 31,
+                        margin: '-31 192 0 213',
+                        border: false,
+                        bodyStyle: {
+                            border: false
+                        },
+                        listeners: {
+                            afterrender: function(tabpanel) {
+
+                                // fill tab
+                                scope.calendarStore.each(function(record, index) {
+                                    tabpanel.add({
+                                        title: record.get('Title')
+                                    });
+                                });
+
+                                // set main room active
+                                tabpanel.setActiveTab(1);
+
+                            }
+                        }
+                    },
+                    {
                         id: 'app-center',
                         title: '...', // will be updated to the current view's date range
                         region: 'center',
                         layout: 'border',
-                        listeners: {
-                            'afterrender': function() {
-                                Ext.getCmp('app-center').header.addCls('app-center-header');
-                            }
-                        },
+                        border: false,
                         items: [
                             {
                                 xtype: 'container',
-                                id: 'app-west',
                                 region: 'west',
-                                width: 214,
+                                width: 213,
+                                border: false,
                                 items: [
                                     {
                                         xtype: 'datepicker',
@@ -117,12 +144,14 @@ Ext.define('Ext.calendar.App', {
                                     }
                                 ]
                             },
-                            {},
                             {
                                 xtype: 'calendarpanel',
                                 eventStore: this.eventStore,
                                 calendarStore: this.calendarStore,
                                 border: false,
+                                bodyStyle: {
+                                    border: false
+                                },
                                 id: 'app-calendar',
                                 region: 'center',
                                 activeItem: 3, // month view
