@@ -1,0 +1,17 @@
+<?php
+
+namespace Meetingroom\Entity\Role;
+
+use \Meetingroom\Entity\User\UserInterface;
+use \Meetingroom\Entity\Role\HasRoleInterface;
+
+class RoleFactory
+{
+//    public function getRole(UserInterface $user, HasRoleInterface $obj)
+//    {
+//        $model = new \Meetingroom\Model\RoleModel();
+//        $userId = $model->getIdByUsername($username);
+//
+//        return $role;
+//    }
+}
