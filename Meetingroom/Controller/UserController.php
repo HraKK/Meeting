@@ -42,6 +42,11 @@ class UserController extends \Phalcon\Mvc\Controller
         } else {
             echo "Access denied :(";
         }
+        print "<hr />";
+
+        $roomManager = new \Meetingroom\Entity\Room\RoomManager();
+        var_dump($roomManager->getAll());
+
         die();
     }
 

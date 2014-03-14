@@ -20,7 +20,7 @@ class Room
 
     public function bind($data)
     {
-        foreach ($fields as $field) {
+        foreach ($this->fields as $field) {
 
         }
     }
