@@ -27,7 +27,7 @@ class BaseBootstrapper implements BootstrapperInterface
         $this->di->setShared(
             'config',
             function () {
-                return new \Phalcon\Config\Adapter\Ini("../Meetingroom/config.ini");
+                return new \Phalcon\Config\Adapter\Ini("../Meetingroom/config/config.ini");
             }
         );
     }
