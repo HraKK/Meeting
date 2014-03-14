@@ -8,7 +8,7 @@ abstract class AbstractModel extends \Phalcon\Mvc\Model
 
     public function onConstruct()
     {
-        $this->db = $this->getDI()->getShared('mydb_con');
+        $this->db = $this->getDI()->getShared('db');
     }
 
 }
