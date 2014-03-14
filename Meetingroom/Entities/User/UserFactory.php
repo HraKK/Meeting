@@ -1,12 +1,20 @@
 <?php
 
-namespace Meetingroom\Entities;
+namespace Meetingroom\Entities\User;
 
-class UserFactory extends AbstractFactory
+class UserFactory
 {
-    public function loadUser($username) 
+    public function getUser($username) 
     {
-        $user = new \Meetingroom\Entities\User();
-        return $user->load($username);
+        $model = new \Meetingroom\Models\UserModel();
+        $userId = $model->getId($username);
+        
+        if($userId === false) {
+            $user = new \Meetingroom\Entities\User\Guest();
+        } else {
+            $user = new \Meetingroom\Entities\User();
+        }
+        
+        return $user->init($username);
     }
 }

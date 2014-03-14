@@ -1,8 +1,9 @@
 <?php
 
-namespace Meetingroom\Entities;
+namespace Meetingroom\Entities\User;
 
 interface UserInterface
 {
-    public function load($username);
+    public function getId();
+    public function getRole();
 }
