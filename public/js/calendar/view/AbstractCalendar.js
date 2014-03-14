@@ -508,7 +508,6 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         }
     },
 
-
     doUpdateFx: function(els, o) {
         this.highlightEvent(els, null, o);
     },
