@@ -60,7 +60,7 @@ Ext.define('Ext.calendar.view.DayBody', {
         this.el.ddScrollConfig = {
             // scrolling is buggy in IE/Opera for some reason.  A larger vthresh
             // makes it at least functional if not perfect
-            vthresh: Ext.isIE || Ext.isOpera ? 100: 40,
+            vthresh: Ext.isIE || Ext.isOpera ? 100 : 40,
             hthresh: -1,
             frequency: 50,
             increment: 100,
@@ -253,12 +253,12 @@ Ext.define('Ext.calendar.view.DayBody', {
         this.getTemplateEventBox(evt);
 
         data._selectorCls = selector;
-        data._colorCls = 'ext-color-' + (evt[M.CalendarId.name] || '0') + (evt._renderAsAllDay ? '-ad': '');
-        data._elId = selector + (evt._weekIndex ? '-' + evt._weekIndex: '');
+        data._colorCls = 'ext-color-' + (evt[M.CalendarId.name] || '0') + (evt._renderAsAllDay ? '-ad' : '');
+        data._elId = selector + (evt._weekIndex ? '-' + evt._weekIndex : '');
         data._isRecurring = evt.Recurrence && evt.Recurrence != '';
         data._isReminder = evt[M.Reminder.name] && evt[M.Reminder.name] != '';
         var title = evt[M.Title.name];
-        data.Title = (evt[M.IsAllDay.name] ? '': Ext.Date.format(evt[M.StartDate.name], 'g:ia ')) + (!title || title.length == 0 ? '(No title)': title);
+        data.Title = (evt[M.IsAllDay.name] ? '' : Ext.Date.format(evt[M.StartDate.name], 'g:ia ')) + (!title || title.length == 0 ? '(No title)' : title);
 
         return Ext.applyIf(data, evt);
     },
@@ -301,7 +301,7 @@ Ext.define('Ext.calendar.view.DayBody', {
         for (; day < this.dayCount; day++) {
             ev = emptyCells = skipped = 0;
             d = this.eventGrid[0][day];
-            ct = d ? d.length: 0;
+            ct = d ? d.length : 0;
 
             for (; ev < ct; ev++) {
                 evt = d[ev];
@@ -336,7 +336,7 @@ Ext.define('Ext.calendar.view.DayBody', {
                 }
                 evt2 = evts[j].data;
                 if (this.isOverlapping(evt, evt2)) {
-                    evt._overlap = evt._overlap == undefined ? 1: evt._overlap + 1;
+                    evt._overlap = evt._overlap == undefined ? 1 : evt._overlap + 1;
                     if (i < j) {
                         if (evt._overcol === undefined) {
                             evt._overcol = 0;

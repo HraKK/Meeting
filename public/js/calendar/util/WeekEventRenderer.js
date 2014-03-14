@@ -29,9 +29,9 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
                 grid = o.eventGrid,
                 dt = Ext.Date.clone(o.viewStart),
                 eventTpl = o.tpl,
-                max = o.maxEventsPerDay != undefined ? o.maxEventsPerDay: 999,
-                weekCount = o.weekCount < 1 ? 6: o.weekCount,
-                dayCount = o.weekCount == 1 ? o.dayCount: 7,
+                max = o.maxEventsPerDay != undefined ? o.maxEventsPerDay : 999,
+                weekCount = o.weekCount < 1 ? 6 : o.weekCount,
+                dayCount = o.weekCount == 1 ? o.dayCount : 7,
                 cellCfg;
 
             for (; w < weekCount; w++) {
@@ -99,8 +99,8 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
                                     item._renderAsAllDay = item[Ext.calendar.data.EventMappings.IsAllDay.name] || evt.isSpanStart;
                                     item.spanLeft = item[Ext.calendar.data.EventMappings.StartDate.name].getTime() < startOfWeek.getTime();
                                     item.spanRight = item[Ext.calendar.data.EventMappings.EndDate.name].getTime() > endOfWeek.getTime();
-                                    item.spanCls = (item.spanLeft ? (item.spanRight ? 'ext-cal-ev-spanboth':
-                                        'ext-cal-ev-spanleft') : (item.spanRight ? 'ext-cal-ev-spanright': ''));
+                                    item.spanCls = (item.spanLeft ? (item.spanRight ? 'ext-cal-ev-spanboth' :
+                                        'ext-cal-ev-spanleft') : (item.spanRight ? 'ext-cal-ev-spanright' : ''));
 
                                     row = this.getEventRow(o.id, w, ev);
                                     cellCfg = {

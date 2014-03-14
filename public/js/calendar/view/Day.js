@@ -54,7 +54,7 @@ Ext.define('Ext.calendar.view.Day', {
     dayCount: 1,
 
     // private
-    initComponent : function(){
+    initComponent: function() {
         // rendering more than 7 days per view is not supported
         this.dayCount = this.dayCount > 7 ? 7 : this.dayCount;
 
@@ -67,12 +67,12 @@ Ext.define('Ext.calendar.view.Day', {
 
         var header = Ext.applyIf({
             xtype: 'dayheaderview',
-            id: this.id+'-hd'
+            id: this.id + '-hd'
         }, cfg);
 
         var body = Ext.applyIf({
             xtype: 'daybodyview',
-            id: this.id+'-bd'
+            id: this.id + '-bd'
         }, cfg);
 
         this.items = [header, body];
@@ -82,26 +82,26 @@ Ext.define('Ext.calendar.view.Day', {
     },
 
     // private
-    afterRender : function(){
+    afterRender: function() {
         this.callParent(arguments);
 
-        this.header = Ext.getCmp(this.id+'-hd');
-        this.body = Ext.getCmp(this.id+'-bd');
+        this.header = Ext.getCmp(this.id + '-hd');
+        this.body = Ext.getCmp(this.id + '-bd');
         this.body.on('eventsrendered', this.forceSize, this);
     },
 
     // private
-    refresh : function(){
+    refresh: function() {
         this.header.refresh();
         this.body.refresh();
     },
 
     // private
-    forceSize: function(){
+    forceSize: function() {
         // The defer call is mainly for good ol' IE, but it doesn't hurt in
         // general to make sure that the window resize is good and done first
         // so that we can properly calculate sizes.
-        Ext.defer(function(){
+        Ext.defer(function() {
             var ct = this.el.up('.x-panel-body'),
                 hd = this.el.down('.ext-cal-day-header'),
                 h = ct.getHeight() - hd.getHeight();
@@ -111,13 +111,13 @@ Ext.define('Ext.calendar.view.Day', {
     },
 
     // private
-    onResize : function() {
+    onResize: function() {
         this.callParent(arguments);
         this.forceSize();
     },
 
     // private
-    getViewBounds : function(){
+    getViewBounds: function() {
         return this.header.getViewBounds();
     },
 
@@ -127,7 +127,7 @@ Ext.define('Ext.calendar.view.Day', {
      * to the user use {@link #getViewBounds}.
      * @return {Date} The start date
      */
-    getStartDate : function(){
+    getStartDate: function() {
         return this.header.getStartDate();
     },
 
@@ -136,13 +136,13 @@ Ext.define('Ext.calendar.view.Day', {
      * earliest and latest dates that match the view requirements and contain the date passed to this function.
      * @param {Date} dt The date used to calculate the new view boundaries
      */
-    setStartDate: function(dt){
+    setStartDate: function(dt) {
         this.header.setStartDate(dt, true);
         this.body.setStartDate(dt, true);
     },
 
     // private
-    renderItems: function(){
+    renderItems: function() {
         this.header.renderItems();
         this.body.renderItems();
     },
@@ -151,7 +151,7 @@ Ext.define('Ext.calendar.view.Day', {
      * Returns true if the view is currently displaying today's date, else false.
      * @return {Boolean} True or false
      */
-    isToday : function(){
+    isToday: function() {
         return this.header.isToday();
     },
 
@@ -160,7 +160,7 @@ Ext.define('Ext.calendar.view.Day', {
      * @param {Date} dt The date to display
      * @return {Date} The new view start date
      */
-    moveTo : function(dt, noRefresh){
+    moveTo: function(dt, noRefresh) {
         this.header.moveTo(dt, noRefresh);
         return this.body.moveTo(dt, noRefresh);
     },
@@ -169,7 +169,7 @@ Ext.define('Ext.calendar.view.Day', {
      * Updates the view to the next consecutive date(s)
      * @return {Date} The new view start date
      */
-    moveNext : function(noRefresh){
+    moveNext: function(noRefresh) {
         this.header.moveNext(noRefresh);
         return this.body.moveNext(noRefresh);
     },
@@ -178,7 +178,7 @@ Ext.define('Ext.calendar.view.Day', {
      * Updates the view to the previous consecutive date(s)
      * @return {Date} The new view start date
      */
-    movePrev : function(noRefresh){
+    movePrev: function(noRefresh) {
         this.header.movePrev(noRefresh);
         return this.body.movePrev(noRefresh);
     },
@@ -188,7 +188,7 @@ Ext.define('Ext.calendar.view.Day', {
      * @param {Number} value The number of days (positive or negative) by which to shift the view
      * @return {Date} The new view start date
      */
-    moveDays : function(value, noRefresh){
+    moveDays: function(value, noRefresh) {
         this.header.moveDays(value, noRefresh);
         return this.body.moveDays(value, noRefresh);
     },
@@ -197,7 +197,7 @@ Ext.define('Ext.calendar.view.Day', {
      * Updates the view to show today
      * @return {Date} Today's date
      */
-    moveToday : function(noRefresh){
+    moveToday: function(noRefresh) {
         this.header.moveToday(noRefresh);
         return this.body.moveToday(noRefresh);
     }

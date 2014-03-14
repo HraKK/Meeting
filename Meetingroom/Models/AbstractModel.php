@@ -2,7 +2,7 @@
 
 namespace Meetingroom\Models;
 
-class AbstractModel extends \Phalcon\Mvc\Model
+abstract class AbstractModel extends \Phalcon\Mvc\Model
 {
     protected  $db;
     

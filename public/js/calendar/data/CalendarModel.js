@@ -15,7 +15,7 @@ Ext.define('Ext.calendar.data.CalendarModel', {
              * @static
              * @return {Function} The updated CalendarRecord constructor function
              */
-            reconfigure: function(){
+            reconfigure: function() {
                 var Data = Ext.calendar.data,
                     Mappings = Data.CalendarMappings,
                     proto = Data.CalendarModel.prototype,
@@ -25,13 +25,13 @@ Ext.define('Ext.calendar.data.CalendarModel', {
                 // is used elsewhere in the data package to match records on CRUD actions:
                 proto.idProperty = Mappings.CalendarId.name || 'id';
 
-                for(prop in Mappings){
-                    if(Mappings.hasOwnProperty(prop)){
+                for (prop in Mappings) {
+                    if (Mappings.hasOwnProperty(prop)) {
                         fields.push(Mappings[prop]);
                     }
                 }
                 proto.fields.clear();
-                for(var i = 0, len = fields.length; i < len; i++){
+                for (var i = 0, len = fields.length; i < len; i++) {
                     proto.fields.add(Ext.create('Ext.data.Field', fields[i]));
                 }
                 return Data.CalendarModel;

@@ -31,10 +31,12 @@ Ext.define('Ext.calendar.data.MemoryCalendarStore', {
         var me = this,
             calendarData = Ext.calendar.data;
 
-        me.sorters = me.sorters || [{
-            property: calendarData.CalendarMappings.Title.name,
-            direction: 'ASC'
-        }];
+        me.sorters = me.sorters || [
+            {
+                property: calendarData.CalendarMappings.Title.name,
+                direction: 'ASC'
+            }
+        ];
 
         me.idProperty = me.idProperty || calendarData.CalendarMappings.CalendarId.name || 'id';
 

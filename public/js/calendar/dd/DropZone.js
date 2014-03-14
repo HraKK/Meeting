@@ -21,12 +21,12 @@ Ext.define('Ext.calendar.dd.DropZone', {
             y = e.getPageY() - dragOffset,
             d = this.view.getDayAt(e.getPageX(), y);
 
-        return d.el ? d: null;
+        return d.el ? d : null;
     },
 
     onNodeOver: function(n, dd, e, data) {
         var D = Ext.calendar.util.Date,
-            start = data.type == 'eventdrag' ? n.date: D.min(data.start, n.date),
+            start = data.type == 'eventdrag' ? n.date : D.min(data.start, n.date),
             end = data.type == 'eventdrag' ? D.add(n.date, {days: D.diffDays(data.eventStart, data.eventEnd)}) :
                 D.max(data.start, n.date);
 
@@ -39,7 +39,7 @@ Ext.define('Ext.calendar.dd.DropZone', {
             if (D.diffDays(start, end) > 0) {
                 range += '-' + Ext.Date.format(end, 'n/j');
             }
-            var msg = Ext.util.Format.format(data.type == 'eventdrag' ? this.moveText: this.createText, range);
+            var msg = Ext.util.Format.format(data.type == 'eventdrag' ? this.moveText : this.createText, range);
             data.proxy.updateMsg(msg);
         }
         return this.dropAllowed;
@@ -63,7 +63,7 @@ Ext.define('Ext.calendar.dd.DropZone', {
             }
         );
 
-        while (i++<cnt) {
+        while (i++ < cnt) {
             var dayEl = this.view.getDayEl(dt);
 
             // if the date is not in the current view ignore it (this

@@ -11,9 +11,10 @@ class UserController extends \Phalcon\Mvc\Controller
     
     public function loadAction($username) 
     {
-        $userFactory = new \Meetingroom\Entities\UserFactory();
-        $user = $userFactory->loadUser($username);
+        $userFactory = new \Meetingroom\Entities\User\UserFactory();
+        $user = $userFactory->getUser($username);
         var_dump($user->getId());
+        exit;
     }
 
 
@@ -31,7 +32,7 @@ class UserController extends \Phalcon\Mvc\Controller
         $acl= $this->getDI()->get('acl');
 
         //test
-        if ($acl->isAllowed("Guest", "User", "test")) {
+        if ($acl->isAllowed("Users", "User", "test")) {
             echo "Access granted!";
         } else {
             echo "Access denied :(";

@@ -40,12 +40,12 @@ Ext.define('Ext.calendar.util.Date', {
 
     // private helper fn
     maxOrMin: function(max) {
-        var dt = (max ? 0: Number.MAX_VALUE),
+        var dt = (max ? 0 : Number.MAX_VALUE),
             i = 0,
             args = arguments[1],
             ln = args.length;
         for (; i < ln; i++) {
-            dt = Math[max ? 'max': 'min'](dt, args[i].getTime());
+            dt = Math[max ? 'max' : 'min'](dt, args[i].getTime());
         }
         return new Date(dt);
     },
@@ -97,7 +97,7 @@ Ext.define('Ext.calendar.util.Date', {
      * date addition first, then clear the time value of the final date before returning it.
      * @return {Date} A new date instance containing the resulting date/time value
      */
-    add : function(dt, o) {
+    add: function(dt, o) {
         if (!o) {
             return dt;
         }

@@ -2,14 +2,11 @@
 
 namespace Meetingroom\Entities;
 
-class User extends AbstractEntity implements UserInterface
+class User extends \Meetingroom\Entities\AbstractEntity implements \Meetingroom\Entities\User\UserInterface
 {
-    public function __construct() 
-    {
-        parent::__construct();
-    }
+    protected $id = null;
     
-    public function load($username) 
+    public function init($username) 
     {
         $model = new \Meetingroom\Models\UserModel();
         $this->id = $model->getId($username);
@@ -19,5 +16,10 @@ class User extends AbstractEntity implements UserInterface
     public function getId() 
     {
         return $this->id;
+    }
+    
+    public function getRole() 
+    {
+        return 'ROLE_USER';
     }
 }

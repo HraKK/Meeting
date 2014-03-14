@@ -2,12 +2,12 @@
 
 namespace Meetingroom\Entities;
 
-class AbstractEntity
+abstract class AbstractEntity
 {
-    protected $id = NULL;
+//    public function __construct() 
+//    {
+//        $this->init();
+//    }
     
-    public function __construct() 
-    {
-        
-    }
+    abstract public function init($username);
 }
