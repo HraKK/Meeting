@@ -58,16 +58,16 @@ Ext.define('Ext.calendar.view.DayHeader', {
     },
 
     // private
-    recalcHeaderBox : function(){
+    recalcHeaderBox: function() {
         var tbl = this.el.down('.ext-cal-evt-tbl'),
             h = tbl.getHeight();
 
-        this.el.setHeight(h+7);
+        this.el.setHeight(h + 7);
 
         // These should be auto-height, but since that does not work reliably
         // across browser / doc type, we have to size them manually
-        this.el.down('.ext-cal-hd-ad-inner').setHeight(h+5);
-        this.el.down('.ext-cal-bg-tbl').setHeight(h+5);
+        this.el.down('.ext-cal-hd-ad-inner').setHeight(h + 5);
+        this.el.down('.ext-cal-bg-tbl').setHeight(h + 5);
     },
 
     // private
@@ -77,7 +77,7 @@ Ext.define('Ext.calendar.view.DayHeader', {
 
     // private
     movePrev: function(noRefresh) {
-        return this.moveDays( - this.dayCount, noRefresh);
+        return this.moveDays(-this.dayCount, noRefresh);
     },
 
     // private

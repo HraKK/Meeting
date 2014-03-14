@@ -15,7 +15,7 @@ Ext.define('Ext.calendar.template.DayBody', {
         'Ext.calendar.util.Date'
     ],
 
-    constructor: function(config){
+    constructor: function(config) {
 
         Ext.apply(this, config);
 
@@ -58,7 +58,7 @@ Ext.define('Ext.calendar.template.DayBody', {
     },
 
     // private
-    applyTemplate : function(o){
+    applyTemplate: function(o) {
         this.today = Ext.calendar.util.Date.today();
         this.dayCount = this.dayCount || 1;
 
@@ -67,14 +67,14 @@ Ext.define('Ext.calendar.template.DayBody', {
             dt = Ext.Date.clone(o.viewStart),
             times = [];
 
-        for(; i<this.dayCount; i++){
+        for (; i < this.dayCount; i++) {
             days[i] = Ext.calendar.util.Date.add(dt, {days: i});
         }
 
         // use a fixed DST-safe date so times don't get skipped on DST boundaries
         dt = Ext.Date.clearTime(new Date('5/26/1972'));
 
-        for(i=0; i<24; i++){
+        for (i = 0; i < 24; i++) {
             times.push(Ext.Date.format(dt, 'ga'));
             dt = Ext.calendar.util.Date.add(dt, {hours: 1});
         }

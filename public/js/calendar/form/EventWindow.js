@@ -29,22 +29,24 @@ Ext.define('Ext.calendar.form.EventWindow', {
             bodyStyle: 'background:transparent;padding:5px 10px 10px;',
             bodyBorder: false,
             border: false,
-            items: [{
-                itemId: 'title',
-                name: Ext.calendar.data.EventMappings.Title.name,
-                fieldLabel: 'Title',
-                xtype: 'textfield',
-                allowBlank: false,
-                emptyText: 'Event Title',
-                anchor: '100%'
-            },
+            items: [
+                {
+                    itemId: 'title',
+                    name: Ext.calendar.data.EventMappings.Title.name,
+                    fieldLabel: 'Title',
+                    xtype: 'textfield',
+                    allowBlank: false,
+                    emptyText: 'Event Title',
+                    anchor: '100%'
+                },
                 {
                     xtype: 'daterangefield',
                     itemId: 'date-range',
                     name: 'dates',
                     anchor: '100%',
                     fieldLabel: 'When'
-                }]
+                }
+            ]
         };
 
         if (config.calendarStore) {
@@ -80,10 +82,11 @@ Ext.define('Ext.calendar.form.EventWindow', {
                     this.onCancel();
                 },
 
-                fbar: [{
-                    xtype: 'tbtext',
-                    text: '<a href="#" id="tblink">Edit Details...</a>'
-                },
+                fbar: [
+                    {
+                        xtype: 'tbtext',
+                        text: '<a href="#" id="tblink">Edit Details...</a>'
+                    },
                     '->',
                     {
                         itemId: 'delete-btn',
@@ -105,7 +108,8 @@ Ext.define('Ext.calendar.form.EventWindow', {
                         disabled: false,
                         handler: this.onCancel,
                         scope: this
-                    }],
+                    }
+                ],
                 items: formPanelCfg
             },
             config)]);
@@ -177,7 +181,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
     },
 
     // private
-    onEditDetailsClick: function(e){
+    onEditDetailsClick: function(e) {
         e.stopEvent();
         this.updateRecord(this.activeRecord, true);
         this.fireEvent('editdetails', this, this.activeRecord, this.animateTarget);
@@ -195,14 +199,14 @@ Ext.define('Ext.calendar.form.EventWindow', {
     show: function(o, animateTarget) {
         // Work around the CSS day cell height hack needed for initial render in IE8/strict:
         var me = this,
-            anim = (Ext.isIE8 && Ext.isStrict) ? null: animateTarget,
+            anim = (Ext.isIE8 && Ext.isStrict) ? null : animateTarget,
             M = Ext.calendar.data.EventMappings;
 
-        this.callParent([anim, function(){
+        this.callParent([anim, function() {
             me.titleField.focus(true);
         }]);
 
-        this.deleteButton[o.data && o.data[M.EventId.name] ? 'show': 'hide']();
+        this.deleteButton[o.data && o.data[M.EventId.name] ? 'show' : 'hide']();
 
         var rec,
             f = this.formPanel.form;
@@ -294,11 +298,11 @@ Ext.define('Ext.calendar.form.EventWindow', {
     },
 
     // private
-    onSave: function(){
-        if(!this.formPanel.form.isValid()){
+    onSave: function() {
+        if (!this.formPanel.form.isValid()) {
             return;
         }
-        if(!this.updateRecord(this.activeRecord)){
+        if (!this.updateRecord(this.activeRecord)) {
             this.onCancel();
             return;
         }
@@ -309,7 +313,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
     },
 
     // private
-    onDelete: function(){
+    onDelete: function() {
         this.fireEvent('eventdelete', this, this.activeRecord, this.animateTarget);
     }
 });
