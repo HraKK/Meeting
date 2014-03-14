@@ -15,6 +15,17 @@ class LDAP implements LDAPInterface
      * @var connection to LDAP
      */
     protected $connection;
+    protected $filter_str = 'ou=people,dc=syneforge,dc=com';
+    protected $_di;
+
+    /**
+     * @param \Phalcon\DI\FactoryDefault $di
+     */
+    public function __construct($di)
+    {
+        $this->_di = $di;
+    }
+
 
     /**
      * Create connection to LDAP server
@@ -42,9 +53,12 @@ class LDAP implements LDAPInterface
      */
     public function getConnection()
     {
+
         if (null == $this->connection) {
-            $this->connect('ldap.syneforge.com', 389);
+            $config = $this->_di->get('config')->LDAP;
+            $this->connect($config->host, $config->port);
         }
+
         return $this->connection;
     }
 
@@ -58,7 +72,7 @@ class LDAP implements LDAPInterface
      */
     public function checkAccess($nickname, $password)
     {
-        return ldap_bind($this->getConnection(), "uid=" . $nickname . ",ou=people,dc=syneforge,dc=com", $password);
+        return ldap_bind($this->getConnection(), "uid=" . $nickname . "," . $this->filter_str, $password);
     }
 
 
@@ -71,7 +85,7 @@ class LDAP implements LDAPInterface
     public function searchByNickname($nickname)
     {
 
-        $searchResult = ldap_search($this->getConnection(), "ou=people,dc=syneforge,dc=com", "uid=" . $nickname);
+        $searchResult = ldap_search($this->getConnection(), $this->filter_str, "uid=" . $nickname);
         $data = ldap_get_entries($this->getConnection(), $searchResult);
 
         $name = $data[0]["cn"][0];
@@ -107,21 +121,15 @@ class LDAP implements LDAPInterface
         if (!$nickname || !$password) {
             return false;
         }
-        try {
+        $access = $this->checkAccess($nickname, $password);
 
-            $access = $this->checkAccess($nickname, $password);
-
-            if (FALSE == $access) {
-                return FALSE;
-            }
-
-            $data = $this->searchByNickname($nickname);
-
-            return $data;
-
-        } catch (Meetingroom\Service\LDAP\LDAPException $e) {
-            throw $e;
+        if (false == $access) {
+            return false;
         }
+
+        $data = $this->searchByNickname($nickname);
+
+        return $data;
     }
 
 }

@@ -25,12 +25,10 @@ class LDAPUser implements LDAPUserInterface
      */
     public function __construct($nickname, $name, $email, $position)
     {
-
         $this->nickname = $nickname;
         $this->name = $name;
         $this->email = $email;
         $this->position = $position;
-
     }
 
     /**
@@ -40,9 +38,7 @@ class LDAPUser implements LDAPUserInterface
      */
     public function getName()
     {
-
         return $this->name;
-
     }
 
 
@@ -53,9 +49,7 @@ class LDAPUser implements LDAPUserInterface
      */
     public function getNickname()
     {
-
         return $this->nickname;
-
     }
 
 
@@ -66,9 +60,7 @@ class LDAPUser implements LDAPUserInterface
      */
     public function getEmail()
     {
-
         return $this->email;
-
     }
 
 
@@ -79,9 +71,7 @@ class LDAPUser implements LDAPUserInterface
      */
     public function getPosition()
     {
-
         return $this->position;
-
     }
 
 
