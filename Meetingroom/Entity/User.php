@@ -2,8 +2,6 @@
 
 namespace Meetingroom\Entity;
 
-use \Meetingroom\Entity\Role\HasRoleInterface;
-
 class User extends \Meetingroom\Entity\AbstractEntity implements \Meetingroom\Entity\User\UserInterface
 {
     protected $id = null;
@@ -19,10 +17,4 @@ class User extends \Meetingroom\Entity\AbstractEntity implements \Meetingroom\En
     {
         return $this->id;
     }
-
-    public function getRole(HasRoleInterface $obj)
-    {
-        return $obj->userRole($this);
-    }
-
 }

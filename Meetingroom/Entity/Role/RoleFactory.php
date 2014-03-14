@@ -7,11 +7,8 @@ use \Meetingroom\Entity\Role\HasRoleInterface;
 
 class RoleFactory
 {
-//    public function getRole(UserInterface $user, HasRoleInterface $obj)
-//    {
-//        $model = new \Meetingroom\Model\RoleModel();
-//        $userId = $model->getIdByUsername($username);
-//
-//        return $role;
-//    }
+    public function getRole(UserInterface $user, HasRoleInterface $obj)
+    {
+        return $obj->userRole($user);
+    }
 }

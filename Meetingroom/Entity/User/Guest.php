@@ -15,10 +15,4 @@ class Guest extends \Meetingroom\Entity\AbstractEntity implements \Meetingroom\E
     {
         return $this->id;
     }
-
-    public function getRole()
-    {
-        return 'ROLE_GUEST';
-    }
-
 }
