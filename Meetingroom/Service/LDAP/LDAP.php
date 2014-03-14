@@ -51,7 +51,7 @@ class LDAP implements LDAPInterface
      * @throws Exception\LDAPException
      * @return resource
      */
-    public function getConnection()
+    protected function getConnection()
     {
 
         if (null == $this->connection) {
@@ -70,7 +70,7 @@ class LDAP implements LDAPInterface
      * @param string $password
      * @return boolean
      */
-    public function checkAccess($nickname, $password)
+    protected function checkAccess($nickname, $password)
     {
         return ldap_bind($this->getConnection(), "uid=" . $nickname . "," . $this->filter_str, $password);
     }
@@ -82,7 +82,7 @@ class LDAP implements LDAPInterface
      * @param string $nickname
      * @return array
      */
-    public function searchByNickname($nickname)
+    protected function searchByNickname($nickname)
     {
 
         $searchResult = ldap_search($this->getConnection(), $this->filter_str, "uid=" . $nickname);
@@ -101,7 +101,7 @@ class LDAP implements LDAPInterface
      *
      * @return boolean
      */
-    public function close()
+    protected function close()
     {
         return ldap_close($this->getConnection());
     }
@@ -128,6 +128,7 @@ class LDAP implements LDAPInterface
         }
 
         $data = $this->searchByNickname($nickname);
+        $this->close();
 
         return $data;
     }
