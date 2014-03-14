@@ -8,9 +8,7 @@ class UserModel extends AbstractModel
     {
         $result = $this->db->query("SELECT id FROM users WHERE name = ? LIMIT 1", [$username]);
         $result->setFetchMode(\Phalcon\Db::FETCH_OBJ);
-        $userObj = $result->fetch();
-
-        return (is_object($userObj)) ? $userObj->id : false;
+        return $result->numRows() === 0 ? false : (int) $result->fetch()->id;
     }
 
     /**

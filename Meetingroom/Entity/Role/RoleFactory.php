@@ -3,12 +3,16 @@
 namespace Meetingroom\Entity\Role;
 
 use \Meetingroom\Entity\User\UserInterface;
-use \Meetingroom\Entity\Role\HasRoleInterface;
+use \Meetingroom\Entity\OwnableInterface;
 
 class RoleFactory
 {
-    public function getRole(UserInterface $user, HasRoleInterface $obj)
+    public function getRole(UserInterface $user, OwnableInterface $obj)
     {
-        return $obj->userRole($user);
+        if($user->getId() === null) {
+            return Group::GUEST;
+        }
+        
+        return ($obj->ownerId() === $user->getId()) ? Group::OWNER : Group::USER;
     }
 }
