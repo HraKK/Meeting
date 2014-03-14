@@ -88,9 +88,9 @@ class LDAP implements LDAPInterface
         $searchResult = ldap_search($this->getConnection(), $this->filter_str, "uid=" . $nickname);
         $data = ldap_get_entries($this->getConnection(), $searchResult);
 
-        $name = $data[0]["cn"][0];
-        $email = $data[0]["mail"][0];
-        $position = $data[0]["title"][0];
+        $name = (isset($data[0]["cn"][0])) ? $data[0]["cn"][0] : '';
+        $email = (isset($data[0]["mail"][0])) ? $data[0]["mail"][0] : '';
+        $position = (isset($data[0]["title"][0])) ? $data[0]["title"][0] : '';
 
         return new LDAPUser($nickname, $name, $email, $position);
     }
