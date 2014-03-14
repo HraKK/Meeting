@@ -10,9 +10,10 @@ class UserFactory
         $userId = $model->getIdByUsername($username);
 
         if ($userId === false) {
-            $user = new \Meetingroom\Entity\User\Guest();
+            $user = new Guest();
         } else {
-            $user = new \Meetingroom\Entity\User($username);
+            $user = new Authorized();
+            $user->load($username);
         }
 
         return $user;
