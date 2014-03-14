@@ -23,4 +23,22 @@ class EventModel extends AbstractModel
         $result->setFetchMode(\Phalcon\Db::FETCH_OBJ);
         return $result->numRows() === 0 ? false : $result->fetch()->user_id;
     }
+    
+    public function getActiveEvents() 
+    {
+        $result = $this->db->query("SELECT * FROM events");
+        $result->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
+        
+        $list = [];
+        
+        if($result->numRows() === 0) {
+            return $list;
+        }
+        
+        while ($event = $result->fetch()) {
+            $list[$event['id']] = $event;
+        }
+        
+        return $list;
+    }
 }

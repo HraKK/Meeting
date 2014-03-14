@@ -796,13 +796,7 @@ td.ext-cal-dtitle-today div {
 .ext-color-1-x dl,
 .ext-color-1-x .ext-cal-evb,
 .room-tab-icon-1 {
-    background: #ffdd4b;
-    background: -moz-linear-gradient(top, #ffdd4b 0%, #ffd418 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #ffdd4b), color-stop(100%, #ffd418));
-    background: -webkit-linear-gradient(top, #ffdd4b 0%, #ffd418 100%);
-    background: -o-linear-gradient(top, #ffdd4b 0%, #ffd418 100%);
-    background: -ms-linear-gradient(top, #ffdd4b 0%, #ffd418 100%);
-    background: linear-gradient(to bottom, #ffdd4b 0%, #ffd418 100%);
+    background: #ffd418;
 }
 
 .ext-color-2,
@@ -819,13 +813,7 @@ td.ext-cal-dtitle-today div {
 .ext-color-2-x dl,
 .ext-color-2-x .ext-cal-evb,
 .room-tab-icon-2 {
-    background: #7cff72;
-    background: -moz-linear-gradient(top, #7cff72 0%, #00d728 100%);
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #7cff72), color-stop(100%, #00d728));
-    background: -webkit-linear-gradient(top, #7cff72 0%, #00d728 100%);
-    background: -o-linear-gradient(top, #7cff72 0%, #00d728 100%);
-    background: -ms-linear-gradient(top, #7cff72 0%, #00d728 100%);
-    background: linear-gradient(to bottom, #7cff72 0%, #00d728 100%);
+    background: #00d728;
 }
 
 .ext-color-3,

@@ -25,7 +25,55 @@ Ext.define('Ext.calendar.App', {
         ],
 
         constructor: function() {
+
             var scope = this;
+
+            // Fix ExtJS 4.2 tooltip issue
+            if(Ext.isIE10) {
+                Ext.supports.Direct2DBug = true;
+            }
+
+            if(Ext.isChrome) {
+                Ext.define('Ext.layout.container.AutoTip', {
+                    alias: ['layout.autotip'],
+                    extend: 'Ext.layout.container.Container',
+
+                    childEls: [
+                        'clearEl'
+                    ],
+
+                    renderTpl: [
+                        '{%this.renderBody(out,values)%}',
+
+                        '<div id="{ownerId}-clearEl" class="', Ext.baseCSSPrefix, 'clear" role="presentation"></div>'
+                    ],
+
+                    calculate: function(ownerContext) {
+                        var me = this,
+                            containerSize;
+
+                        if (!ownerContext.hasDomProp('containerChildrenDone')) {
+                            me.done = false;
+                        } else {
+
+                            containerSize = me.getContainerSize(ownerContext);
+                            if (!containerSize.gotAll) {
+                                me.done = false;
+                            }
+
+                            me.calculateContentSize(ownerContext);
+                        }
+                    }
+                });
+
+                Ext.override(Ext.tip.Tip, {
+                    layout: {
+                        type: 'autotip'
+                    }
+                });
+            }
+
+            Ext.QuickTips.init();
 
             // Minor workaround for OSX Lion scrollbars
             this.checkScrollOffset();
@@ -104,9 +152,9 @@ Ext.define('Ext.calendar.App', {
 
                                 // fill tab
                                 scope.calendarStore.each(function(record, index) {
-                                    console.log(record);
                                     tabpanel.add({
                                         title: record.get('Title'),
+                                        tooltip: record.get('Description'),
                                         iconCls: 'room-tab-icon room-tab-icon-' + record.get('CalendarId')
                                     });
                                 });

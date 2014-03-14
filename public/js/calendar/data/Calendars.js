@@ -6,27 +6,27 @@ Ext.define('Ext.calendar.data.Calendars', {
                     {
                         id: '1',
                         title: 'Yellow Room',
-                        description: 'Meeting room in the building 2c.'
+                        desc: 'Meeting room in the building 2c.'
                     },
                     {
                         id: '2',
                         title: 'Green Room',
-                        description: 'Main meeting room on the third floor.'
+                        desc: 'Main meeting room on the third floor.'
                     },
                     {
                         id: '3',
-                        title: 'Small Hall Room #1',
-                        description: 'Small meeting room in the hall.'
+                        title: 'Lobby Small Room #1',
+                        desc: 'Small meeting room in the lobby.'
                     },
                     {
                         id: '4',
-                        title: 'Small Hall Room #2',
-                        description: 'Small meeting room in the hall.'
+                        title: 'Lobby Small Room #2',
+                        desc: 'Small meeting room in the lobby.'
                     },
                     {
                         id: '5',
-                        title: 'Big Hall Room',
-                        description: 'Big meeting room in the hall.'
+                        title: 'Lobby Big Room',
+                        desc: 'Big meeting room in the lobby.'
                     }
                 ]
             };
