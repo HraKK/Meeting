@@ -1,10 +1,9 @@
 <?php
 
-namespace Meetingroom\Controllers;
+namespace Meetingroom\Controller;
 
 class EventController extends AbstractController
 {
-
     public function indexAction()
     {
         echo "<h1>Events</h1>";

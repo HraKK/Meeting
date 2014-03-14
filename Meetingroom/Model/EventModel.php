@@ -1,8 +1,8 @@
 <?php
 
-namespace Meetingroom\Models;
+namespace Meetingroom\Model;
 
 class RoomModel extends AbstractModel
 {
-
+    
 }
