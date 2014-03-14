@@ -1,35 +1,35 @@
 <?php
-namespace Meetingroom\Services\Ldap;
+namespace Meetingroom\Services\LDAP;
 
 /**
- * Class Ldap
+ * Class LDAP
  *
  * @author Denis Maximovskikh <denkin@syneforge.com.ua>
  * @package Meetingroom\Services
  */
-class Ldap implements LdapInterface
+class LDAP implements LDAPInterface
 {
 
 
     /**
-     * @var connection to ldap
+     * @var connection to LDAP
      */
-    private $connection;
+    protected  $connection;
 
     /**
-     * Create connection to ldap server
+     * Create connection to LDAP server
      *
      * @param string $host
      * @param int $port
-     * @throws Meetingroom\Services\Ldap\LDAPException
+     * @throws Exception\LDAPException
      * @return resource|false connection resource
      */
-    public function connect($host = "ldap.syneforge.com", $port = 389)
+    protected function connect($host, $port)
     {
-        $this->connection = ldap_connect($host,$port);
+        $this->connection = ldap_connect($host, $port);
         ldap_set_option($this->connection, LDAP_OPT_PROTOCOL_VERSION, 3);
-        if(false==$this->connection){
-            throw new Meetingroom\Services\Ldap\LDAPException('Can\'t connect to LDAP server');
+        if (false == $this->connection) {
+            throw new Exception\LDAPException('Can\'t connect to LDAP server');
         }
     }
 
@@ -37,15 +37,15 @@ class Ldap implements LdapInterface
     /**
      * Return established connection
      *
-     * @throws Meetingroom\Services\Ldap\LDAPException
+     * @throws Meetingroom\Services\LDAP\LDAPException
      * @return resource
      */
     public function getConnection()
     {
-        if(!is_resource($this->connection)){
-            try{
-                $this->connect();
-            }catch (Meetingroom\Services\Ldap\LDAPException $e){
+        if (!is_resource($this->connection)) {
+            try {
+                $this->connect('ldap.syneforge.com', 389);
+            } catch (Exception\LDAPException $e) {
                 throw $e;
             }
         }
@@ -56,14 +56,13 @@ class Ldap implements LdapInterface
     /**
      * Method check if user can access to ldap server
      *
-     * @param resource $ldap_connection
      * @param string $nickname
      * @param string $password
      * @return boolean
      */
-    public function checkAccess($ldap_connection, $nickname, $password)
+    public function checkAccess($nickname, $password)
     {
-        return ldap_bind($ldap_connection,"uid=" . $nickname . ",ou=people,dc=syneforge,dc=com",$password);
+        return ldap_bind($this->getConnection(), "uid=" . $nickname . ",ou=people,dc=syneforge,dc=com", $password);
     }
 
 
@@ -76,13 +75,13 @@ class Ldap implements LdapInterface
     public function searchByNickname($nickname)
     {
 
-        $searchResult=ldap_search($this->getConnection(), "ou=people,dc=syneforge,dc=com", "uid=" . $nickname);
+        $searchResult = ldap_search($this->getConnection(), "ou=people,dc=syneforge,dc=com", "uid=" . $nickname);
         $data = ldap_get_entries($this->getConnection(), $searchResult);
 
         return [
-            'cn'=>$data[0]["cn"][0],
-            'email'=>$data[0]["mail"][0],
-            'position'=>$data[0]["title"][0],
+            'cn' => $data[0]["cn"][0],
+            'email' => $data[0]["mail"][0],
+            'position' => $data[0]["title"][0],
         ];
     }
 
@@ -107,24 +106,25 @@ class Ldap implements LdapInterface
      * @throws \Exception if ldap connection problem
      * @return array|false user info
      */
-    public function getUserInfo($nickname,$password)
+    public function getUserInfo($nickname, $password)
     {
-        if(!$nickname || !$password){
+        if (!$nickname || !$password) {
             return false;
         }
-        try{
-            $authorization=ldap_bind($this->getConnection(),"uid=" . $nickname . ",ou=people,dc=syneforge,dc=com",$password);
+        try {
 
-            if(FALSE==$authorization){
+            $access = $this->checkAccess($nickname, $password);
+
+
+            if (FALSE == $access) {
                 return FALSE;
             }
 
             $data = $this->searchByNickname($nickname);
-            $this->close();
 
             return $data;
 
-        }catch (Meetingroom\Services\Ldap\LDAPException $e){
+        } catch (Meetingroom\Services\LDAP\LDAPException $e) {
             throw $e;
         }
     }
