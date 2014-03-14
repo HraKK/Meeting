@@ -2,12 +2,12 @@
 
 namespace Meetingroom\Entity\Event;
 
-use Meetingroom\Entity\OwnableInterface;
+use \Meetingroom\Entity\OwnableInterface;
+use \Meetingroom\Entity\Exception\FieldNotExistException;
 
 class Event extends \Meetingroom\Entity\AbstractEntity implements OwnableInterface
 {
     protected $loaded = false;
-    
     protected $id = null;
     protected $roomId = null;
     protected $dateStart = null;
@@ -17,7 +17,6 @@ class Event extends \Meetingroom\Entity\AbstractEntity implements OwnableInterfa
     protected $desription = null;
     protected $repeatable = null;
     protected $attendees = null;
-    
     protected $fields = [
         'id' => 'id',
         'rooom_id' => 'roomId',
@@ -40,16 +39,37 @@ class Event extends \Meetingroom\Entity\AbstractEntity implements OwnableInterfa
         return $this;
     }
 
+    public function __get($name)
+    {
+        $this->fieldExist($name);
+
+        if ($this->loaded === false) {
+            $this->load();
+        }
+
+        return $this->$name;
+    }
+
+    public function __set($name, $value)
+    {
+        $this->fieldExist($name);
+        $this->$name = $value;
+        return $this;
+    }
+
+    public function fieldExist($name)
+    {
+        $map = array_flip($this->fields);
+
+        if (!in_array($name, $map)) {
+            throw new FieldNotExistException(sprintf('Field with name %s not exist in class %s', $name, __CLASS__));
+        }
+    }
+
     protected function load()
     {
         $model = new \Meetingroom\Model\EventModel();
-        $data = $model->getEventData($this->id);
-        if ($data) {
-            $this->loaded = true;
-            $this->userId = $data->user_id;
-        }
-
-        return $this;
+        $this->bind($model->getEventData($this->id));
     }
 
     public function bind($data = [])
@@ -59,19 +79,19 @@ class Event extends \Meetingroom\Entity\AbstractEntity implements OwnableInterfa
         }
 
         $this->loaded = true;
-        
+
         foreach ($this->fields as $db => $map) {
             $this->$map = isset($data[$db]) ? $data[$db] : null;
         }
-        
+
         return $this;
     }
 
-    public function isLoaded() 
+    public function isLoaded()
     {
         return (bool) $this->loaded;
     }
-    
+
     public function ownerId()
     {
         return $this->userId;

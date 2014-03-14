@@ -6,10 +6,21 @@ use \Meetingroom\Entity\Event\Event;
 
 class EventManager
 {
+    protected $eventModel = null;
+    
+    public function getEventModel()
+    {
+        if($this->eventModel === null) {
+           $this->eventModel = new \Meetingroom\Model\EventModel();
+        }
+        
+        return $this->eventModel;
+    }
+    
     public function loadEvents()
     {
-        $model = new \Meetingroom\Model\EventModel();
-        $result = $model->getActiveEvents();
+        
+        $result = $this->getEventModel()->getActiveEvents();
         
         $list = [];
         
