@@ -20,9 +20,10 @@ class UserController extends \Phalcon\Mvc\Controller
     public function testAction()
     {
         echo "<h1>User2!</h1>";
+        $di = $this->getDI();
 
-        //$user = new \Meetingroom\Models\UserModel();
-        $ldap = new \Meetingroom\Service\LDAP\LDAP();
+
+        $ldap = new \Meetingroom\Service\LDAP\LDAP($di);
 
         $LDAPUser = $ldap->getUserInfo('sysgstats', 'pgGZErgMkNXF');
 
@@ -33,7 +34,7 @@ class UserController extends \Phalcon\Mvc\Controller
         print "Position: " . $LDAPUser->getPosition() . "<br />";
 
 
-        $acl = $this->getDI()->get('acl');
+        $acl = $di->get('acl');
 
         //test
         if ($acl->isAllowed("Users", "User", "test")) {

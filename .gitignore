@@ -2,4 +2,6 @@
 /nbproject
 .idea
 /Meetingroom/config.php
+/Meetingroom/config.ini
 /public/.htaccess
+
