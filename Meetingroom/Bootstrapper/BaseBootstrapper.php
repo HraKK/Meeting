@@ -41,14 +41,6 @@ class BaseBootstrapper implements BootstrapperInterface
 
                 $router = new \Phalcon\Mvc\Router();
                 $router->setUriSource(\Phalcon\Mvc\Router::URI_SOURCE_SERVER_REQUEST_URI);
-                $router->add(
-                    "/",
-                    array(
-                        'namespace' => 'Meetingroom\Controller',
-                        'controller' => 'Index',
-                        'action' => 'index',
-                    )
-                );
 
                 $router->add(
                     "/:controller/:action/:params",
@@ -76,7 +68,7 @@ class BaseBootstrapper implements BootstrapperInterface
     {
         $di = $this->di;
         $this->di->set(
-            'mydb_con',
+            'db',
             function () use ($di) {
                 return new \Phalcon\Db\Adapter\Pdo\Postgresql((array)$di->get('config')->db);
             }

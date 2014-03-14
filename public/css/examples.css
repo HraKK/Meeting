@@ -31,7 +31,7 @@ h1 {
 
 #app-header h1 {
     float: left;
-    margin: 8px 5px;
+    margin: 8px 5px 8px 0;
     font-size: 18px;
     font-weight: 300;
     color: #455C6F;
@@ -97,4 +97,35 @@ h1 {
 
 .ext-evt-edit-form .x-header-text {
     color: #555;
+}
+
+.room-tabs .x-header {
+    background-color: transparent;
+}
+
+.room-tabs .x-panel-body {
+    display: none;
+}
+
+.room-tabs .x-tab-bar-body-default-top {
+    padding-bottom: 0;
+}
+
+.room-tab-icon {
+    -webkit-border-radius: 100%;
+    border-radius: 100%;
+}
+
+#app-center_header {
+    background-color: #add2ed;
+}
+
+#app-center_header .x-panel-header-text-container-default {
+    color: #157fcc;
+}
+
+.user-name {
+    overflow: hidden;
+    text-align: right;
+    text-overflow: ellipsis;
 }

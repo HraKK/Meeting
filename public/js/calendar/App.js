@@ -25,6 +25,8 @@ Ext.define('Ext.calendar.App', {
         ],
 
         constructor: function() {
+            var scope = this;
+
             // Minor workaround for OSX Lion scrollbars
             this.checkScrollOffset();
 
@@ -54,6 +56,7 @@ Ext.define('Ext.calendar.App', {
                         region: 'north',
                         height: 40,
                         padding: 0,
+                        border: false,
                         items: [
                             {
                                 xtype: 'container',
@@ -73,6 +76,8 @@ Ext.define('Ext.calendar.App', {
                             },
                             {
                                 xtype: 'tbtext',
+                                width: 172,
+                                cls: 'user-name',
                                 text: 'username'
                             },
                             {
@@ -85,21 +90,45 @@ Ext.define('Ext.calendar.App', {
                         ]
                     },
                     {
+                        xtype: 'tabpanel',
+                        region: 'north',
+                        cls: 'room-tabs',
+                        height: 31,
+                        margin: '-31 192 0 213',
+                        border: false,
+                        bodyStyle: {
+                            border: false
+                        },
+                        listeners: {
+                            afterrender: function(tabpanel) {
+
+                                // fill tab
+                                scope.calendarStore.each(function(record, index) {
+                                    console.log(record);
+                                    tabpanel.add({
+                                        title: record.get('Title'),
+                                        iconCls: 'room-tab-icon room-tab-icon-' + record.get('CalendarId')
+                                    });
+                                });
+
+                                // set main room active
+                                tabpanel.setActiveTab(1);
+
+                            }
+                        }
+                    },
+                    {
                         id: 'app-center',
                         title: '...', // will be updated to the current view's date range
                         region: 'center',
                         layout: 'border',
-                        listeners: {
-                            'afterrender': function() {
-                                Ext.getCmp('app-center').header.addCls('app-center-header');
-                            }
-                        },
+                        border: false,
                         items: [
                             {
                                 xtype: 'container',
-                                id: 'app-west',
                                 region: 'west',
-                                width: 214,
+                                width: 213,
+                                border: false,
                                 items: [
                                     {
                                         xtype: 'datepicker',
@@ -117,12 +146,14 @@ Ext.define('Ext.calendar.App', {
                                     }
                                 ]
                             },
-                            {},
                             {
                                 xtype: 'calendarpanel',
                                 eventStore: this.eventStore,
                                 calendarStore: this.calendarStore,
                                 border: false,
+                                bodyStyle: {
+                                    border: false
+                                },
                                 id: 'app-calendar',
                                 region: 'center',
                                 activeItem: 3, // month view
@@ -137,7 +168,6 @@ Ext.define('Ext.calendar.App', {
                                     'eventclick': {
                                         fn: function(vw, rec, el) {
                                             this.showEditWindow(rec, el);
-                                            this.clearMsg();
                                         },
                                         scope: this
                                     },
@@ -184,7 +214,6 @@ Ext.define('Ext.calendar.App', {
                                                 StartDate: dt,
                                                 IsAllDay: ad
                                             }, el);
-                                            this.clearMsg();
                                         },
                                         scope: this
                                     },
@@ -192,7 +221,6 @@ Ext.define('Ext.calendar.App', {
                                         fn: function(win, dates, onComplete) {
                                             this.showEditWindow(dates);
                                             this.editWin.on('hide', onComplete, this, {single: true});
-                                            this.clearMsg();
                                         },
                                         scope: this
                                     },
@@ -314,11 +342,9 @@ Ext.define('Ext.calendar.App', {
         // This is an application-specific way to communicate CalendarPanel event messages back to the user.
         // This could be replaced with a function to do "toast" style messages, growl messages, etc. This will
         // vary based on application requirements, which is why it's not baked into the CalendarPanel.
-        showMsg: function(msg) {
-            Ext.fly('app-msg').update(msg).removeCls('x-hidden');
-        },
-        clearMsg: function() {
-            Ext.fly('app-msg').update('').addCls('x-hidden');
+        showMsg: function(msg, type) {
+            var msgType = (typeof type == 'undefined') ? 'success' : type;
+            Ext.noty(msg, msgType, 1000)
         },
 
         // OSX Lion introduced dynamic scrollbars that do not take up space in the
@@ -379,4 +405,24 @@ Ext.define('Ext.calendar.App', {
                 this.updateOperation.apply(this, arguments);
             }
         });
+
+        // Included jQuery notification plugin
+        Ext.noty = function(text, type, duration) {
+            noty({
+                text: text,
+                type: type,
+                dismissQueue: true,
+                modal: false,
+                layout: 'topCenter',
+                theme: 'defaultTheme',
+                animation: {
+                    open: {height: 'toggle'},
+                    close: {height: 'toggle'},
+                    easing: 'swing',
+                    speed: 500
+                },
+                timeout: duration || 3000
+            });
+        };
+
     });
