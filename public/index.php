@@ -2,7 +2,6 @@
 
 //print_r($_SERVER['REQUEST_URI'] ); exit;
 try {
-    require_once '../Meetingroom/config.php';
 
     $loader = new \Phalcon\Loader();
 
