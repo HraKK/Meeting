@@ -8,8 +8,14 @@ class RoomManager
     {
 
         $roomModel = new \Meetingroom\Model\RoomModel();
+        $rooms = $roomModel->getAll();
 
-        return $roomModel->getAll();
+        $roomsObj = [];
+        foreach ($rooms as $room) {
+            $roomsObj[] = (new Room())->bind($room);
+        }
+
+        return $roomsObj;
     }
 
 }
