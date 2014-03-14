@@ -8,6 +8,7 @@ use \Meetingroom\Entity\Exception\FieldNotExistException;
 class Event extends \Meetingroom\Entity\AbstractEntity implements OwnableInterface
 {
     protected $loaded = false;
+    protected $eventModel = null;
     protected $id = null;
     protected $roomId = null;
     protected $dateStart = null;
@@ -29,6 +30,16 @@ class Event extends \Meetingroom\Entity\AbstractEntity implements OwnableInterfa
         'attendees' => 'attendees'
     ];
 
+    public function getEventModel()
+    {
+        if ($this->eventModel === null) {
+            $this->eventModel = new \Meetingroom\Model\EventModel();
+        }
+
+        return $this->eventModel;
+    }
+
+    
     public function __construct($id = null)
     {
         $this->id = $id;
@@ -68,8 +79,7 @@ class Event extends \Meetingroom\Entity\AbstractEntity implements OwnableInterfa
 
     protected function load()
     {
-        $model = new \Meetingroom\Model\EventModel();
-        $this->bind($model->getEventData($this->id));
+        $this->bind($this->getEventModel()->getEventData($this->id));
     }
 
     public function bind($data = [])

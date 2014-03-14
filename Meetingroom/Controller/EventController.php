@@ -5,7 +5,7 @@ namespace Meetingroom\Controller;
 use \Meetingroom\Entity\Role\RoleFactory;
 use \Meetingroom\Entity\User\UserFactory;
 use \Meetingroom\Entity\Event\EventManager;
-use \Meetingroom\Entity\Event\Event;
+use \Meetingroom\Entity\Event\EventEntity;
 
 class EventController extends AbstractController
 {
@@ -22,7 +22,7 @@ class EventController extends AbstractController
 
     public function showAction($id = 0)
     {
-        $event = new Event($id);
+        $event = new EventEntity($id);
         $user = (new UserFactory())->getUser('Alex');
         $role = (new RoleFactory())->getRole($user, $event);
         var_dump($role);
