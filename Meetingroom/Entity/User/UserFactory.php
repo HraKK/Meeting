@@ -12,7 +12,7 @@ class UserFactory
         if ($userId === false) {
             $user = new Guest();
         } else {
-            $user = new User();
+            $user = new Authorized();
             $user->load($username);
         }
 

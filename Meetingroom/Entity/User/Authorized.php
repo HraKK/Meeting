@@ -2,7 +2,7 @@
 
 namespace Meetingroom\Entity\User;
 
-class User extends \Meetingroom\Entity\AbstractEntity implements \Meetingroom\Entity\User\UserInterface
+class Authorized extends \Meetingroom\Entity\AbstractEntity implements \Meetingroom\Entity\User\UserInterface
 {
     protected $id = null;
 
