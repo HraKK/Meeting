@@ -12,7 +12,9 @@ class Room extends \Meetingroom\Entity\AbstractEntity
 
     protected $loaded = false;
 
-
+    /**
+     * @param null|integer $id
+     */
     public function __construct($id = null)
     {
         $this->id = $id;
@@ -22,17 +24,34 @@ class Room extends \Meetingroom\Entity\AbstractEntity
     }
 
 
+    public function __get($name)
+    {
+        $this->fieldExist($name);
+
+        if ($this->loaded === false) {
+            $this->load();
+        }
+
+        return $this->$name;
+    }
+
+
     public function bind($data)
     {
         foreach ($data as $field => $value) {
-            if (property_exists(__CLASS__, $field)) {
+            if ($this->fieldExist($field)) {
                 $this->$field = $value;
             } else {
-                throw new \Exception('property not found');
+                throw new \Meetingroom\Entity\Exception\FieldNotExistException(sprintf(
+                    'Field with name %s not exist in class %s',
+                    $field,
+                    __CLASS__
+                ));
             }
         }
         return $this;
     }
+
 
     public function load()
     {
@@ -47,10 +66,15 @@ class Room extends \Meetingroom\Entity\AbstractEntity
         return (bool)$this->loaded;
     }
 
+
+    public function fieldExist($field)
+    {
+        return property_exists(__CLASS__, $field);
+    }
+
+
     public function save()
     {
 
     }
-
-
 }
