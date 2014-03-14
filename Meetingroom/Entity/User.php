@@ -9,7 +9,7 @@ class User extends \Meetingroom\Entity\AbstractEntity implements \Meetingroom\En
     public function __construct($username)
     {
         $model = new \Meetingroom\Model\UserModel();
-        $this->id = $model->getId($username);
+        $this->id = $model->getIdByUsername($username);
         return $this;
     }
 
