@@ -6,38 +6,15 @@ interface LDAPInterface
 {
 
     /**
-     * Return established connection
+     * Method search LDAP user and return full info
      *
-     * @return resource
-     */
-    public function getConnection();
-
-
-    /**
-     * Method check if user can access to ldap server
-     *
-     * @param string $nickname
+     * @param string $nickname ldap nickname
      * @param string $password
-     * @return boolean
-     */
-    public function checkAccess($nickname, $password);
-
-
-    /**
-     * Search user info by nickname
      *
-     * @param string $nickname
-     * @return array
+     * @throws \Exception if ldap connection problem
+     * @return array|false user info
      */
-    public function searchByNickname($nickname);
-
-
-    /**
-     * Closing ldap connection
-     *
-     * @return mixed
-     */
-    public function close();
+    public function getUserInfo($nickname, $password);
 
 
 }
