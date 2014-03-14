@@ -21,4 +21,5 @@ class RoomModel extends AbstractModel
         return $result->fetch();
     }
 
+
 }

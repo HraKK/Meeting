@@ -48,7 +48,7 @@ class UserController extends \Phalcon\Mvc\Controller
         //var_dump($roomManager->getAll());
 
         $room = new \Meetingroom\Entity\Room\Room(1);
-        var_dump($room);
+        var_dump((array)$room);
 
         die();
     }
