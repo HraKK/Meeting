@@ -74,14 +74,18 @@ class Event extends \Meetingroom\Entity\AbstractEntity implements OwnableInterfa
 
     public function bind($data = [])
     {
-        if (sizeof($data) === 0) {
+        if (empty($data)) {
             return $this;
         }
 
         $this->loaded = true;
 
         foreach ($this->fields as $db => $map) {
-            $this->$map = isset($data[$db]) ? $data[$db] : null;
+            if(!isset($data[$db])) {
+                continue;
+            }
+            
+            $this->$map = $data[$db];
         }
 
         return $this;
