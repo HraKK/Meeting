@@ -43,10 +43,8 @@ class EventController extends AbstractController
     
     public function createAction()
     {
-        $model = new EventModel();
-//        $model->create(['rooom_id' => 1, 'user_id' => 3]);
-        
-        $result = $model->read(1);
+        $model = new EventModel(['rooom_id', 'user_id']);
+        $result = $model->read(2);
         
         var_dump($result);
         exit;

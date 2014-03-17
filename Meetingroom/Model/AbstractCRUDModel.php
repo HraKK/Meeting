@@ -5,10 +5,11 @@ namespace Meetingroom\Model;
 abstract class AbstractCRUDModel extends AbstractModel
 {
     protected $table = null;
-    
-    public function create($values = [], $params = null) 
+    protected $fields = [];
+
+    public function create(array $values) 
     {
-        if($this->table === null or empty($values)) {
+        if($this->table === null || empty($values)) {
             return false;
         }
         
@@ -19,23 +20,28 @@ abstract class AbstractCRUDModel extends AbstractModel
         );
     }
     
-    public function read($id = null) 
+    public function read($id) 
     {
-        if($this->table === null or $id === null) {
+        if($this->table === null || empty($id) || empty($this->fields)) {
             return false;
         }
         
+        $connection = $this->db;
+        $select = implode(', ', array_map(function($item) use ($connection) {
+            return $connection->escapeIdentifier($item);
+        }, $this->fields));
+
         $sql = sprintf(
-            'SELECT * FROM %s WHERE id = ?',
+            'SELECT ' . $select . ' FROM %s WHERE id = ?',
             $this->db->escapeIdentifier($this->table)
         );
         
         return $this->db->fetchOne($sql, \Phalcon\Db::FETCH_ASSOC, [$id]);
     }
     
-    public function update($id = null, $values = []) 
+    public function update($id, $values) 
     {
-        if($this->table === null or $id === null or empty($values)) {
+        if($this->table === null || empty($id) || empty($values)) {
             return false;
         }
         
@@ -47,9 +53,9 @@ abstract class AbstractCRUDModel extends AbstractModel
         );
     }
     
-    public function delete($id = null) 
+    public function delete($id) 
     {
-        if($this->table === null or $id === null) {
+        if($this->table === null || empty($id)) {
             return false;
         }
         
