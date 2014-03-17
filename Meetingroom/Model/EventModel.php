@@ -6,6 +6,11 @@ class EventModel extends AbstractCRUDModel
 {
     protected $table = 'events';
     
+    public function init(array $args)
+    {
+        $this->fields = array_shift($args);
+    }
+    
     public function eventExist($id) 
     {
         $result = $this->db->query("SELECT id FROM events WHERE id = ? LIMIT 1", [$id]);
