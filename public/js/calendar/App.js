@@ -29,11 +29,9 @@ Ext.define('Ext.calendar.App', {
             var scope = this;
 
             // Fix ExtJS 4.2 tooltip issue
-            if(Ext.isIE10) {
+            if (Ext.isIE10) {
                 Ext.supports.Direct2DBug = true;
-            }
-
-            if(Ext.isChrome) {
+            } else if (Ext.isChrome) {
                 Ext.define('Ext.layout.container.AutoTip', {
                     alias: ['layout.autotip'],
                     extend: 'Ext.layout.container.Container',
@@ -109,9 +107,9 @@ Ext.define('Ext.calendar.App', {
                             {
                                 xtype: 'container',
                                 html: '<div id="app-logo">' +
-                                    '<div class="logo-top">&nbsp;</div>' +
-                                    '<div id="logo-body">' + new Date().getDate() + '</div>' +
-                                    '<div class="logo-bottom">&nbsp;</div>' +
+                                        '<div class="logo-top">&nbsp;</div>' +
+                                        '<div id="logo-body">' + new Date().getDate() + '</div>' +
+                                        '<div class="logo-bottom">&nbsp;</div>' +
                                     '</div>' +
                                     '<h1>Meeting Room 2.0</h1>'
                             },
@@ -162,6 +160,11 @@ Ext.define('Ext.calendar.App', {
                                 // set main room active
                                 tabpanel.setActiveTab(1);
 
+                                // TODO filter events store
+                                scope.eventStore.filterBy(function(record) {
+                                    if (record.get('CalendarId') === 2) return record;
+                                });
+
                             }
                         }
                     },
@@ -204,7 +207,6 @@ Ext.define('Ext.calendar.App', {
                                 },
                                 id: 'app-calendar',
                                 region: 'center',
-                                activeItem: 3, // month view
 
                                 monthViewCfg: {
                                     showHeader: true,
