@@ -358,10 +358,10 @@ Ext.define('Ext.calendar.view.DayBody', {
             if (evt._overlap !== undefined) {
                 colWidth = 100 / (overlapCols + 1);
                 evtWidth = 100 - (colWidth * evt._overlap);
-
                 evt._width = colWidth;
                 evt._left = colWidth * evt._overcol;
             }
+
             markup = this.getEventTemplate().apply(evt);
             target = this.id + '-day-col-' + Ext.Date.format(evts[i].date, 'Ymd');
 
@@ -395,6 +395,7 @@ Ext.define('Ext.calendar.view.DayBody', {
 
     // private
     getDayAt: function(x, y) {
+
         var xoffset = this.el.down('.ext-cal-day-times').getWidth(),
             viewBox = this.el.getBox(),
             daySize = this.getDaySize(false),
@@ -406,7 +407,7 @@ Ext.define('Ext.calendar.view.DayBody', {
         // first avail row, just to calc size
             rowH = row.getHeight() / 2,
         // 30 minute increment since a row is 60 minutes
-            relY = y - viewBox.y - rowH + scroll.top,
+            relY = y - viewBox.y - rowH + scroll.top + 378,// 378=42*9
             rowIndex = Math.max(0, Math.ceil(relY / rowH)),
             mins = rowIndex * 30,
             dt = Ext.calendar.util.Date.add(this.viewStart, {days: dayIndex, minutes: mins}),
@@ -423,7 +424,7 @@ Ext.define('Ext.calendar.view.DayBody', {
             // this is the box for the specific time block in the day that was clicked on:
             timeBox: {
                 x: timeX,
-                y: (rowIndex * 21) + viewBox.y - scroll.top,
+                y: (rowIndex * 21) + viewBox.y - scroll.top - 378, // 378=42*9
                 width: daySize.width,
                 height: rowH
             }

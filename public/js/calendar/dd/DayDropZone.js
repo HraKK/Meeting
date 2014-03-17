@@ -45,9 +45,8 @@ Ext.define('Ext.calendar.dd.DayDropZone', {
             } else {
                 n.date = Ext.Date.add(n.date, Ext.Date.MINUTE, 30);
             }
-            console.log(box.height);
-            this.shim(this.dragCreateDt, box);
 
+            this.shim(this.dragCreateDt, box);
             curr = Ext.calendar.util.Date.copyTime(n.date, this.dragCreateDt);
             this.dragStartDate = Ext.calendar.util.Date.min(this.dragCreateDt, curr);
             this.dragEndDate = endDt || Ext.calendar.util.Date.max(this.dragCreateDt, curr);

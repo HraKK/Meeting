@@ -944,7 +944,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     getTitle: function() {
-        return Ext.Date.format(this.startDate, 'F Y');
+        return Ext.Date.format(this.startDate, 'G:i Y');
     },
 
     /*
