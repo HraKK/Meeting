@@ -44,7 +44,7 @@ Ext.define('Ext.calendar.form.field.DateRange', {
      * {@link Ext.Date.use24HourTime} setting and sets the format to 'g:i A' for 12-hour time (e.g., 1:30 PM)
      * or 'G:i' for 24-hour time (e.g., 13:30). This can also be overridden by a static format string if desired.
      */
-    timeFormat: Ext.Date.use24HourTime ? 'G:i' : 'g:i A',
+    timeFormat: 'H:i',
 
     // private
     fieldLayout: {
@@ -145,6 +145,9 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             hideLabel: true,
             width: 90,
             format: this.timeFormat,
+            minValue: '09:00',
+            maxValue: '19:30',
+            increment: 30,
             listeners: {
                 'select': {
                     fn: function(){
@@ -183,6 +186,9 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             hideLabel: true,
             width: 90,
             format: this.timeFormat,
+            minValue: '09:30',
+            maxValue: '20:00',
+            increment: 30,
             listeners: {
                 'select': {
                     fn: function(){
@@ -208,7 +214,12 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             itemId: this.id + '-allday',
             hidden: this.showTimes === false || this.showAllDay === false,
             boxLabel: this.allDayText,
-            margins: { top: 2, right: 5, bottom: 0, left: 0 },
+            margins: {
+                top: 2,
+                right: 5,
+                bottom: 0,
+                left: 0
+            },
             handler: this.onAllDayChange,
             scope: this
         };

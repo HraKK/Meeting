@@ -287,7 +287,7 @@ Ext.define('Ext.calendar.App', {
                                     'eventmove': {
                                         fn: function(vw, rec) {
                                             var mappings = Ext.calendar.data.EventMappings,
-                                                time = rec.data[mappings.IsAllDay.name] ? '' : ' \\a\\t g:i a';
+                                                time = rec.data[mappings.IsAllDay.name] ? '' : ' \\a\\t H:i';
 
                                             rec.commit();
 
