@@ -4,9 +4,10 @@ namespace Meetingroom\Controller;
 
 use \Meetingroom\Entity\Role\RoleFactory;
 use \Meetingroom\Entity\User\UserFactory;
+use \Meetingroom\Entity\User\UserManager;
+use \Meetingroom\Entity\Room\RoomManager;
 use \Meetingroom\Entity\Event\EventManager;
 use \Meetingroom\Entity\Event\EventEntity;
-use \Meetingroom\Model\EventModel;
 
 class EventController extends AbstractController
 {
@@ -50,10 +51,38 @@ class EventController extends AbstractController
     
     public function createAction()
     {
-        $model = new EventModel(['rooom_id', 'user_id']);
-        $result = $model->read(2);
+        $this->session->set('username', 'Barif2');
+        $username = $this->session->get('username');
         
-        var_dump($result);
+        $userManager = new UserManager();
+        $userId = $userManager->getUserId($username);
+        
+        if ($userId === false) {
+            $userId = $userManager->createUser($username, 1, 'developer', 'barif');
+        }
+        
+        $roomId = $this->request->getPost("room_id", "int");
+        $roomManager = new RoomManager();
+        $isRoom = $roomManager->isRoomExist($roomId);
+
+        if(!$isRoom) {
+            echo json_encode(['status' => 'error']);
+        }
+        
+        $eventManager = new EventManager();
+        
+        $event = $eventManager->createEvent(
+                $this->request->getPost("title", "striptags"), 
+                $userId, 
+                $roomId, 
+                $this->request->getPost("date_start", "string"), 
+                $this->request->getPost("date_end", "string"), 
+                $this->request->getPost("description", "striptags"), 
+                $this->request->getPost("repeatable", "int"),  
+                $this->request->getPost("attendies", "int")
+        );
+        
+        var_dump($event);
         exit;
     }
 }

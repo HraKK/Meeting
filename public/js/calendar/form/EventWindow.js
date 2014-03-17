@@ -34,6 +34,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
                     itemId: 'title',
                     name: Ext.calendar.data.EventMappings.Title.name,
                     fieldLabel: 'Title',
+                    labelWidth: 100,
                     xtype: 'textfield',
                     allowBlank: false,
                     emptyText: 'Event Title',
@@ -44,7 +45,33 @@ Ext.define('Ext.calendar.form.EventWindow', {
                     itemId: 'date-range',
                     name: 'dates',
                     anchor: '100%',
-                    fieldLabel: 'When'
+                    fieldLabel: 'When',
+                    labelWidth: 100
+                },
+                {
+                    xtype: 'numberfield',
+                    fieldLabel: 'Attendees',
+                    labelWidth: 100,
+                    allowBlank: false,
+                    value: 3,
+                    maxValue: 99,
+                    minValue: 0,
+                    emptyText: 'Attendees Title',
+                    anchor: '100%'
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'Owner',
+                    labelWidth: 100,
+                    readOnly: true,
+                    value: 'username',
+                    anchor: '100%'
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'Room',
+                    labelWidth: 100,
+                    hidden: true
                 }
             ]
         };
@@ -57,6 +84,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
                 xtype: 'calendarpicker',
                 itemId: 'calendar',
                 name: Ext.calendar.data.EventMappings.CalendarId.name,
+                labelWidth: 100,
                 anchor: '100%',
                 store: this.calendarStore
             });
@@ -65,7 +93,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
         this.callParent([Ext.apply({
                 titleTextAdd: 'Add Event',
                 titleTextEdit: 'Edit Event',
-                width: 600,
+                width: 620,
                 autocreate: true,
                 border: true,
                 closeAction: 'hide',
@@ -84,8 +112,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
 
                 fbar: [
                     {
-                        xtype: 'tbtext',
-                        text: '<a href="#" id="tblink">Edit Details...</a>'
+                        xtype: 'tbtext'
                     },
                     '->',
                     {
@@ -171,8 +198,6 @@ Ext.define('Ext.calendar.form.EventWindow', {
         this.callParent();
 
         this.el.addCls('ext-cal-event-win');
-
-        Ext.get('tblink').on('click', this.onEditDetailsClick, this);
 
         this.titleField = this.down('#title');
         this.dateRangeField = this.down('#date-range');

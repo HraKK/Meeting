@@ -273,7 +273,6 @@ Ext.define('Ext.calendar.CalendarPanel', {
         });
 
         this.layout = 'card';
-
         // do not allow override
         if (this.showDayView) {
             var day = Ext.apply({
@@ -291,7 +290,6 @@ Ext.define('Ext.calendar.CalendarPanel', {
             this.initEventRelay(day);
             this.add(day);
         }
-
         if (this.showWeekView) {
             var wk = Ext.applyIf({
                     xtype: 'weekview',
@@ -308,7 +306,6 @@ Ext.define('Ext.calendar.CalendarPanel', {
             this.initEventRelay(wk);
             this.add(wk);
         }
-
         if (this.showMonthView) {
             var month = Ext.applyIf({
                     xtype: 'monthview',

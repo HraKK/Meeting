@@ -42,17 +42,16 @@ Ext.define('Ext.calendar.dd.DayDropZone', {
                 box.height += n.timeBox.height;
                 box.y = box.y - box.height + n.timeBox.height;
                 endDt = Ext.Date.add(this.dragCreateDt, Ext.Date.MINUTE, 30);
-            }
-            else {
+            } else {
                 n.date = Ext.Date.add(n.date, Ext.Date.MINUTE, 30);
             }
-            this.shim(this.dragCreateDt, box);
 
+            this.shim(this.dragCreateDt, box);
             curr = Ext.calendar.util.Date.copyTime(n.date, this.dragCreateDt);
             this.dragStartDate = Ext.calendar.util.Date.min(this.dragCreateDt, curr);
             this.dragEndDate = endDt || Ext.calendar.util.Date.max(this.dragCreateDt, curr);
 
-            dt = Ext.Date.format(this.dragStartDate, 'g:ia-') + Ext.Date.format(this.dragEndDate, 'g:ia');
+            dt = Ext.Date.format(this.dragStartDate, 'H:i-') + Ext.Date.format(this.dragEndDate, 'H:i');
         }
         else {
             evtEl = Ext.get(data.ddel);
@@ -69,7 +68,7 @@ Ext.define('Ext.calendar.dd.DayDropZone', {
                 else {
                     box.y = n.timeBox.y;
                 }
-                dt = Ext.Date.format(n.date, 'n/j g:ia');
+                dt = Ext.Date.format(n.date, 'n/j H:i');
                 box.x = n.el.getX();
 
                 this.shim(n.date, box);
@@ -97,7 +96,7 @@ Ext.define('Ext.calendar.dd.DayDropZone', {
                     StartDate: start,
                     EndDate: end
                 };
-                dt = Ext.Date.format(start, 'g:ia-') + Ext.Date.format(end, 'g:ia');
+                dt = Ext.Date.format(start, 'H:i-') + Ext.Date.format(end, 'H:i');
                 text = this.resizeText;
             }
         }

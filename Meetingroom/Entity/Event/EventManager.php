@@ -31,4 +31,17 @@ class EventManager
         return $list;
     }
 
+    public function createEvent($title, $userId, $roomId, $dateStart, $dateEnd, $description = '', $repeatable = 0, $attendies = 0) 
+    {
+        return $this->getEventModel()->create([
+            'rooom_id' => $roomId, 
+            'date_start' => $dateStart, 
+            'date_end' => $dateEnd, 
+            'user_id' => $userId, 
+            'title' => $title, 
+            'description' => $description, 
+            'repeatable' => $repeatable, 
+            'attendees' => $attendies
+        ]);
+    }
 }

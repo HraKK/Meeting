@@ -21,11 +21,12 @@ Ext.define('Ext.calendar.form.field.CalendarCombo', {
         'Ext.calendar.data.CalendarMappings'
     ],
 
-    fieldLabel: 'Calendar',
+    fieldLabel: 'Meeting Room',
     triggerAction: 'all',
     queryMode: 'local',
     forceSelection: true,
     selectOnFocus: true,
+    hidden: true,
 
     // private
     defaultCls: 'ext-color-default',

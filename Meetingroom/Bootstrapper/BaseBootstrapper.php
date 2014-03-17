@@ -19,6 +19,7 @@ class BaseBootstrapper implements BootstrapperInterface
         $this->initURL();
         $this->initACL();
         $this->initSession();
+        $this->initRequest();
     }
 
 
@@ -140,4 +141,15 @@ class BaseBootstrapper implements BootstrapperInterface
             }
         );
     }
+    
+    protected function initRequest()
+    {
+        $this->di->setShared(
+            'request',
+            function() {
+                return new \Phalcon\Http\Request();
+            }
+        );
+    }
+
 }
