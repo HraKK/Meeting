@@ -35,8 +35,14 @@ class Room extends \Meetingroom\Entity\AbstractEntity
         return $this->$name;
     }
 
-
-    public function bind($data)
+    /**
+     * Link data from the db and class fields
+     *
+     * @param array $data
+     * @return $this
+     * @throws \Meetingroom\Entity\Exception\FieldNotExistException
+     */
+    public function bind(array $data)
     {
         foreach ($data as $field => $value) {
             if ($this->fieldExist($field)) {
@@ -53,7 +59,11 @@ class Room extends \Meetingroom\Entity\AbstractEntity
         return $this;
     }
 
-
+    /**
+     * Load data and bind data from db(RoomModel)
+     *
+     * @return void
+     */
     public function load()
     {
         $roomModel = new \Meetingroom\Model\RoomModel();
@@ -62,13 +72,18 @@ class Room extends \Meetingroom\Entity\AbstractEntity
         $this->loaded = true;
     }
 
+
+    /**
+     * check is loaded data
+     * @return bool
+     */
     public function isLoaded()
     {
         return (bool)$this->loaded;
     }
 
 
-    public function fieldExist($field)
+    protected function fieldExist($field)
     {
         return property_exists(__CLASS__, $field);
     }

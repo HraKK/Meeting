@@ -29,6 +29,17 @@ class EventController extends AbstractController
         var_dump($role);
         exit;
     }
+
+
+    public function lookuperAction($id = 0)
+    {
+        $di = $this->getDI();
+
+        $lookupper = new \Meetingroom\Entity\Event\Lookuper\EventLookuper($di);
+        print 'ok';
+        die();
+    }
+
     
     public function createAction()
     {
