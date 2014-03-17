@@ -140,7 +140,7 @@ Ext.define('Ext.calendar.App', {
                         region: 'north',
                         cls: 'room-tabs',
                         height: 31,
-                        margin: '-31 192 0 213',
+                        margin: '-31 192 0 214',
                         border: false,
                         bodyStyle: {
                             border: false
@@ -188,8 +188,9 @@ Ext.define('Ext.calendar.App', {
                             {
                                 xtype: 'container',
                                 region: 'west',
-                                width: 213,
+                                width: 212,
                                 border: false,
+                                margin: '0 1 0 1',
                                 items: [
                                     {
                                         xtype: 'datepicker',
