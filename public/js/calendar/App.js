@@ -213,13 +213,13 @@ Ext.define('Ext.calendar.App', {
                                 region: 'center',
                                 border: false,
                                 style: {
-                                    background: '#fff'
+                                    background: '#add2ed'
                                 },
                                 items: [
                                     {
                                         xtype: 'calendarpanel',
                                         id: 'app-calendar',
-                                        height: 549,
+                                        height: 548,
                                         eventStore: this.eventStore,
                                         calendarStore: this.calendarStore,
                                         border: false,

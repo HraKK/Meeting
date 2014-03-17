@@ -70,12 +70,14 @@ Ext.define('Ext.calendar.view.DayBody', {
                 view: this,
                 containerScroll: true
             },
-            cfg));
+            cfg)
+        );
 
         this.dropZone = new Ext.calendar.dd.DayDropZone(this.el, Ext.apply({
                 view: this
             },
-            cfg));
+            cfg)
+        );
     },
 
     //private

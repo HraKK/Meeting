@@ -236,14 +236,14 @@
 .ext-cal-day-times {
     background-color: #f6f9fc;
     color: #666;
-    padding: 1px 0 0 0;
+    padding: 0;
     text-align: right;
     vertical-align: top;
 }
 
 .ext-cal-day-time-inner {
     height: 42px;
-    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
     padding: 3px 4px 0 0;
 }
 
@@ -774,7 +774,9 @@ td.ext-cal-dtitle-today div {
 .ext-cal-evr,
 .ext-cal-evi,
 .ext-cal-evt dl {
-    color: #fff;
+    color: #000;
+    font-size: 11px;
+    font-weight: bold;
 }
 
 .ext-cal-day-col .ext-cal-evt {
