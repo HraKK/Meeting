@@ -2,8 +2,10 @@
 
 namespace Meetingroom\Model;
 
-class UserModel extends AbstractModel
+class UserModel extends AbstractCRUDModel
 {
+    protected $table = 'users';
+    
     public function getIdByUsername($username)
     {
         $result = $this->db->query("SELECT id FROM users WHERE name = ? LIMIT 1", [$username]);

@@ -2,8 +2,10 @@
 
 namespace Meetingroom\Model;
 
-class EventModel extends AbstractModel
+class EventModel extends AbstractCRUDModel
 {
+    protected $table = 'events';
+    
     public function eventExist($id) 
     {
         $result = $this->db->query("SELECT id FROM events WHERE id = ? LIMIT 1", [$id]);

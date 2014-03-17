@@ -2,8 +2,9 @@
 
 namespace Meetingroom\Model;
 
-class RoomModel extends AbstractModel
+class RoomModel extends AbstractCRUDModel
 {
+    protected $table = 'rooms';
 
     public function getAll()
     {
