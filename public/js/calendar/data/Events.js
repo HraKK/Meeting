@@ -17,8 +17,8 @@ Ext.define('Ext.calendar.data.Events', {
                         "id": 1001,
                         "cid": 1,
                         "title": "Vacation",
-                        "start": makeDate(-20, 10),
-                        "end": makeDate(-10, 15),
+                        "start": makeDate(0, 11, 30),
+                        "end": makeDate(0, 13),
                         "notes": "Have fun"
                     },
                     {
@@ -36,33 +36,30 @@ Ext.define('Ext.calendar.data.Events', {
                         "id": 1003,
                         "cid": 3,
                         "title": "Project due",
-                        "start": makeDate(0, 15),
-                        "end": makeDate(0, 15)
+                        "start": makeDate(0, 11, 30),
+                        "end": makeDate(0, 13),
                     },
                     {
                         "id": 1004,
                         "cid": 4,
                         "title": "Sarah's birthday",
-                        "start": today,
-                        "end": today,
-                        "notes": "Need to get a gift",
-                        "ad": true
+                        "start": makeDate(0, 11, 30),
+                        "end": makeDate(0, 13),
+                        "notes": "Need to get a gift"
                     },
                     {
                         "id": 1005,
                         "cid": 5,
                         "title": "A long one...",
-                        "start": makeDate(-12),
-                        "end": makeDate(10, 0, 0, -1),
-                        "ad": true
+                        "start": makeDate(0, 11, 30),
+                        "end": makeDate(0, 13)
                     },
                     {
                         "id": 1006,
                         "cid": 4,
                         "title": "School holiday",
-                        "start": makeDate(5),
-                        "end": makeDate(7, 0, 0, -1),
-                        "ad": true,
+                        "start": makeDate(0, 9),
+                        "end": makeDate(0, 9, 30),
                         "rem": "2880"
                     },
                     {
@@ -77,16 +74,15 @@ Ext.define('Ext.calendar.data.Events', {
                         "id": 1008,
                         "cid": 2,
                         "title": "An old event",
-                        "start": makeDate(-30),
-                        "end": makeDate(-28),
-                        "ad": true
+                        "start": makeDate(0, 9),
+                        "end": makeDate(0, 9, 30),
                     },
                     {
                         "id": 1009,
                         "cid": 1,
                         "title": "Board meeting",
-                        "start": makeDate(-2, 13),
-                        "end": makeDate(-2, 18),
+                        "start": makeDate(0, 9),
+                        "end": makeDate(0, 9, 30),
                         "loc": "ABC Inc.",
                         "rem": "60"
                     },
@@ -94,16 +90,15 @@ Ext.define('Ext.calendar.data.Events', {
                         "id": 1010,
                         "cid": 2,
                         "title": "Jenny's final exams",
-                        "start": makeDate(-2),
-                        "end": makeDate(3, 0, 0, -1),
-                        "ad": true
+                        "start": makeDate(0, 15),
+                        "end": makeDate(0, 15, 30)
                     },
                     {
                         "id": 1011,
                         "cid": 3,
                         "title": "Movie night",
-                        "start": makeDate(2, 19),
-                        "end": makeDate(2, 23),
+                        "start": makeDate(0, 15),
+                        "end": makeDate(0, 15, 30),
                         "notes": "Don't forget the tickets!",
                         "rem": "60"
                     }

@@ -184,21 +184,25 @@ Ext.define('Ext.calendar.view.DayBody', {
         if (!this.eventTpl) {
             this.eventTpl = !(Ext.isIE || Ext.isOpera) ?
                 new Ext.XTemplate(
-                    '<div id="{_elId}" class="{_selectorCls} {_colorCls} ext-cal-evt ext-cal-evr" style="left: {_left}%; width: {_width}%; top: {_top}px; height: {_height}px;">',
-                    '<div class="ext-evt-bd">', this.getEventBodyMarkup(), '</div>',
-                    '<div class="ext-evt-rsz"><div class="ext-evt-rsz-h">&#160;</div></div>',
+                    '<div id="{_elId}" class="{_selectorCls} {_colorCls} ext-cal-evt ext-cal-evr is-hidden-{IsHidden}" style="left: {_left}%; width: {_width}%; top: {_top}px; height: {_height}px;">',
+                        '<div class="ext-evt-bd">', this.getEventBodyMarkup(), '</div>',
+                        '<div class="ext-evt-rsz">' +
+                            '<div class="ext-evt-rsz-h">&#160;</div>' +
+                        '</div>',
                     '</div>'
                 )
                 : new Ext.XTemplate(
-                '<div id="{_elId}" class="ext-cal-evt {_selectorCls} {_colorCls}-x" style="left: {_left}%; width: {_width}%; top: {_top}px;">',
-                '<div class="ext-cal-evb">&#160;</div>',
-                '<dl style="height: {_height}px;" class="ext-cal-evdm">',
-                '<dd class="ext-evt-bd">',
-                this.getEventBodyMarkup(),
-                '</dd>',
-                '<div class="ext-evt-rsz"><div class="ext-evt-rsz-h">&#160;</div></div>',
-                '</dl>',
-                '<div class="ext-cal-evb">&#160;</div>',
+                '<div id="{_elId}" class="ext-cal-evt {_selectorCls} {_colorCls}-x is-hidden-{IsHidden}" style="left: {_left}%; width: {_width}%; top: {_top}px;">',
+                    '<div class="ext-cal-evb">&#160;</div>',
+                    '<dl style="height: {_height}px;" class="ext-cal-evdm">',
+                        '<dd class="ext-evt-bd">',
+                            this.getEventBodyMarkup(),
+                        '</dd>',
+                        '<div class="ext-evt-rsz">' +
+                            '<div class="ext-evt-rsz-h">&#160;</div>' +
+                        '</div>',
+                    '</dl>',
+                    '<div class="ext-cal-evb">&#160;</div>',
                 '</div>'
             );
             this.eventTpl.compile();
