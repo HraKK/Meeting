@@ -1,5 +1,5 @@
 <?php
-namespace Meetingroom\Entity\Event\Lookuper;
+namespace Meetingroom\Entity\Event\Lookupper;
 
 interface PeriodCriteriaInterface
 {

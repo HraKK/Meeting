@@ -27,6 +27,9 @@ Ext.define('Ext.calendar.form.field.DateRange', {
      * The text to display as the label for the all day checkbox (defaults to 'All day')
      */
     allDayText: 'All day',
+
+    isRepeatableText: 'Is Repeatable',
+
     /**
      * @cfg {String/Boolean} singleLine
      * `true` to render the fields all on one line, `false` to break the start date/time and end date/time
@@ -44,12 +47,17 @@ Ext.define('Ext.calendar.form.field.DateRange', {
      * {@link Ext.Date.use24HourTime} setting and sets the format to 'g:i A' for 12-hour time (e.g., 1:30 PM)
      * or 'G:i' for 24-hour time (e.g., 13:30). This can also be overridden by a static format string if desired.
      */
-    timeFormat: Ext.Date.use24HourTime ? 'G:i' : 'g:i A',
+    timeFormat: 'H:i',
 
     // private
     fieldLayout: {
         type: 'hbox',
-        defaultMargins: { top: 0, right: 5, bottom: 0, left: 0 }
+        defaultMargins: {
+            top: 0,
+            right: 5,
+            bottom: 0,
+            left: 0
+        }
     },
 
     // private
@@ -77,7 +85,8 @@ Ext.define('Ext.calendar.form.field.DateRange', {
                 items: [
                     me.getEndDateConfig(),
                     me.getEndTimeConfig(),
-                    me.getAllDayConfig()
+                    me.getAllDayConfig(),
+                    me.getIsRepeatableConfig()
                 ]
             }];
         }
@@ -115,7 +124,8 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             me.getDateSeparatorConfig(),
             me.getEndTimeConfig(),
             me.getEndDateConfig(),
-            me.getAllDayConfig()
+            me.getAllDayConfig(),
+            me.getIsRepeatableConfig()
         ];
     },
 
@@ -143,8 +153,11 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             hidden: this.showTimes === false,
             labelWidth: 0,
             hideLabel: true,
-            width: 90,
+            width: 70,
             format: this.timeFormat,
+            minValue: '09:00',
+            maxValue: '19:30',
+            increment: 30,
             listeners: {
                 'select': {
                     fn: function(){
@@ -181,8 +194,11 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             hidden: this.showTimes === false,
             labelWidth: 0,
             hideLabel: true,
-            width: 90,
+            width: 70,
             format: this.timeFormat,
+            minValue: '09:30',
+            maxValue: '20:00',
+            increment: 30,
             listeners: {
                 'select': {
                     fn: function(){
@@ -202,14 +218,35 @@ Ext.define('Ext.calendar.form.field.DateRange', {
         return end.getTime() - start.getTime();
     },
 
+    // TODO: remove All Day checkbox and all dependencies
     getAllDayConfig: function() {
         return {
             xtype: 'checkbox',
             itemId: this.id + '-allday',
-            hidden: this.showTimes === false || this.showAllDay === false,
+            hidden: true,
             boxLabel: this.allDayText,
-            margins: { top: 2, right: 5, bottom: 0, left: 0 },
+            margins: {
+                top: 2,
+                right: 5,
+                bottom: 0,
+                left: 0
+            },
             handler: this.onAllDayChange,
+            scope: this
+        };
+    },
+
+    getIsRepeatableConfig: function() {
+        return {
+            xtype: 'checkbox',
+            boxLabel: this.isRepeatableText,
+            margins: {
+                top: 2,
+                right: 5,
+                bottom: 0,
+                left: 0
+            },
+            handler: this.onIsRepeatableChange,
             scope: this
         };
     },
@@ -218,6 +255,12 @@ Ext.define('Ext.calendar.form.field.DateRange', {
         Ext.suspendLayouts();
         this.startTime.setDisabled(checked).setVisible(!checked);
         this.endTime.setDisabled(checked).setVisible(!checked);
+        Ext.resumeLayouts(true);
+    },
+
+    onIsRepeatableChange: function(chk, checked) {
+        Ext.suspendLayouts();
+        // TODO: implement handler
         Ext.resumeLayouts(true);
     },
 
