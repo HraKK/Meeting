@@ -11,27 +11,27 @@ Ext.define('Ext.calendar.template.BoxLayout', {
 
             this.callParent([
                 '<tpl for="weeks">',
-                '<div id="{[this.id]}-wk-{[xindex-1]}" class="ext-cal-wk-ct" style="top:{[this.getRowTop(xindex, xcount)]}%; height:{[this.getRowHeight(xcount)]}%;">',
-                weekLinkTpl,
-                '<table class="ext-cal-bg-tbl" cellpadding="0" cellspacing="0">',
-                '<tbody>',
-                '<tr>',
-                '<tpl for=".">',
-                '<td id="{[this.id]}-day-{date:date("Ymd")}" class="{cellCls}">&#160;</td>',
-                '</tpl>',
-                '</tr>',
-                '</tbody>',
-                '</table>',
-                '<table class="ext-cal-evt-tbl" cellpadding="0" cellspacing="0">',
-                '<tbody>',
-                '<tr>',
-                '<tpl for=".">',
-                '<td id="{[this.id]}-ev-day-{date:date("Ymd")}" class="{titleCls}"><div>{title}</div></td>',
-                '</tpl>',
-                '</tr>',
-                '</tbody>',
-                '</table>',
-                '</div>',
+                    '<div id="{[this.id]}-wk-{[xindex-1]}" class="ext-cal-wk-ct" style="top:{[this.getRowTop(xindex, xcount)]}%; height:{[this.getRowHeight(xcount)]}%;">',
+                        weekLinkTpl,
+                        '<table class="ext-cal-bg-tbl" cellpadding="0" cellspacing="0">',
+                            '<tbody>',
+                                '<tr>',
+                                    '<tpl for=".">',
+                                        '<td id="{[this.id]}-day-{date:date("Ymd")}" class="{cellCls}">&#160;</td>',
+                                    '</tpl>',
+                                '</tr>',
+                            '</tbody>',
+                        '</table>',
+                        '<table class="ext-cal-evt-tbl" cellpadding="0" cellspacing="0">',
+                            '<tbody>',
+                                '<tr>',
+                                    '<tpl for=".">',
+                                        '<td id="{[this.id]}-ev-day-{date:date("Ymd")}" class="{titleCls}"><div>{title}</div></td>',
+                                    '</tpl>',
+                                '</tr>',
+                            '</tbody>',
+                        '</table>',
+                    '</div>',
                 '</tpl>', {
                     getRowTop: function(i, ln) {
                         return ((i - 1) * (100 / ln));
@@ -41,6 +41,7 @@ Ext.define('Ext.calendar.template.BoxLayout', {
                     }
                 }
             ]);
+
         },
 
         applyTemplate: function(o) {
@@ -106,9 +107,11 @@ Ext.define('Ext.calendar.template.BoxLayout', {
             return this.applyOut({
                 weeks: weeks
             }, []).join('');
+
         },
 
         getTodayText: function() {
+
             var dt = Ext.Date.format(new Date(), 'l, F j, Y'),
                 fmt,
                 todayText = this.showTodayText !== false ? this.todayText : '',
@@ -119,10 +122,14 @@ Ext.define('Ext.calendar.template.BoxLayout', {
             if (this.dayCount == 1) {
                 return dt + separator + todayText + timeText;
             }
+
             fmt = this.weekCount == 1 ? 'D j' : 'j';
+
             return todayText.length > 0 ? todayText + timeText : Ext.Date.format(new Date(), fmt) + timeText;
+
         }
     },
     function() {
         this.createAlias('apply', 'applyTemplate');
-    });
+    }
+);

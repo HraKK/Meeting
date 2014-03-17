@@ -273,6 +273,7 @@ Ext.define('Ext.calendar.CalendarPanel', {
         });
 
         this.layout = 'card';
+
         // do not allow override
         if (this.showDayView) {
             var day = Ext.apply({
@@ -282,13 +283,15 @@ Ext.define('Ext.calendar.CalendarPanel', {
                     showTodayText: this.showTodayText,
                     showTime: this.showTime
                 },
-                this.dayViewCfg);
+                this.dayViewCfg
+            );
 
             day.id = this.id + '-day';
             day.store = day.store || this.eventStore;
             this.initEventRelay(day);
             this.add(day);
         }
+
         if (this.showWeekView) {
             var wk = Ext.applyIf({
                     xtype: 'weekview',
@@ -297,13 +300,15 @@ Ext.define('Ext.calendar.CalendarPanel', {
                     showTodayText: this.showTodayText,
                     showTime: this.showTime
                 },
-                this.weekViewCfg);
+                this.weekViewCfg
+            );
 
             wk.id = this.id + '-week';
             wk.store = wk.store || this.eventStore;
             this.initEventRelay(wk);
             this.add(wk);
         }
+
         if (this.showMonthView) {
             var month = Ext.applyIf({
                     xtype: 'monthview',
@@ -320,7 +325,8 @@ Ext.define('Ext.calendar.CalendarPanel', {
                         }
                     }
                 },
-                this.monthViewCfg);
+                this.monthViewCfg
+            );
 
             month.id = this.id + '-month';
             month.store = month.store || this.eventStore;
@@ -328,30 +334,33 @@ Ext.define('Ext.calendar.CalendarPanel', {
             this.add(month);
         }
 
-        this.add(Ext.applyIf({
-                xtype: 'eventeditform',
-                id: this.id + '-edit',
-                calendarStore: this.calendarStore,
-                listeners: {
-                    'eventadd': {
-                        scope: this,
-                        fn: this.onEventAdd
-                    },
-                    'eventupdate': {
-                        scope: this,
-                        fn: this.onEventUpdate
-                    },
-                    'eventdelete': {
-                        scope: this,
-                        fn: this.onEventDelete
-                    },
-                    'eventcancel': {
-                        scope: this,
-                        fn: this.onEventCancel
+        this.add(
+            Ext.applyIf({
+                    xtype: 'eventeditform',
+                    id: this.id + '-edit',
+                    calendarStore: this.calendarStore,
+                    listeners: {
+                        'eventadd': {
+                            scope: this,
+                            fn: this.onEventAdd
+                        },
+                        'eventupdate': {
+                            scope: this,
+                            fn: this.onEventUpdate
+                        },
+                        'eventdelete': {
+                            scope: this,
+                            fn: this.onEventDelete
+                        },
+                        'eventcancel': {
+                            scope: this,
+                            fn: this.onEventCancel
+                        }
                     }
-                }
-            },
-            this.editViewCfg));
+                },
+                this.editViewCfg
+            )
+        );
     },
 
     // private
