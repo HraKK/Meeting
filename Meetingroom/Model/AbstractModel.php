@@ -2,13 +2,18 @@
 
 namespace Meetingroom\Model;
 
-abstract class AbstractModel extends \Phalcon\Mvc\Model
+abstract class AbstractModel
 {
     protected $db;
 
-    public function onConstruct()
+    final function __construct()
     {
-        $this->db = $this->getDI()->getShared('db');
+        $this->db = \Phalcon\DI::getDefault()->getShared('db');
+        $this->init();
     }
-
+    
+    protected function init()
+    {
+        
+    }
 }

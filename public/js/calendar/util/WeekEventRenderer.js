@@ -8,6 +8,7 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
     requires: ['Ext.calendar.util.Date'],
 
     statics: {
+
         // private
         getEventRow: function(id, week, index) {
             var indexOffset = 1,
@@ -99,8 +100,7 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
                                     item._renderAsAllDay = item[Ext.calendar.data.EventMappings.IsAllDay.name] || evt.isSpanStart;
                                     item.spanLeft = item[Ext.calendar.data.EventMappings.StartDate.name].getTime() < startOfWeek.getTime();
                                     item.spanRight = item[Ext.calendar.data.EventMappings.EndDate.name].getTime() > endOfWeek.getTime();
-                                    item.spanCls = (item.spanLeft ? (item.spanRight ? 'ext-cal-ev-spanboth' :
-                                        'ext-cal-ev-spanleft') : (item.spanRight ? 'ext-cal-ev-spanright' : ''));
+                                    item.spanCls = (item.spanLeft ? (item.spanRight ? 'ext-cal-ev-spanboth' : 'ext-cal-ev-spanleft') : (item.spanRight ? 'ext-cal-ev-spanright' : ''));
 
                                     row = this.getEventRow(o.id, w, ev);
                                     cellCfg = {
@@ -117,6 +117,7 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
                                     Ext.core.DomHelper.append(row, cellCfg);
                                 }
                             }
+
                             if (ev > max) {
                                 row = this.getEventRow(o.id, w, max);
                                 Ext.core.DomHelper.append(row, {
@@ -129,6 +130,7 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
                                     }
                                 });
                             }
+
                             if (ct < o.evtMaxCount[w]) {
                                 row = this.getEventRow(o.id, w, ct);
                                 if (row) {
@@ -144,8 +146,11 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
                                     Ext.core.DomHelper.append(row, cellCfg);
                                 }
                             }
+
                         } else {
+
                             row = this.getEventRow(o.id, w, 0);
+
                             if (row) {
                                 cellCfg = {
                                     tag: 'td',
@@ -157,11 +162,15 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
                                 }
                                 Ext.core.DomHelper.append(row, cellCfg);
                             }
+
                         }
+
                         dt = Ext.calendar.util.Date.add(dt, {days: 1});
+
                     }
                 }
             }
         }
+
     }
 });

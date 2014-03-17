@@ -67,7 +67,7 @@ class Room extends \Meetingroom\Entity\AbstractEntity
     public function load()
     {
         $roomModel = new \Meetingroom\Model\RoomModel();
-        $roomInfo = $roomModel->getById($this->id);
+        $roomInfo = $roomModel->read($this->id);
         $this->bind($roomInfo);
         $this->loaded = true;
     }

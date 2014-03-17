@@ -2,9 +2,11 @@
 
 namespace Meetingroom\Model;
 
-class RoomModel extends AbstractModel
+class RoomModel extends AbstractCRUDModel
 {
-
+    protected $table = 'rooms';
+    protected $fields = ['id', 'title', 'description', 'attendees'];
+    
     public function getAll()
     {
         $result = $this->db->query("SELECT * FROM rooms ");
@@ -12,14 +14,4 @@ class RoomModel extends AbstractModel
 
         return $result->fetchAll();
     }
-
-    public function getById($id)
-    {
-        $result = $this->db->query("SELECT * FROM rooms WHERE id = ? ", [$id]);
-        $result->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
-
-        return $result->fetch();
-    }
-
-
 }

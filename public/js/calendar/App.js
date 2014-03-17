@@ -146,24 +146,34 @@ Ext.define('Ext.calendar.App', {
                             border: false
                         },
                         listeners: {
-                            afterrender: function(tabpanel) {
+                            afterrender: function(tabPanel) {
 
                                 // fill tab
                                 scope.calendarStore.each(function(record, index) {
-                                    tabpanel.add({
+                                    tabPanel.add({
                                         title: record.get('Title'),
                                         tooltip: record.get('Description'),
-                                        iconCls: 'room-tab-icon room-tab-icon-' + record.get('CalendarId')
+                                        iconCls: 'room-tab-icon room-tab-icon-' + record.get('CalendarId'),
+                                        CalendarId: record.get('CalendarId')
                                     });
                                 });
 
                                 // set main room active
-                                tabpanel.setActiveTab(1);
+                                tabPanel.setActiveTab(1);
 
-                                // TODO filter events store
-                                scope.eventStore.filterBy(function(record) {
-                                    if (record.get('CalendarId') === 2) return record;
+                            },
+                            tabchange: function(tabPanel, newCard, oldCard) {
+
+                                var calendar = Ext.getCmp('app-calendar');
+                                var activeItemId = Ext.getCmp('app-calendar').getActiveView().id;
+
+                                scope.eventStore.each(function(record) {
+                                    record.set('IsHidden', (record.get('CalendarId') != newCard.CalendarId));
                                 });
+
+                                Ext.defer(function() {
+                                    Ext.getCmp('app-calendar').setActiveView(activeItemId);
+                                }, 10);
 
                             }
                         }
@@ -466,8 +476,12 @@ Ext.define('Ext.calendar.App', {
                 layout: 'topCenter',
                 theme: 'defaultTheme',
                 animation: {
-                    open: {height: 'toggle'},
-                    close: {height: 'toggle'},
+                    open: {
+                        height: 'toggle'
+                    },
+                    close: {
+                        height: 'toggle'
+                    },
                     easing: 'swing',
                     speed: 500
                 },

@@ -6,6 +6,7 @@ use \Meetingroom\Entity\Role\RoleFactory;
 use \Meetingroom\Entity\User\UserFactory;
 use \Meetingroom\Entity\Event\EventManager;
 use \Meetingroom\Entity\Event\EventEntity;
+use \Meetingroom\Model\EventModel;
 
 class EventController extends AbstractController
 {
@@ -39,4 +40,13 @@ class EventController extends AbstractController
         die();
     }
 
+    
+    public function createAction()
+    {
+        $model = new EventModel(['rooom_id', 'user_id']);
+        $result = $model->read(2);
+        
+        var_dump($result);
+        exit;
+    }
 }

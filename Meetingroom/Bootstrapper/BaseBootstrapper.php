@@ -70,7 +70,15 @@ class BaseBootstrapper implements BootstrapperInterface
         $this->di->set(
             'db',
             function () use ($di) {
-                return new \Phalcon\Db\Adapter\Pdo\Postgresql((array)$di->get('config')->db);
+                $params = (array) $di->get('config')->db;
+                
+                $params['options'] = [
+                    \PDO::ATTR_CASE => \PDO::CASE_LOWER, 
+                    \PDO::ATTR_PERSISTENT => true,
+                    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ
+                ];
+                
+                return new \Phalcon\Db\Adapter\Pdo\Postgresql($params);
             }
         );
 
