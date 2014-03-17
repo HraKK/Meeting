@@ -9,10 +9,10 @@ abstract class AbstractModel
     final function __construct()
     {
         $this->db = \Phalcon\DI::getDefault()->getShared('db');
-        $this->init(func_get_args());
+        $this->init();
     }
     
-    protected function init(array $args)
+    protected function init()
     {
         
     }
