@@ -1,8 +1,9 @@
 <?php
 namespace Meetingroom\Entity\Room;
 
+//TODO: rename file
 
-class Room extends \Meetingroom\Entity\AbstractEntity
+class RoomEntity extends \Meetingroom\Entity\AbstractEntity
 {
 
     protected $id;

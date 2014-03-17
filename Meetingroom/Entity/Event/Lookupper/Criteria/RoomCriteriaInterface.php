@@ -2,11 +2,16 @@
 namespace Meetingroom\Entity\Event\Lookupper\Criteria;
 
 /**
- * Class LookupperCriteriaInterface
+ * Interface RoomCriteriaInterface
  * @package Meetingroom\Entity\Event\Lookupper\Criteria
  * @author Denis Maximovskikh <denkin.syneforge.com>
  */
-class LookupperCriteriaInterface
+interface RoomCriteriaInterface
 {
 
-} 
+    /**
+     * @param integer $id room id
+     */
+    public function __construct($id);
+
+}

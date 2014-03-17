@@ -2,14 +2,13 @@
 namespace Meetingroom\Entity\Event\Lookupper\Criteria;
 
 
-class DayPeriodCriteria implements PeriodCriteriaInterface
+/**
+ * Class DayPeriodCriteria
+ * @author Denis Maximovskikh <denkin.syneforge.com>
+ * @package Meetingroom\Entity\Event\Lookupper\Criteria
+ */
+class DayPeriodCriteria extends AbstractPeriodCriteria
 {
-
-    /**
-     * @var string sql where
-     */
-    protected $condition;
-
     /**
      * @param integer $day
      * @param integer $month
@@ -17,31 +16,9 @@ class DayPeriodCriteria implements PeriodCriteriaInterface
      */
     public function __construct($day, $month, $year)
     {
-        $unix_day_start = mktime(0, 0, 0, $month, $day, $year);
-        $unix_day_end = $unix_day_start + 86400;
-        $condition = 'events.date_start BETWEEN  ' . $unix_day_start . ' AND ' . $unix_day_end;
-
-        return $condition;
+        $unix_start_date = mktime(0, 0, 0, $month, $day, $year);
+        $this->startDate = date('c', $unix_start_date);
+        $this->endDate = date('c', $unix_start_date + 86400);
     }
-
-
-    /**
-     * @return string where condition
-     */
-    public function getPeriod()
-    {
-        return $this->condition;
-    }
-
-    /**
-     * magic. invoke $this->getperiod()
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        $this->getPeriod();
-    }
-
 
 } 

@@ -5,7 +5,7 @@ namespace Meetingroom\Entity\Event;
 use \Meetingroom\Entity\OwnableInterface;
 use \Meetingroom\Entity\Exception\FieldNotExistException;
 
-class Event extends \Meetingroom\Entity\AbstractEntity implements OwnableInterface
+class EventEntity extends \Meetingroom\Entity\AbstractEntity implements OwnableInterface
 {
     protected $loaded = false;
     protected $eventModel = null;
@@ -20,7 +20,7 @@ class Event extends \Meetingroom\Entity\AbstractEntity implements OwnableInterfa
     protected $attendees = null;
     protected $fields = [
         'id' => 'id',
-        'rooom_id' => 'roomId',
+        'rooom_id' => 'id',
         'date_start' => 'dateStart',
         'date_end' => 'dateEnd',
         'user_id' => 'userId',
