@@ -114,10 +114,6 @@ Ext.define('Ext.calendar.App', {
                                     '<h1>Meeting Room 2.0</h1>'
                             },
                             {
-                                xtype: 'container',
-                                html: '<span id="app-msg" class="x-hidden"></span>'
-                            },
-                            {
                                 xtype: 'tbfill'
                             },
                             {
@@ -281,7 +277,8 @@ Ext.define('Ext.calendar.App', {
                                             'dayclick': {
                                                 fn: function(vw, dt, ad, el) {
                                                     this.showEditWindow({
-                                                        StartDate: dt
+                                                        StartDate: Ext.calendar.util.Date.add(dt, {hours: 9}),
+                                                        EndDate: Ext.calendar.util.Date.add(dt, {hours: 9.5})
                                                     }, el);
                                                 },
                                                 scope: this
@@ -342,6 +339,7 @@ Ext.define('Ext.calendar.App', {
         // it altogether. Because of this, it's up to the application code to tie the pieces together.
         // Note that this function is called from various event handlers in the CalendarPanel above.
         showEditWindow: function(rec, animateTarget) {
+
             if (!this.editWin) {
                 this.editWin = Ext.create('Ext.calendar.form.EventWindow', {
                     calendarStore: this.calendarStore,
@@ -351,6 +349,7 @@ Ext.define('Ext.calendar.App', {
                                 win.hide();
                                 rec.data.IsNew = false;
                                 rec.data.Owner = Ext.getUser();
+                                rec.data.CalendarId = Ext.currentCalendarId;
                                 this.eventStore.add(rec);
                                 this.eventStore.sync();
                                 this.showMsg('Event ' + rec.data.Title + ' was added');
@@ -384,7 +383,9 @@ Ext.define('Ext.calendar.App', {
                     }
                 });
             }
+
             this.editWin.show(rec, animateTarget);
+
         },
 
         // The CalendarPanel itself supports the standard Panel title config, but that title

@@ -241,8 +241,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
             rec = o;
             this.setTitle(rec.phantom ? this.titleTextAdd : this.titleTextEdit);
             f.loadRecord(rec);
-        }
-        else {
+        } else {
             this.setTitle(this.titleTextAdd);
 
             var start = o[M.StartDate.name],
@@ -261,6 +260,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
         if (this.calendarStore) {
             this.calendarField.setValue(rec.data[M.CalendarId.name]);
         }
+
         this.dateRangeField.setValue(rec.data);
         this.activeRecord = rec;
 
