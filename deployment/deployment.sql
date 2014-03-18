@@ -20,7 +20,7 @@ SET default_with_oids = false;
 
 CREATE TABLE events (
     id integer NOT NULL,
-    rooom_id smallint,
+    room_id smallint,
     date_start timestamp without time zone,
     date_end timestamp without time zone,
     user_id integer,
@@ -202,3 +202,15 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 --
 
 
+ALTER TABLE "public"."repeating_options"
+ADD CONSTRAINT "event_id" FOREIGN KEY ("id") REFERENCES "public"."events" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE "public"."events" RENAME "rooom_id" TO "room_id";
+
+ALTER TABLE "public"."repeating_options" RENAME "1" TO "mon";
+ALTER TABLE "public"."repeating_options" RENAME "2" TO "tue";
+ALTER TABLE "public"."repeating_options" RENAME "3" TO "wed";
+ALTER TABLE "public"."repeating_options" RENAME "4" TO "thu";
+ALTER TABLE "public"."repeating_options" RENAME "5" TO "fri";
+ALTER TABLE "public"."repeating_options" RENAME "6" TO "sat";
+ALTER TABLE "public"."repeating_options" RENAME "7" TO "sun";

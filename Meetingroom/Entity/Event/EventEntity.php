@@ -20,7 +20,7 @@ class EventEntity extends \Meetingroom\Entity\AbstractEntity implements OwnableI
     protected $attendees = null;
     protected $fields = [
         'id' => 'id',
-        'rooom_id' => 'id',
+        'room_id' => 'room_id',
         'date_start' => 'dateStart',
         'date_end' => 'dateEnd',
         'user_id' => 'userId',
@@ -110,5 +110,16 @@ class EventEntity extends \Meetingroom\Entity\AbstractEntity implements OwnableI
     {
         return $this->userId;
     }
-
+    
+    public function save()
+    {
+        $values = [];
+        
+        foreach ($this->fields as $db => $map) {
+            $values[$db] = $this->$map;
+        }
+        
+        $model = $this->getEventModel();
+        return $this->id === null ? $model->create($values) : $model->update($this->id, $values);
+    }
 }

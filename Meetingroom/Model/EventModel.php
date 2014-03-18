@@ -6,7 +6,7 @@ class EventModel extends AbstractCRUDModel
 {
     protected $table = 'events';
     protected $fields = [
-        'id', 'rooom_id', 'date_start', 'date_end', 'user_id', 
+        'id', 'room_id', 'date_start', 'date_end', 'user_id', 
         'title', 'description', 'repeatable', 'attendees'
     ];
     
@@ -19,6 +19,7 @@ class EventModel extends AbstractCRUDModel
     public function getEventData($id) 
     {
         $result = $this->db->query("SELECT * FROM events WHERE id = ? LIMIT 1", [$id]);
+        $result->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
         return $result->numRows() === 0 ? [] : $result->fetch();
     }
     

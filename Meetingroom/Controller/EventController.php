@@ -11,6 +11,7 @@ use \Meetingroom\Entity\Event\EventEntity;
 use \Meetingroom\Entity\Event\Lookupper\EventLookupper;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria;
 
+use \Meetingroom\Entity\Role\Group;
 
 class EventController extends AbstractController
 {
@@ -88,10 +89,79 @@ class EventController extends AbstractController
                 $this->request->getPost("date_end", "string"), 
                 $this->request->getPost("description", "striptags"), 
                 $this->request->getPost("repeatable", "int"),  
-                $this->request->getPost("attendies", "int")
+                $this->request->getPost("attendees", "int")
         );
         
+        //TODO repeatable
         var_dump($event);
         exit;
+    }
+    
+    public function updateAction()
+    {
+        $event = $this->validateEvent();
+        
+        $roomId = $this->request->getPost("room_id", "int");
+        
+        if($roomId !== $event->room_id) {
+            $roomManager = new RoomManager();
+            if(!$roomManager->isRoomExist($roomId)) {
+                die('room ain`t exist');
+            }
+        }
+         
+        // @todo repeatable, check period
+
+        $event->bind([
+            'title' => $this->request->getPost("title", "striptags"),
+            'room_id' => $roomId,
+            'date_start' => $this->request->getPost("date_start", "string"),
+            'date_end' => $this->request->getPost("date_end", "string"),
+            'description' => $this->request->getPost("description", "striptags"),
+            'repeatable' => $this->request->getPost("repeatable", "int"),
+            'attendees' => $this->request->getPost("attendees", "int"),
+        ]);
+        
+        $update = $event->save();
+        var_dump($update);
+        exit;
+    }
+    
+    public function deleteAction()
+    {
+        $event = $this->validateEvent();
+        
+        $eventManager = new EventManager();
+        $check = $eventManager->deleteEvent($event->id);
+        
+        echo $check ? 'success' : 'false';
+        exit;
+    }
+    
+    private function validateEvent()
+    {
+        $this->session->set('username', 'Barif2');
+        $username = $this->session->get('username');
+        
+        $user = (new UserFactory())->getUser($username);
+        
+        if ($user->getId() == false) {
+            die('user not found');
+        }
+        
+        $eventId = $this->request->getPost("event_id", "int");
+        
+        $event = new EventEntity($eventId);
+        if($event->isLoaded() === false) {
+            die('event not found');
+        }
+        
+        $role = (new RoleFactory())->getRole($user, $event);
+        
+        if($role !== Group::OWNER) {
+            die('user is not owner');
+        }
+        
+        return $event;
     }
 }
