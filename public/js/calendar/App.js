@@ -213,11 +213,16 @@ Ext.define('Ext.calendar.App', {
                                 style: {
                                     background: '#add2ed'
                                 },
+                                layout: {
+                                    type: 'hbox',
+                                    align: 'stretch'
+                                },
                                 items: [
                                     {
                                         xtype: 'calendarpanel',
                                         id: 'app-calendar',
-                                        height: 548,
+                                        maxHeight: 534,
+                                        flex: 1,
                                         eventStore: this.eventStore,
                                         calendarStore: this.calendarStore,
                                         border: false,
@@ -276,9 +281,19 @@ Ext.define('Ext.calendar.App', {
                                             },
                                             'dayclick': {
                                                 fn: function(vw, dt, ad, el) {
+                                                    var StartDate = dt,
+                                                        EndDate;
+
+                                                    if (dt.getHours() < 9) {
+                                                        StartDate = Ext.calendar.util.Date.add(StartDate, {hours: 9});
+                                                        EndDate = Ext.calendar.util.Date.add(StartDate, {hours: 0.5});
+                                                    } else {
+                                                        EndDate = Ext.calendar.util.Date.add(StartDate, {hours: 0.5});
+                                                    }
+
                                                     this.showEditWindow({
-                                                        StartDate: Ext.calendar.util.Date.add(dt, {hours: 9}),
-                                                        EndDate: Ext.calendar.util.Date.add(dt, {hours: 9.5})
+                                                        StartDate: StartDate,
+                                                        EndDate: EndDate
                                                     }, el);
                                                 },
                                                 scope: this
@@ -508,7 +523,6 @@ Ext.define('Ext.calendar.App', {
             var d = new Date(),
                 n = d.getTime();
             n += parseInt((Math.random() * 1000).toFixed(0));
-            console.log(n);
             return n;
         }
 
