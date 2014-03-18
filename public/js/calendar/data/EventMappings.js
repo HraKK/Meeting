@@ -14,7 +14,7 @@ Ext.calendar.data.EventMappings = {
     },
     CalendarId: {
         name: 'CalendarId',
-        mapping: 'cid',
+        mapping: 'room',
         type: 'int'
     },
     Title: {
@@ -34,34 +34,14 @@ Ext.calendar.data.EventMappings = {
         type: 'date',
         dateFormat: 'c'
     },
-    Location: {
-        name: 'Location',
-        mapping: 'loc',
-        type: 'string'
-    },
-    Notes: {
-        name: 'Notes',
-        mapping: 'notes',
-        type: 'string'
-    },
-    Url: {
-        name: 'Url',
-        mapping: 'url',
-        type: 'string'
-    },
-    IsAllDay: {
-        name: 'IsAllDay',
-        mapping: 'ad',
-        type: 'boolean'
-    },
-    Reminder: {
-        name: 'Reminder',
-        mapping: 'rem',
-        type: 'string'
-    },
     IsNew: {
         name: 'IsNew',
         mapping: 'n',
         type: 'boolean'
+    },
+    Owner: {
+        name: 'Owner',
+        mapping: 'owner',
+        type: 'string'
     }
 };

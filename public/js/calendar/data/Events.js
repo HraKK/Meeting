@@ -15,92 +15,103 @@ Ext.define('Ext.calendar.data.Events', {
                 "evts": [
                     {
                         "id": 1001,
-                        "cid": 1,
+                        "room": 1,
                         "title": "Vacation",
                         "start": makeDate(0, 11, 30),
                         "end": makeDate(0, 13),
-                        "notes": "Have fun"
+                        "notes": "Have fun",
+                        "owner": "stevejobs"
                     },
                     {
                         "id": 1002,
-                        "cid": 2,
+                        "room": 2,
                         "title": "Lunch with Matt",
                         "start": makeDate(0, 11, 30),
                         "end": makeDate(0, 13),
                         "loc": "Chuy's!",
                         "url": "http://chuys.com",
                         "notes": "Order the queso",
-                        "rem": "15"
+                        "rem": "15",
+                        "owner": "alancarr"
                     },
                     {
                         "id": 1003,
-                        "cid": 3,
+                        "room": 3,
                         "title": "Project due",
                         "start": makeDate(0, 11, 30),
                         "end": makeDate(0, 13),
+                        "owner": "zelazny"
                     },
                     {
                         "id": 1004,
-                        "cid": 4,
+                        "room": 4,
                         "title": "Sarah's birthday",
                         "start": makeDate(0, 11, 30),
                         "end": makeDate(0, 13),
-                        "notes": "Need to get a gift"
+                        "notes": "Need to get a gift",
+                        "owner": "tommy"
                     },
                     {
                         "id": 1005,
-                        "cid": 5,
+                        "room": 5,
                         "title": "A long one...",
                         "start": makeDate(0, 11, 30),
-                        "end": makeDate(0, 13)
+                        "end": makeDate(0, 13),
+                        "owner": "bogi"
                     },
                     {
                         "id": 1006,
-                        "cid": 4,
+                        "room": 4,
                         "title": "School holiday",
                         "start": makeDate(0, 9),
                         "end": makeDate(0, 9, 30),
-                        "rem": "2880"
+                        "rem": "2880",
+                        "owner": "moo"
                     },
                     {
                         "id": 1007,
-                        "cid": 3,
+                        "room": 3,
                         "title": "Haircut",
                         "start": makeDate(0, 9),
                         "end": makeDate(0, 9, 30),
-                        "notes": "Get cash on the way"
+                        "notes": "Get cash on the way",
+                        "owner": "tyler"
                     },
                     {
                         "id": 1008,
-                        "cid": 2,
+                        "room": 2,
                         "title": "An old event",
                         "start": makeDate(0, 9),
                         "end": makeDate(0, 9, 30),
+                        "owner": "maxanter"
                     },
                     {
                         "id": 1009,
-                        "cid": 1,
+                        "room": 1,
                         "title": "Board meeting",
                         "start": makeDate(0, 9),
                         "end": makeDate(0, 9, 30),
                         "loc": "ABC Inc.",
-                        "rem": "60"
+                        "rem": "60",
+                        "owner": "cooper"
                     },
                     {
                         "id": 1010,
-                        "cid": 2,
+                        "room": 2,
                         "title": "Jenny's final exams",
                         "start": makeDate(0, 15),
-                        "end": makeDate(0, 15, 30)
+                        "end": makeDate(0, 15, 30),
+                        "owner": "stevejobs"
                     },
                     {
                         "id": 1011,
-                        "cid": 3,
+                        "room": 3,
                         "title": "Movie night",
                         "start": makeDate(0, 15),
                         "end": makeDate(0, 15, 30),
                         "notes": "Don't forget the tickets!",
-                        "rem": "60"
+                        "rem": "60",
+                        "owner": "stevejobs"
                     }
                 ]
             }
