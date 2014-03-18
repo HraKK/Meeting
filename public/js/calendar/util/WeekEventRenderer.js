@@ -77,8 +77,7 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
                                     row = this.getEventRow(o.id, w, ev - emptyCells);
                                     cellCfg = {
                                         tag: 'td',
-                                        cls: 'ext-cal-ev',
-                                        id: o.id + '-empty-' + ct + '-day-' + Ext.Date.format(dt, 'Ymd')
+                                        cls: 'ext-cal-ev'
                                     };
                                     if (emptyCells > 1 && max - ev > emptyCells) {
                                         cellCfg.rowspan = Math.min(emptyCells, max - ev);
@@ -104,8 +103,7 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
                                     row = this.getEventRow(o.id, w, ev);
                                     cellCfg = {
                                         tag: 'td',
-                                        cls: 'ext-cal-ev',
-                                        cn: eventTpl.apply(o.templateDataFn(item))
+                                        cls: 'ext-cal-ev'
                                     };
                                     var diff = Ext.calendar.util.Date.diffDays(dt, item[Ext.calendar.data.EventMappings.EndDate.name]) + 1,
                                         cspan = Math.min(diff, dayCount - d);
@@ -122,11 +120,7 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
                                 Ext.core.DomHelper.append(row, {
                                     tag: 'td',
                                     cls: 'ext-cal-ev-more',
-                                    id: 'ext-cal-ev-more-' + Ext.Date.format(dt, 'Ymd'),
-                                    cn: {
-                                        tag: 'a',
-                                        html: '+' + skipped + ' more...'
-                                    }
+                                    id: 'ext-cal-ev-more-' + Ext.Date.format(dt, 'Ymd')
                                 });
                             }
 
@@ -135,8 +129,7 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
                                 if (row) {
                                     cellCfg = {
                                         tag: 'td',
-                                        cls: 'ext-cal-ev',
-                                        id: o.id + '-empty-' + (ct + 1) + '-day-' + Ext.Date.format(dt, 'Ymd')
+                                        cls: 'ext-cal-ev'
                                     };
                                     var rowspan = o.evtMaxCount[w] - ct;
                                     if (rowspan > 1) {
@@ -153,8 +146,7 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
                             if (row) {
                                 cellCfg = {
                                     tag: 'td',
-                                    cls: 'ext-cal-ev',
-                                    id: o.id + '-empty-day-' + Ext.Date.format(dt, 'Ymd')
+                                    cls: 'ext-cal-ev'
                                 };
                                 if (o.evtMaxCount[w] > 1) {
                                     cellCfg.rowSpan = o.evtMaxCount[w];

@@ -19,7 +19,6 @@ Ext.define('Ext.calendar.view.DayHeader', {
     // private configs
     weekCount: 1,
     dayCount: 1,
-    allDayOnly: true,
     monitorResize: false,
 
     /**
@@ -90,7 +89,7 @@ Ext.define('Ext.calendar.view.DayHeader', {
                 parts = el.id.split(this.dayElIdDelimiter);
                 dt = parts[parts.length - 1];
 
-                this.fireEvent('dayclick', this, Ext.Date.parseDate(dt, 'Ymd'), true, Ext.get(this.getDayId(dt)));
+                this.fireEvent('dayclick', this, Ext.Date.parseDate(dt, 'Ymd'), false, Ext.get(this.getDayId(dt)));
                 return;
             }
         }

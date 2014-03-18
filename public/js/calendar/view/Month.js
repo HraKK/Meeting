@@ -258,11 +258,9 @@ Ext.define('Ext.calendar.view.Month', {
         return Ext.applyIf({
                 _selectorCls: selector,
                 _colorCls: 'ext-color-' + (evt[M.CalendarId.name] ?
-                    evt[M.CalendarId.name] : 'default') + (evt._renderAsAllDay ? '-ad' : ''),
+                    evt[M.CalendarId.name] : 'default'),
                 _elId: selector + '-' + evt._weekIndex,
-                _isRecurring: evt.Recurrence && evt.Recurrence != '',
-                _isReminder: evt[M.Reminder.name] && evt[M.Reminder.name] != '',
-                Title: (evt[M.IsAllDay.name] ? '' : Ext.Date.format(evt[M.StartDate.name], 'H:i ')) + (!title || title.length == 0 ? '(No title)' : title)
+                Title: Ext.Date.format(evt[M.StartDate.name], 'H:i ') + (!title || title.length == 0 ? '(No title)' : title)
             },
             evt);
     },
@@ -282,7 +280,7 @@ Ext.define('Ext.calendar.view.Month', {
     // private
     renderItems: function() {
         Ext.calendar.util.WeekEventRenderer.render({
-            eventGrid: this.allDayOnly ? this.allDayGrid : this.eventGrid,
+            eventGrid: this.eventGrid,
             viewStart: this.viewStart,
             tpl: this.getEventTemplate(),
             maxEventsPerDay: this.getMaxEventsPerDay(),

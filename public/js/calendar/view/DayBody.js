@@ -212,44 +212,6 @@ Ext.define('Ext.calendar.view.DayBody', {
         return this.eventTpl;
     },
 
-    /**
-     * <p>Returns the XTemplate that is bound to the calendar's event store (it expects records of type
-     * {@link Ext.calendar.EventRecord}) to populate the calendar views with <strong>all-day</strong> events.
-     * Internally this method by default generates different markup for browsers that support CSS border radius
-     * and those that don't. This method can be overridden as needed to customize the markup generated.</p>
-     * <p>Note that this method calls {@link #getEventBodyMarkup} to retrieve the body markup for events separately
-     * from the surrounding container markup.  This provdes the flexibility to customize what's in the body without
-     * having to override the entire XTemplate. If you do override this method, you should make sure that your
-     * overridden version also does the same.</p>
-     * @return {Ext.XTemplate} The event XTemplate
-     */
-    getEventAllDayTemplate: function() {
-        if (!this.eventAllDayTpl) {
-            var tpl,
-                body = this.getEventBodyMarkup();
-
-            tpl = !(Ext.isIE || Ext.isOpera) ?
-                new Ext.XTemplate(
-                    '<div id="{_elId}" class="{_selectorCls} {_colorCls} {spanCls} ext-cal-evt ext-cal-evr" style="left: {_left}%; width: {_width}%; top: {_top}px; height: {_height}px;">',
-                    body,
-                    '</div>'
-                )
-                : new Ext.XTemplate(
-                '<div id="{_elId}" class="ext-cal-evt" style="left: {_left}%; width: {_width}%; top: {_top}px; height: {_height}px;">',
-                '<div class="{_selectorCls} {spanCls} {_colorCls} ext-cal-evo">',
-                '<div class="ext-cal-evm">',
-                '<div class="ext-cal-evi">',
-                body,
-                '</div>',
-                '</div>',
-                '</div></div>'
-            );
-            tpl.compile();
-            this.eventAllDayTpl = tpl;
-        }
-        return this.eventAllDayTpl;
-    },
-
     // private
     getTemplateEventData: function(evt) {
         var selector = this.getEventSelectorCls(evt[Ext.calendar.data.EventMappings.EventId.name]),
@@ -259,7 +221,7 @@ Ext.define('Ext.calendar.view.DayBody', {
         this.getTemplateEventBox(evt);
 
         data._selectorCls = selector;
-        data._colorCls = 'ext-color-' + (evt[M.CalendarId.name] || '0') + (evt._renderAsAllDay ? '-ad' : '');
+        data._colorCls = 'ext-color-' + (evt[M.CalendarId.name] || '0');
         data._elId = selector + (evt._weekIndex ? '-' + evt._weekIndex : '');
         data._isRecurring = evt.Recurrence && evt.Recurrence != '';
         var title = evt[M.Title.name];
@@ -314,9 +276,6 @@ Ext.define('Ext.calendar.view.DayBody', {
                     continue;
                 }
                 item = evt.data || evt.event.data;
-                if (item._renderAsAllDay) {
-                    continue;
-                }
                 Ext.apply(item, {
                     cls: 'ext-cal-ev',
                     _positioned: true
@@ -446,7 +405,7 @@ Ext.define('Ext.calendar.view.DayBody', {
         if (el) {
             if (el.id && el.id.indexOf(this.dayElIdDelimiter) > -1) {
                 var dt = this.getDateFromId(el.id, this.dayElIdDelimiter);
-                this.fireEvent('dayclick', this, Ext.Date.parseDate(dt, 'Ymd'), true, Ext.get(this.getDayId(dt, true)));
+                this.fireEvent('dayclick', this, Ext.Date.parseDate(dt, 'Ymd'), false, Ext.get(this.getDayId(dt, true)));
                 return;
             }
         }

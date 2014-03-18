@@ -357,13 +357,13 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    prepareEventGridSpans: function(evt, grid, w, d, days, allday) {
+    prepareEventGridSpans: function(evt, grid, w, d, days) {
         // this event spans multiple days/weeks, so we have to preprocess
         // the events and store special span events as placeholders so that
         // the render routine can build the necessary TD spans correctly.
         var w1 = w,
             d1 = d,
-            row = this.findEmptyRowIndex(w, d, allday),
+            row = this.findEmptyRowIndex(w, d),
             dt = Ext.Date.clone(this.viewStart);
 
         var start = {
@@ -401,8 +401,8 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    findEmptyRowIndex: function(w, d, allday) {
-        var grid = allday ? this.allDayGrid : this.eventGrid,
+    findEmptyRowIndex: function(w, d) {
+        var grid = this.eventGrid,
             day = grid[w] ? grid[w][d] || [] : [],
             i = 0,
             ln = day.length;
