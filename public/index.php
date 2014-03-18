@@ -1,4 +1,5 @@
 <?php
+ini_set('date.timezone', 'Europe/Kiev');
 
 //print_r($_SERVER['REQUEST_URI'] ); exit;
 try {

@@ -3,13 +3,10 @@ namespace Meetingroom\Entity\Event\Lookupper;
 
 class EventLookupper implements \Meetingroom\Entity\Event\Lookupper\EventLookupperInterface
 {
-
-
-    /**
-     * @var array holder where conditions
-     */
-    protected $conditions = [];
-    protected $di, $db;
+    protected $roomCriteria;
+    protected $periodCriteria;
+    protected $di;
+    protected $db;
 
     public function __construct($di)
     {
@@ -18,23 +15,23 @@ class EventLookupper implements \Meetingroom\Entity\Event\Lookupper\EventLookupp
     }
 
     /**
-     * @param Meetingroom\Entity\Event\Lookupper\RoomCriteriaInterface
+     * @param Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteriaInterface
      *
      * @return void
      */
-    public function setRoomCriteria(Meetingroom\Entity\Event\Lookupper\RoomCriteriaInterface $criteria)
+    public function setRoomCriteria(\Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteriaInterface $criteria)
     {
-        $this->conditions[] = $criteria;
+        $this->roomCriteria = $criteria;
     }
 
     /**
-     * @param Meetingroom\Entity\Event\Lookupper\PeriodCriteriaInterface
+     * @param \Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface
      *
      * @return void
      */
-    public function setPeriodCriteria(Meetingroom\Entity\Event\Lookupper\PeriodCriteriaInterface $criteria)
+    public function setPeriodCriteria(\Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface $criteria)
     {
-        $this->conditions[] = $criteria;
+        $this->periodCriteria = $criteria;
     }
 
     /**
@@ -46,9 +43,9 @@ class EventLookupper implements \Meetingroom\Entity\Event\Lookupper\EventLookupp
     {
 
         $eventLookupperModel = new \Meetingroom\Entity\Event\Lookupper\EventLookupperModel($this->di);
-        $eventLookupperModel->setCriterias($this->conditions);
 
-        return $eventLookupperModel->getEvents();
+
+        return $eventLookupperModel->getEvents($this->roomCriteria, $this->periodCriteria);
     }
 
 

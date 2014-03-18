@@ -36,8 +36,15 @@ class EventController extends AbstractController
     {
         $di = $this->getDI();
 
-        $lookupper = new \Meetingroom\Entity\Event\Lookuper\EventLookuper($di);
-        print 'ok';
+        $lookupper = new \Meetingroom\Entity\Event\Lookupper\EventLookupper($di);
+
+        $roomCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria(1);
+        $periodCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria(17, 3, 2014);
+        $lookupper->setPeriodCriteria($periodCriteria);
+        $lookupper->setRoomCriteria($roomCriteria);
+        var_dump('<pre>', $lookupper->lookup());
+
+
         die();
     }
 

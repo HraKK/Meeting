@@ -1,39 +1,31 @@
 <?php
 namespace Meetingroom\Entity\Event\Lookupper\Criteria;
 
-
+/**
+ * Class RoomCriteria
+ * @package Meetingroom\Entity\Event\Lookupper\Criteria
+ * @author Denis Maximovskikh <denkin.syneforge.com>
+ */
 class RoomCriteria implements RoomCriteriaInterface
 {
 
-    /**
-     * @var string sql where
-     */
-    protected $condition = '';
+    protected $id;
 
     /**
      * @param integer $id room id
      */
     public function __construct($id)
     {
-        $this->condition = 'rooms.id = ' . intval($id);
+        $this->id = intval($id);
     }
 
     /**
-     * @return string where condition
+     * @return int
      */
-    public function getRoomName()
+    public function getId()
     {
-        return $this->condition;
+        return $this->id;
     }
 
-    /**
-     * magic. invoke $this->getRoomName()
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        $this->getRoomName();
-    }
 
-} 
+}
