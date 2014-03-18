@@ -349,6 +349,7 @@ Ext.define('Ext.calendar.App', {
                                 win.hide();
                                 rec.data.IsNew = false;
                                 rec.data.Owner = Ext.getUser();
+                                rec.data.CalendarId = Ext.currentCalendarId;
                                 this.eventStore.add(rec);
                                 this.eventStore.sync();
                                 this.showMsg('Event ' + rec.data.Title + ' was added');

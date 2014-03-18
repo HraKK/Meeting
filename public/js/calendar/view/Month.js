@@ -255,14 +255,15 @@ Ext.define('Ext.calendar.view.Month', {
             selector = this.getEventSelectorCls(evt[M.EventId.name]),
             title = evt[M.Title.name];
 
-        return Ext.applyIf({
+        return Ext.applyIf(
+            {
                 _selectorCls: selector,
-                _colorCls: 'ext-color-' + (evt[M.CalendarId.name] ?
-                    evt[M.CalendarId.name] : 'default'),
+                _colorCls: 'ext-color-' + (evt[M.CalendarId.name] ? evt[M.CalendarId.name] : 'default'),
                 _elId: selector + '-' + evt._weekIndex,
                 Title: Ext.Date.format(evt[M.StartDate.name], 'H:i ') + (!title || title.length == 0 ? '(No title)' : title)
             },
-            evt);
+            evt
+        );
     },
 
     // private
