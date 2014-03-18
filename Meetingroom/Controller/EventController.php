@@ -78,4 +78,63 @@ class EventController extends AbstractController
         var_dump($event);
         exit;
     }
+    
+    public function editAction()
+    {
+        $this->session->set('username', 'Barif2');
+        $username = $this->session->get('username');
+        
+        $userManager = new UserManager();
+        $userId = $userManager->getUserId($username);
+        
+        if ($userId === false) {
+            $userId = $userManager->createUser($username, 1, 'developer', 'barif');
+        }
+        
+        $roomId = $this->request->getPost("room_id", "int");
+        $roomManager = new RoomManager();
+        $isRoom = $roomManager->isRoomExist($roomId);
+
+        if(!$isRoom) {
+            echo json_encode(['status' => 'error']);
+        }
+        
+        $eventManager = new EventManager();
+        
+        $event = $eventManager->createEvent(
+                $this->request->getPost("title", "striptags"), 
+                $userId, 
+                $roomId, 
+                $this->request->getPost("date_start", "string"), 
+                $this->request->getPost("date_end", "string"), 
+                $this->request->getPost("description", "striptags"), 
+                $this->request->getPost("repeatable", "int"),  
+                $this->request->getPost("attendies", "int")
+        );
+        //todo repeating
+        var_dump($event);
+        exit;
+    }
+    
+    public function deleteAction()
+    {
+        $this->session->set('username', 'Barif2');
+        $username = $this->session->get('username');
+        
+        $userManager = new UserManager();
+        $userId = $userManager->getUserId($username);
+        
+        if ($userId === false) {
+            echo json_encode(['status' => 'error']);
+        }
+        
+        $eventId = $this->request->getPost("event_id", "int");
+        $event = new EventEntity($eventId);
+        
+        $eventManager = new EventManager();
+        $check = $eventManager->deleteEvent($eventId);
+        
+        var_dump($check);
+        exit;
+    }
 }
