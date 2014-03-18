@@ -1,7 +1,8 @@
 <?php
 namespace Meetingroom\Entity\Event\Lookupper\Builder;
 
-use \Meetingroom\Entity\Event\Lookupper\Criteria;
+use \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteriaInterface;
+use \Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface;
 
 /**
  * Class MainEventBuilder
@@ -14,11 +15,13 @@ class EventBuilder
     /**
      * @param RoomCriteriaInterface $roomCriteria
      * @param PeriodCriteriaInterface $periodCriteria
+     * @param array $fields
      * @return string
      */
     public function build(
-        \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteriaInterface $roomCriteria,
-        \Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface $periodCriteria
+        RoomCriteriaInterface $roomCriteria,
+        PeriodCriteriaInterface $periodCriteria,
+        array $fields = []
     ) {
         $sql = '';
         $baseCriteriaBuilder = new BaseCriteriaBuilder();
@@ -26,7 +29,7 @@ class EventBuilder
         $periodCriteriaBuilder = new PeriodCriteriaBuilder();
 
 
-        $sql .= $baseCriteriaBuilder->build();
+        $sql .= $baseCriteriaBuilder->build($fields);
         $sql .= $roomCriteriaBuilder->build($roomCriteria);
         $sql .= ' AND ';
         $sql .= $periodCriteriaBuilder->build($periodCriteria);

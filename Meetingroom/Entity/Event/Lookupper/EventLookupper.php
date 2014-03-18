@@ -1,12 +1,22 @@
 <?php
 namespace Meetingroom\Entity\Event\Lookupper;
 
+use \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteriaInterface;
+use \Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface;
+
+/**
+ * Class EventLookupper
+ * @package Meetingroom\Entity\Event\Lookupper
+ * @author Denis Maximovskikh <denkin.syneforge.com>
+ */
 class EventLookupper implements \Meetingroom\Entity\Event\Lookupper\EventLookupperInterface
 {
     protected $roomCriteria;
     protected $periodCriteria;
     protected $di;
     protected $db;
+    protected $fields = [];
+
 
     public function __construct($di)
     {
@@ -15,23 +25,35 @@ class EventLookupper implements \Meetingroom\Entity\Event\Lookupper\EventLookupp
     }
 
     /**
-     * @param Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteriaInterface
+     * @param RoomCriteriaInterface $criteria
      *
-     * @return void
+     * @return Lookupper
      */
-    public function setRoomCriteria(\Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteriaInterface $criteria)
+    public function setRoomCriteria(RoomCriteriaInterface $criteria)
     {
         $this->roomCriteria = $criteria;
+        return $this;
     }
 
     /**
-     * @param \Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface
+     * @param PeriodCriteriaInterface $criteria
      *
-     * @return void
+     * @return Lookupper
      */
-    public function setPeriodCriteria(\Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface $criteria)
+    public function setPeriodCriteria(PeriodCriteriaInterface $criteria)
     {
         $this->periodCriteria = $criteria;
+        return $this;
+    }
+
+    /**
+     * @param array $fields
+     * @return Lookupper
+     */
+    public function setFields($fields)
+    {
+        $this->fields = $fields;
+        return $this;
     }
 
     /**
@@ -42,10 +64,10 @@ class EventLookupper implements \Meetingroom\Entity\Event\Lookupper\EventLookupp
     public function lookup()
     {
 
-        $eventLookupperModel = new \Meetingroom\Entity\Event\Lookupper\EventLookupperModel($this->di);
+        $eventLookupperModel = new \Meetingroom\Entity\Event\Lookupper\EventLookupperModel();
 
 
-        return $eventLookupperModel->getEvents($this->roomCriteria, $this->periodCriteria);
+        return $eventLookupperModel->getEvents($this->roomCriteria, $this->periodCriteria, $this->fields);
     }
 
 

@@ -1,46 +1,25 @@
 <?php
 namespace Meetingroom\Entity\Event\Lookupper;
 
-use \Meetingroom\Entity\Event\Lookupper\Criteria;
+use \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteriaInterface;
+use \Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface;
 
 
-class EventLookupperModel
+class EventLookupperModel extends \Meetingroom\Model\AbstractModel
 {
-    /**
-     * @var array
-     */
-    protected $conditions = [];
-    /**
-     * @var Phalcon\DI
-     */
-    protected $di;
-    /**
-     * @var string
-     */
-
-    protected $db;
-
 
     /**
-     * @param Phalcon\DI $di
-     */
-    public function __construct($di)
-    {
-        $this->di = $di;
-        $this->db = $di->getShared('db');
-    }
-
-
-    /**
-     * @param RoomCriteria $roomCriteria
+     * @param RoomCriteriaInterface $roomCriteria
      * @param PeriodCriteriaInterface $periodCriteria
+     * @param array $fields
      * @return array array of \Meetingroom\Entity\Event\Event
      */
     public function getEvents(
-        \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria $roomCriteria,
-        \Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface $periodCriteria
+        RoomCriteriaInterface $roomCriteria,
+        PeriodCriteriaInterface $periodCriteria,
+        array $fields = []
     ) {
-        $sql = $this->buildQuery($roomCriteria, $periodCriteria);
+        $sql = $this->buildQuery($roomCriteria, $periodCriteria, $fields);
 
         $result = $this->execute($sql);
 
@@ -53,14 +32,20 @@ class EventLookupperModel
         return $list;
     }
 
-
+    /**
+     * @param RoomCriteriaInterface $roomCriteria
+     * @param PeriodCriteriaInterface $periodCriteria
+     * @param array $fields
+     * @return string
+     */
     protected function buildQuery(
-        \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria $roomCriteria,
-        \Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface $periodCriteria
+        RoomCriteriaInterface $roomCriteria,
+        PeriodCriteriaInterface $periodCriteria,
+        array $fields = []
     ) {
         $eventBuilder = new \Meetingroom\Entity\Event\Lookupper\Builder\EventBuilder();
 
-        return $eventBuilder->build($roomCriteria, $periodCriteria);
+        return $eventBuilder->build($roomCriteria, $periodCriteria, $fields);
 
     }
 
@@ -70,7 +55,6 @@ class EventLookupperModel
      */
     protected function execute($sql)
     {
-
         $result = $this->db->query($sql);
         $result->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
 
