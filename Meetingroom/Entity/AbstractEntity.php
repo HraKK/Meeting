@@ -53,8 +53,7 @@ abstract class AbstractEntity
 
     public function fieldExist($name)
     {
-        $map = array_flip($this->fields);
-        if (!key_exists($name, $map)) {
+        if (!in_array($name, $this->fields)) {
             throw new FieldNotExistException(sprintf('Field with name %s not exist in class %s', $name, __CLASS__));
         }
     }

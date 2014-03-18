@@ -10,6 +10,10 @@ class RoomEntity extends \Meetingroom\Entity\AbstractEntity
     protected $description;
     protected $attendees;
 
-    protected $fields = ['id' => 'id', 'title' => 'title', 
-        'description' => 'description', 'attendees' => 'attendees'];
+    protected $fields = [
+        'id' => 'id', 
+        'title' => 'title', 
+        'description' => 'description', 
+        'attendees' => 'attendees'
+    ];
 }
