@@ -223,6 +223,8 @@ Ext.define('Ext.calendar.form.field.DateRange', {
                 bottom: 0,
                 left: 0
             },
+            inputValue: true,
+            uncheckedValue: false,
             handler: this.onIsRepeatableChange,
             scope: this
         };
@@ -230,7 +232,7 @@ Ext.define('Ext.calendar.form.field.DateRange', {
 
     onIsRepeatableChange: function(chk, checked) {
 
-        // TODO: handler
+        // TODO: #1
     },
 
     getDateSeparatorConfig: function() {

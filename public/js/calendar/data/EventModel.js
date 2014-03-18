@@ -68,10 +68,13 @@ Ext.define('Ext.calendar.data.EventModel', {
                         fields.push(Mappings[prop]);
                     }
                 }
+
                 proto.fields.clear();
+
                 for (var i = 0, len = fields.length; i < len; i++) {
                     proto.fields.add(Ext.create('Ext.data.Field', fields[i]));
                 }
+
                 return Data.EventModel;
             }
         }
