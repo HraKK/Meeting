@@ -9,7 +9,7 @@ class RoomModel extends AbstractCRUDModel
     
     public function getAll()
     {
-        $result = $this->db->query("SELECT * FROM rooms ");
+        $result = $this->db->query("SELECT id, title, description, attendees FROM rooms ");
         $result->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
 
         return $result->fetchAll();
