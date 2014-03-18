@@ -10,9 +10,9 @@ class UserFactory
         $userId = $model->getIdByUsername($username);
 
         if ($userId === false) {
-            $user = new Guest();
+            $user = new GuestEntity();
         } else {
-            $user = new Authorized();
+            $user = new AuthorizedEntity();
             $user->load($username);
         }
 
