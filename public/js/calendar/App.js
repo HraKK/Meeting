@@ -504,4 +504,12 @@ Ext.define('Ext.calendar.App', {
             return 'username';
         };
 
+        Ext.getRandomId = function() {
+            var d = new Date(),
+                n = d.getTime();
+            n += parseInt((Math.random() * 1000).toFixed(0));
+            console.log(n);
+            return n;
+        }
+
     });

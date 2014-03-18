@@ -22,11 +22,6 @@ Ext.calendar.data.CalendarMappings = {
         mapping: 'desc',
         type: 'string'
     },
-    ColorId: {
-        name: 'ColorId',
-        mapping: 'color',
-        type: 'int'
-    },
     IsHidden: {
         name: 'IsHidden',
         mapping: 'hidden',
