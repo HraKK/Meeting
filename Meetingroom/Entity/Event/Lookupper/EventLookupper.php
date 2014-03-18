@@ -57,6 +57,17 @@ class EventLookupper implements \Meetingroom\Entity\Event\Lookupper\EventLookupp
     }
 
     /**
+     *
+     * @param \Meetingroom\Entity\Event\EventEntity $event
+     * @return boolean
+     */
+    public function checkConflict(\Meetingroom\Entity\Event\EventEntity $event)
+    {
+        $eventLookupperModel = new \Meetingroom\Entity\Event\Lookupper\EventLookupperModel();
+        $eventLookupperModel->checkConflict($event);
+    }
+
+    /**
      *Return search result
      *
      * @return array of Meetingroom\Entity\Event\Event
