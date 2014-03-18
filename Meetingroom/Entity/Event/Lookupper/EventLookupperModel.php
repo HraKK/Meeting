@@ -1,6 +1,8 @@
 <?php
 namespace Meetingroom\Entity\Event\Lookupper;
 
+use \Meetingroom\Entity\Event\Lookupper\Criteria;
+
 
 class EventLookupperModel
 {
@@ -15,7 +17,8 @@ class EventLookupperModel
     /**
      * @var string
      */
-    protected $query;
+
+    protected $db;
 
 
     /**
@@ -23,52 +26,42 @@ class EventLookupperModel
      */
     public function __construct($di)
     {
-
         $this->di = $di;
-
+        $this->db = $di->getShared('db');
     }
 
-    /**
-     * Add single criteria
-     *
-     * @param array $conditions array of Criteria\LookupperCriteriaInterface
-     * @return void
-     */
-    public function setCriterias(array $conditions)
-    {
-        $this->conditions = $conditions;
-    }
 
     /**
-     * Set array of criterias
-     *
-     * @param Criteria\LookupperCriteriaInterface $condition
-     * @return void
-     */
-    public function addCriterias(Criteria\LookupperCriteriaInterface $condition)
-    {
-        $this->conditions[] = $condition;
-    }
-
-    /**
+     * @param RoomCriteria $roomCriteria
+     * @param PeriodCriteriaInterface $periodCriteria
      * @return array array of \Meetingroom\Entity\Event\Event
      */
-    public function getEvents()
-    {
-        $result = $this->execute($this->buildQuery());
+    public function getEvents(
+        \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria $roomCriteria,
+        \Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface $periodCriteria
+    ) {
+        $sql = $this->buildQuery($roomCriteria, $periodCriteria);
 
+        $result = $this->execute($sql);
+
+        $list = [];
         foreach ($result as $id => $data) {
-            $list[$id] = (new \Meetingroom\Entity\Event\Event())->bind($data);
+
+            $list[$id] = (new \Meetingroom\Entity\Event\EventEntity())->bind($data);
         }
 
         return $list;
     }
 
 
-    protected function buildQuery()
-    {
-        $where_str = implode(' AND ', $this->conditions);
-        $this->query = "SELECT * FROM events WHERE 1=1 AND " . $where_str;
+    protected function buildQuery(
+        \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria $roomCriteria,
+        \Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface $periodCriteria
+    ) {
+        $eventBuilder = new \Meetingroom\Entity\Event\Lookupper\Builder\EventBuilder();
+
+        return $eventBuilder->build($roomCriteria, $periodCriteria);
+
     }
 
     /**
@@ -77,10 +70,11 @@ class EventLookupperModel
      */
     protected function execute($sql)
     {
-        $result = $this->db->query($this->query);
+
+        $result = $this->db->query($sql);
         $result->setFetchMode(\Phalcon\Db::FETCH_ASSOC);
 
-        return $result;
+        return $result->fetchAll();
     }
 
 } 

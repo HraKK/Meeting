@@ -13,11 +13,30 @@ abstract class AbstractCRUDModel extends AbstractModel
             return false;
         }
         
-        return $this->db->insert(
+        $insert = $this->performInsert($values);
+        
+        $result = $this->db->insert(
             $this->table,
-            array_values($values),
-            array_keys($values)
+            array_values($insert),
+            array_keys($insert)
         );
+
+        return $result;
+    }
+    
+    protected function performInsert($values)
+    {
+        $insert = [];
+        
+        foreach ($this->fields as $key) {
+            if($key == 'id') {
+                continue;
+            }
+            
+            $insert[$key] = isset($values[$key]) ? $values[$key] : null;
+        }
+        
+        return $insert;
     }
     
     public function read($id) 
