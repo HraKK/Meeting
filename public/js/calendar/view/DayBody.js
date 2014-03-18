@@ -165,17 +165,11 @@ Ext.define('Ext.calendar.view.DayBody', {
         if (!this.eventBodyMarkup) {
             this.eventBodyMarkup = ['{Title}',
                 '<tpl if="_isReminder">',
-                '<i class="ext-cal-ic ext-cal-ic-rem">&#160;</i>',
+                    '<i class="ext-cal-ic ext-cal-ic-rem">&#160;</i>',
                 '</tpl>',
                 '<tpl if="_isRecurring">',
-                '<i class="ext-cal-ic ext-cal-ic-rcr">&#160;</i>',
+                    '<i class="ext-cal-ic ext-cal-ic-rcr">&#160;</i>',
                 '</tpl>'
-                //                '<tpl if="spanLeft">',
-                //                    '<i class="ext-cal-spl">&#160;</i>',
-                //                '</tpl>',
-                //                '<tpl if="spanRight">',
-                //                    '<i class="ext-cal-spr">&#160;</i>',
-                //                '</tpl>'
             ].join('');
         }
         return this.eventBodyMarkup;
@@ -265,6 +259,7 @@ Ext.define('Ext.calendar.view.DayBody', {
             evtWidth,
             markup,
             target;
+
         for (; day < this.dayCount; day++) {
             ev = emptyCells = skipped = 0;
             d = this.eventGrid[0][day];
@@ -290,6 +285,7 @@ Ext.define('Ext.calendar.view.DayBody', {
         // overlapping event pre-processing loop
         i = j = overlapCols = prevCol = 0;
         l = evts.length;
+
         for (; i < l; i++) {
             evt = evts[i].data;
             evt2 = null;

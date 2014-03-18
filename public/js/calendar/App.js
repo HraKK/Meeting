@@ -408,23 +408,28 @@ Ext.define('Ext.calendar.App', {
         // we added a title to the layout's outer center region that is app-specific. This code
         // updates that outer title based on the currently-selected view range anytime the view changes.
         updateTitle: function(startDt, endDt) {
+
             var p = Ext.getCmp('app-center'),
                 fmt = Ext.Date.format;
 
             if (Ext.Date.clearTime(startDt).getTime() == Ext.Date.clearTime(endDt).getTime()) {
+
                 p.setTitle(fmt(startDt, 'F j, Y'));
-            }
-            else if (startDt.getFullYear() == endDt.getFullYear()) {
+
+            } else if (startDt.getFullYear() == endDt.getFullYear()) {
+
                 if (startDt.getMonth() == endDt.getMonth()) {
                     p.setTitle(fmt(startDt, 'F j') + ' - ' + fmt(endDt, 'j, Y'));
-                }
-                else {
+                } else {
                     p.setTitle(fmt(startDt, 'F j') + ' - ' + fmt(endDt, 'F j, Y'));
                 }
-            }
-            else {
+
+            } else {
+
                 p.setTitle(fmt(startDt, 'F j, Y') + ' - ' + fmt(endDt, 'F j, Y'));
+
             }
+
         },
 
         // This is an application-specific way to communicate CalendarPanel event messages back to the user.
@@ -447,6 +452,7 @@ Ext.define('Ext.calendar.App', {
             if (scrollbarWidth < 3) {
                 Ext.getBody().addCls('x-no-scrollbar');
             }
+
             if (Ext.isWindows) {
                 Ext.getBody().addCls('x-win');
             }

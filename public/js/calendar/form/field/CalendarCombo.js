@@ -32,7 +32,7 @@ Ext.define('Ext.calendar.form.field.CalendarCombo', {
     defaultCls: 'ext-color-default',
 
     // private
-    initComponent: function(){
+    initComponent: function() {
         this.valueField = Ext.calendar.data.CalendarMappings.CalendarId.name;
         this.displayField = Ext.calendar.data.CalendarMappings.Title.name;
 
@@ -50,7 +50,7 @@ Ext.define('Ext.calendar.form.field.CalendarCombo', {
     },
 
     // private
-    afterRender: function(){
+    afterRender: function() {
         this.callParent(arguments);
 
         this.wrap = this.el.down('.x-form-item-body');
@@ -64,7 +64,7 @@ Ext.define('Ext.calendar.form.field.CalendarCombo', {
     /* @private
      * Value can be a data value or record, or an array of values or records.
      */
-    getStyleClass: function(value){
+    getStyleClass: function(value) {
         var val = value;
 
         if (!Ext.isEmpty(val)) {

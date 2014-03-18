@@ -199,16 +199,16 @@ Ext.define('Ext.calendar.view.Month', {
         if (!this.eventBodyMarkup) {
             this.eventBodyMarkup = ['{Title}',
                 '<tpl if="_isReminder">',
-                '<i class="ext-cal-ic ext-cal-ic-rem">&#160;</i>',
+                    '<i class="ext-cal-ic ext-cal-ic-rem">&#160;</i>',
                 '</tpl>',
                 '<tpl if="_isRecurring">',
-                '<i class="ext-cal-ic ext-cal-ic-rcr">&#160;</i>',
+                    '<i class="ext-cal-ic ext-cal-ic-rcr">&#160;</i>',
                 '</tpl>',
                 '<tpl if="spanLeft">',
-                '<i class="ext-cal-spl">&#160;</i>',
+                    '<i class="ext-cal-spl">&#160;</i>',
                 '</tpl>',
                 '<tpl if="spanRight">',
-                '<i class="ext-cal-spr">&#160;</i>',
+                    '<i class="ext-cal-spr">&#160;</i>',
                 '</tpl>'
             ].join('');
         }
