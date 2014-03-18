@@ -1,4 +1,5 @@
 <?php
+
 namespace Meetingroom\Entity\Room;
 
 class RoomEntity extends \Meetingroom\Entity\AbstractEntity

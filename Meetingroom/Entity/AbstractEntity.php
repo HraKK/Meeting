@@ -11,9 +11,6 @@ abstract class AbstractEntity
     protected $modelName = null;
     protected $fields = [];
 
-    /**
-     * @param null|integer $id
-     */
     public function getModel()
     {
         $class = '\Meetingroom\Model\\' . $this->modelName;
