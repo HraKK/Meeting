@@ -1,8 +1,8 @@
 <?php
 
-namespace Meetingroom\Model;
+namespace Meetingroom\Model\Event;
 
-class EventModel extends AbstractCRUDModel
+class EventModel extends \Meetingroom\Model\AbstractCRUDModel
 {
     protected $table = 'events';
     protected $fields = [

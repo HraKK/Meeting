@@ -13,8 +13,7 @@ abstract class AbstractEntity
 
     public function getModel()
     {
-        $class = '\Meetingroom\Model\\' . $this->modelName;
-        return $this->model === null ? new $class : $this->model;
+        return $this->model === null ? new $this->modelName : $this->model;
     }
 
     /**
@@ -48,7 +47,7 @@ abstract class AbstractEntity
         return $this;
     }
 
-    public function fieldExist($name)
+    protected function fieldExist($name)
     {
         if (!in_array($name, $this->fields)) {
             throw new FieldNotExistException(sprintf('Field with name %s not exist in class %s', $name, __CLASS__));
@@ -102,6 +101,11 @@ abstract class AbstractEntity
 
     public function save()
     {
+        return $this->id === null ? $this->insert(): $this->update();
+    }
+    
+    public function insert()
+    {
         $values = [];
         
         foreach ($this->fields as $db => $map) {
@@ -109,7 +113,21 @@ abstract class AbstractEntity
         }
         
         $model = $this->getModel();
-        return $this->id === null ? $model->create($values) : $model->update($this->id, $values);
+        $result = $model->create($values);
+        $this->id  = ($result) ? $result : null;
+        return $result;
+    }
+    
+    public function update()
+    {
+        $values = [];
+        
+        foreach ($this->fields as $db => $map) {
+            $values[$db] = $this->$map;
+        }
+        
+        $model = $this->getModel();
+        return $model->update($this->id, $values);
     }
     
     public function delete()

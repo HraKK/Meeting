@@ -18,7 +18,7 @@ abstract class AbstractCRUDModel extends AbstractModel
             array_keys($insert)
         );
 
-        return $result;
+        return $result ? $insert['id'] : false;
     }
     
     protected function performInsert($values)
@@ -27,6 +27,7 @@ abstract class AbstractCRUDModel extends AbstractModel
         
         foreach ($this->fields as $key) {
             if($key == 'id') {
+                $insert['id'] = isset($values[$key]) ? $values[$key] : $this->getNextId();
                 continue;
             }
             
@@ -79,5 +80,10 @@ abstract class AbstractCRUDModel extends AbstractModel
             $this->table,
             "id = " . (int) $id
         );
+    }
+    
+    public function getNextId()
+    {
+        return (int) $this->db->query("select nextval('" . $this->table . "_id_seq'::regclass)")->fetch()->nextval;
     }
 }

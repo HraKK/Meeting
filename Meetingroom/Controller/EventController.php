@@ -6,7 +6,7 @@ use \Meetingroom\Entity\Role\RoleFactory;
 use \Meetingroom\Entity\User\UserFactory;
 use \Meetingroom\Entity\User\UserManager;
 use \Meetingroom\Entity\Room\RoomManager;
-use \Meetingroom\Entity\Event\EventManager;
+use \Meetingroom\Entity\Event\EventOptionEntity;
 use \Meetingroom\Entity\Event\EventEntity;
 use \Meetingroom\Entity\Event\Lookupper\EventLookupper;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria;
@@ -17,14 +17,14 @@ class EventController extends AbstractController
 {
     public function indexAction()
     {
-
+        $model = new \Meetingroom\Model\Event\EventModel();
+        var_dump($model->getNextId());
+        exit;
     }
 
     public function lookuperAction($id = 0)
     {
         $di = $this->getDI();
-
-
         $roomCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria(1);
         //$periodCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\WeekPeriodCriteria(17,3, 2014); // test week
         //$periodCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\MonthPeriodCriteria(3, 2014);   // test month
@@ -37,7 +37,6 @@ class EventController extends AbstractController
                 ['id', 'title']
             )->lookup()
         );
-
 
         die();
     }
@@ -65,21 +64,38 @@ class EventController extends AbstractController
             echo json_encode(['status' => 'error']);
         }
         
+        $isRepeatable = $this->request->getPost("repeatable", "int");
+        
         $event = new EventEntity();
-        $event->bind([
+        $check = $event->bind([
             'title' => $this->request->getPost("title", "striptags"),
             'room_id' => $roomId,
             'user_id' => $userId,
             'date_start' => $this->request->getPost("date_start", "string"),
             'date_end' => $this->request->getPost("date_end", "string"),
             'description' => $this->request->getPost("description", "striptags"),
-            'repeatable' => $this->request->getPost("repeatable", "int"),
+            'repeatable' => $isRepeatable,
             'attendees' => $this->request->getPost("attendees", "int"),
-        ]);
+        ])->save();
         
-        $check = $event->save();
-        // @todo repeatable
-        var_dump($check);
+        if(!($check && $isRepeatable)) {
+            var_dump($check);
+            exit;
+        }
+        
+        $option = new EventOptionEntity();
+        $res = $option->bind([
+            'id' => $event->id,
+            'mon' => $this->request->getPost("mon", "int"),
+            'tue' => $this->request->getPost("tue", "int"),
+            'wed' => $this->request->getPost("wed", "int"),
+            'thu' => $this->request->getPost("thu", "int"),
+            'fri' => $this->request->getPost("fri", "int"),
+            'sat' => $this->request->getPost("sat", "int"),
+            'sun' => $this->request->getPost("sun", "int"),
+        ])->insert();
+        
+        print_r($res);
         exit;
     }
     
@@ -97,19 +113,36 @@ class EventController extends AbstractController
         }
          
         // @todo repeatable, check period
-
-        $event->bind([
+        $isRepeatable = $this->request->getPost("repeatable", "int");
+        $check = $event->bind([
             'title' => $this->request->getPost("title", "striptags"),
             'room_id' => $roomId,
             'date_start' => $this->request->getPost("date_start", "string"),
             'date_end' => $this->request->getPost("date_end", "string"),
             'description' => $this->request->getPost("description", "striptags"),
-            'repeatable' => $this->request->getPost("repeatable", "int"),
+            'repeatable' => $isRepeatable,
             'attendees' => $this->request->getPost("attendees", "int"),
-        ]);
+        ])->save();
         
-        $update = $event->save();
-        var_dump($update);
+        
+        if(!($check && $isRepeatable)) {
+            var_dump($check);
+            exit;
+        }
+        
+        $option = new EventOptionEntity();
+        $res = $option->bind([
+            'id' => $event->id,
+            'mon' => $this->request->getPost("mon", "int"),
+            'tue' => $this->request->getPost("tue", "int"),
+            'wed' => $this->request->getPost("wed", "int"),
+            'thu' => $this->request->getPost("thu", "int"),
+            'fri' => $this->request->getPost("fri", "int"),
+            'sat' => $this->request->getPost("sat", "int"),
+            'sun' => $this->request->getPost("sun", "int"),
+        ])->update();
+        
+        print_r($res);
         exit;
     }
     
