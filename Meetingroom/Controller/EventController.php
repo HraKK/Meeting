@@ -1,5 +1,4 @@
 <?php
-
 namespace Meetingroom\Controller;
 
 use \Meetingroom\Entity\Role\RoleFactory;
@@ -35,6 +34,17 @@ class EventController extends AbstractController
         exit;
     }
 
+
+    public function checkConflictAction($id = 0)
+    {
+        $di = $this->getDI();
+        $lookupper = new EventLookupper($di);
+        $entity = new \Meetingroom\Entity\Event\EventEntity(1);
+        //var_dump('<pre>',$entity);
+        $lookupper->checkConflict($entity);
+
+        die('--fin--');
+    }
 
     public function lookuperAction($id = 0)
     {

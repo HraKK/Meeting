@@ -20,7 +20,7 @@ class EventEntity extends \Meetingroom\Entity\AbstractEntity implements OwnableI
     protected $attendees = null;
     protected $fields = [
         'id' => 'id',
-        'room_id' => 'room_id',
+        'room_id' => 'roomId',
         'date_start' => 'dateStart',
         'date_end' => 'dateEnd',
         'user_id' => 'userId',
