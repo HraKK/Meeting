@@ -245,7 +245,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
             this.setTitle(this.titleTextAdd);
 
             var start = o[M.StartDate.name],
-                end = o[M.EndDate.name] || Ext.calendar.util.Date.add(start, {hours: 1});
+                end = o[M.EndDate.name] || Ext.calendar.util.Date.add(start, {hours: 0.5});
 
             rec = Ext.create('Ext.calendar.data.EventModel');
             rec.data[M.StartDate.name] = start;
@@ -330,6 +330,10 @@ Ext.define('Ext.calendar.form.EventWindow', {
         }
         if (!this.updateRecord(this.activeRecord)) {
             this.onCancel();
+            return;
+        }
+        if (this.activeRecord.data.StartDate.getTime() == this.activeRecord.data.EndDate.getTime()) {
+            Ext.noty('Wrong time selected', 'error', 1000);
             return;
         }
         this.fireEvent(this.activeRecord.phantom ? 'eventadd' : 'eventupdate', this, this.activeRecord, this.animateTarget);

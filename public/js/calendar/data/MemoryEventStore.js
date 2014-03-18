@@ -59,7 +59,7 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
                 len = records.length;
 
             for (; i < len; i++) {
-                records[i].data[Ext.calendar.data.EventMappings.EventId.name] = records[i].id;
+                records[i].data[Ext.calendar.data.EventMappings.EventId.name] = Ext.getRandomId();
             }
         }
     },
