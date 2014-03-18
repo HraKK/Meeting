@@ -49,7 +49,7 @@ class EventController extends AbstractController
         $username = $this->session->get('username');
         
         $userManager = new UserManager();
-        $userId = $userManager->getUserId($username);
+        $userId = $userManager->getIdByUsername($username);
         
         if ($userId === false) {
             // @todo

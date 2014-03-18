@@ -15,7 +15,7 @@ class UserManager
         return $this->userModel;
     }
 
-    public function getUserId($username)
+    public function getIdByUsername($username)
     {
         return $this->getUserModel()->getIdByUsername($username);
     }
