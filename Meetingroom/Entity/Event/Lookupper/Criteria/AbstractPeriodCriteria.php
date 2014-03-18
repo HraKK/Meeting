@@ -9,16 +9,16 @@ namespace Meetingroom\Entity\Event\Lookupper\Criteria;
 abstract class AbstractPeriodCriteria implements PeriodCriteriaInterface
 {
     /**
-     * @var integer timestamp
+     * @var string ISO 8601
      */
     protected $startDate;
     /**
-     * @var integer timestamp
+     * @var string ISO 8601
      */
     protected $endDate;
 
     /**
-     * @return integer timestamp
+     * @return string ISO 8601
      */
     public function getEndDate()
     {
@@ -26,7 +26,7 @@ abstract class AbstractPeriodCriteria implements PeriodCriteriaInterface
     }
 
     /**
-     * @return integer timestamp
+     * @return string ISO 8601
      */
     public function getStartDate()
     {

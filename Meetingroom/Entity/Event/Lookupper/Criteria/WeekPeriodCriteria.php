@@ -16,7 +16,8 @@ class WeekPeriodCriteria extends AbstractPeriodCriteria
      */
     public function __construct($day, $month, $year)
     {
-        $this->startDate = mktime(0, 0, 0, $month, $day, $year);
-        $this->endDate = $this->startDate + 86400 * 7;
+        $unix_start_date = mktime(0, 0, 0, $month, $day, $year);
+        $this->startDate = date('c', $unix_start_date);
+        $this->endDate = date('c', $unix_start_date + (86400 * 7));
     }
 } 
