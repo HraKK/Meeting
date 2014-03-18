@@ -4,9 +4,6 @@ namespace Meetingroom\Model;
 
 abstract class AbstractCRUDModel extends AbstractModel
 {
-    protected $table = null;
-    protected $fields = [];
-
     public function create(array $values) 
     {
         if($this->table === null || empty($values)) {
