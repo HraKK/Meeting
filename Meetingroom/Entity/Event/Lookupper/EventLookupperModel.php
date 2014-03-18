@@ -32,6 +32,23 @@ class EventLookupperModel extends \Meetingroom\Model\AbstractModel
         return $list;
     }
 
+    public function checkConflict($event)
+    {
+        //var_dump('<pre>',$event);
+        var_dump('<pre>', $event->date_start, $event->room_id);
+        die();
+
+        $weekday = strtolower(date("D", $event->date_start));
+        $eventBuilder = new \Meetingroom\Entity\Event\Lookupper\Builder\CheckConflictBuilder();
+
+        $sql = $eventBuilder->build($event->room_id, $weekday);
+
+        var_dump($sql);
+
+        $result = $this->execute();
+        return !empty($result);
+    }
+
     /**
      * @param RoomCriteriaInterface $roomCriteria
      * @param PeriodCriteriaInterface $periodCriteria

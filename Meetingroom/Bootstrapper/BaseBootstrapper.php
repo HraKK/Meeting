@@ -1,6 +1,11 @@
 <?php
 namespace Meetingroom\Bootstrapper;
 
+/**
+ * Class BaseBootstrapper
+ * @package Meetingroom\Bootstrapper
+ * @author Denis Maximovskikh <denkin.syneforge.com>
+ */
 class BaseBootstrapper implements BootstrapperInterface
 {
 
