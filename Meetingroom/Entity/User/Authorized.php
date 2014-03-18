@@ -13,7 +13,7 @@ class Authorized extends \Meetingroom\Entity\AbstractEntity implements \Meetingr
     
     public function load($username)
     {
-        $model = new \Meetingroom\Model\UserModel();
+        $model = new \Meetingroom\Model\User\UserModel();
         $this->id = $model->getIdByUsername($username);
         return $this;
     }

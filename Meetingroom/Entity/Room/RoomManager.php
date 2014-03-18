@@ -9,18 +9,18 @@ namespace Meetingroom\Entity\Room;
 class RoomManager
 {
     /**
-     * @var \Meetingroom\Model\RoomModel
+     * @var \Meetingroom\Model\Room\RoomModel
      */
     protected $roomModel;
 
     /**
      * lazy initialization RoomModel
-     * @return \Meetingroom\Model\RoomModel
+     * @return \Meetingroom\Model\Room\RoomModel
      */
     public function getRoomModel()
     {
         if ($this->roomModel == null) {
-            $this->roomModel = new \Meetingroom\Model\RoomModel();
+            $this->roomModel = new \Meetingroom\Model\Room\RoomModel();
         }
 
         return $this->roomModel;
@@ -28,7 +28,7 @@ class RoomManager
 
     /**
      * lazy initialization RoomModel
-     * @return \Meetingroom\Model\RoomModel
+     * @return \Meetingroom\Model\Room\RoomModel
      */
     public function isRoomExist($id)
     {

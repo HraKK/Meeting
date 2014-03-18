@@ -6,7 +6,7 @@ use \Meetingroom\Entity\OwnableInterface;
 
 class EventEntity extends \Meetingroom\Entity\AbstractEntity implements OwnableInterface
 {
-    protected $modelName = 'EventModel';
+    protected $modelName = '\Meetingroom\Model\Event\EventModel';
     
     protected $id = null;
     protected $roomId = null;

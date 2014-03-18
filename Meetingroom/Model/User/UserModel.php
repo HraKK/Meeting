@@ -1,8 +1,8 @@
 <?php
 
-namespace Meetingroom\Model;
+namespace Meetingroom\Model\User;
 
-class UserModel extends AbstractCRUDModel
+class UserModel extends \Meetingroom\Model\AbstractCRUDModel
 {
     protected $table = 'users';
     
