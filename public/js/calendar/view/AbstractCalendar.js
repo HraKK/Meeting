@@ -294,9 +294,6 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         this.eventGrid = [
             []
         ];
-        this.allDayGrid = [
-            []
-        ];
         this.evtMaxCount = [];
 
         var evtsInView = this.store.queryBy(function(rec) {
@@ -311,7 +308,6 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
                 break;
             }
             this.eventGrid[w] = this.eventGrid[w] || [];
-            this.allDayGrid[w] = this.allDayGrid[w] || [];
 
             for (d = 0; d < this.dayCount; d++) {
                 if (evtsInView.getCount() > 0) {
@@ -347,17 +343,10 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
 
             if (days > 1 || Ext.calendar.util.Date.diffDays(evt.data[M.StartDate.name], evt.data[M.EndDate.name]) > 1) {
                 me.prepareEventGridSpans(evt, me.eventGrid, w, d, days);
-                me.prepareEventGridSpans(evt, me.allDayGrid, w, d, days, true);
             } else {
                 row = me.findEmptyRowIndex(w, d);
                 me.eventGrid[w][d] = me.eventGrid[w][d] || [];
                 me.eventGrid[w][d][row] = evt;
-
-                if (evt.data[M.IsAllDay.name]) {
-                    row = me.findEmptyRowIndex(w, d, true);
-                    me.allDayGrid[w][d] = me.allDayGrid[w][d] || [];
-                    me.allDayGrid[w][d][row] = evt;
-                }
             }
 
             if (me.evtMaxCount[w] < me.eventGrid[w][d].length) {
@@ -788,13 +777,6 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
                 b = evtB.data,
                 M = Ext.calendar.data.EventMappings;
 
-            // Always sort all day events before anything else
-            if (a[M.IsAllDay.name]) {
-                return -1;
-            }
-            else if (b[M.IsAllDay.name]) {
-                return 1;
-            }
             if (this.spansHavePriority) {
                 // This logic always weights span events higher than non-span events
                 // (at the possible expense of start time order). This seems to

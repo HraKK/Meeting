@@ -22,11 +22,6 @@ Ext.define('Ext.calendar.form.field.DateRange', {
      * The text to display in between the date/time fields (defaults to 'to')
      */
     toText: 'to',
-    /**
-     * @cfg {String} allDayText
-     * The text to display as the label for the all day checkbox (defaults to 'All day')
-     */
-    allDayText: 'All day',
 
     isRepeatableText: 'Is Repeatable',
 
@@ -85,7 +80,6 @@ Ext.define('Ext.calendar.form.field.DateRange', {
                 items: [
                     me.getEndDateConfig(),
                     me.getEndTimeConfig(),
-                    me.getAllDayConfig(),
                     me.getIsRepeatableConfig()
                 ]
             }];
@@ -101,7 +95,6 @@ Ext.define('Ext.calendar.form.field.DateRange', {
         me.startTime = me.down('#' + me.id + '-start-time');
         me.endTime = me.down('#' + me.id + '-end-time');
         me.endDate = me.down('#' + me.id + '-end-date');
-        me.allDay = me.down('#' + me.id + '-allday');
         me.toLabel = me.down('#' + me.id + '-to-label');
 
         me.startDate.validateOnChange = me.endDate.validateOnChange = false;
@@ -124,7 +117,6 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             me.getDateSeparatorConfig(),
             me.getEndTimeConfig(),
             me.getEndDateConfig(),
-            me.getAllDayConfig(),
             me.getIsRepeatableConfig()
         ];
     },
@@ -218,24 +210,6 @@ Ext.define('Ext.calendar.form.field.DateRange', {
         return end.getTime() - start.getTime();
     },
 
-    // TODO: remove All Day checkbox and all dependencies
-    getAllDayConfig: function() {
-        return {
-            xtype: 'checkbox',
-            itemId: this.id + '-allday',
-            hidden: true,
-            boxLabel: this.allDayText,
-            margins: {
-                top: 2,
-                right: 5,
-                bottom: 0,
-                left: 0
-            },
-            handler: this.onAllDayChange,
-            scope: this
-        };
-    },
-
     getIsRepeatableConfig: function() {
         return {
             xtype: 'checkbox',
@@ -249,13 +223,6 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             handler: this.onIsRepeatableChange,
             scope: this
         };
-    },
-
-    onAllDayChange: function(chk, checked) {
-        Ext.suspendLayouts();
-        this.startTime.setDisabled(checked).setVisible(!checked);
-        this.endTime.setDisabled(checked).setVisible(!checked);
-        Ext.resumeLayouts(true);
     },
 
     onIsRepeatableChange: function(chk, checked) {
@@ -341,23 +308,17 @@ Ext.define('Ext.calendar.form.field.DateRange', {
     getValue: function(){
         var eDate = Ext.calendar.util.Date,
             start = this.getDT('start'),
-            end = this.getDT('end'),
-            allDay = this.allDay.getValue();
+            end = this.getDT('end');
 
         if (Ext.isDate(start) && Ext.isDate(end) && start.getTime() !== end.getTime()) {
-            if (!allDay && eDate.isMidnight(start) && eDate.isMidnight(end)) {
-                // 12:00am -> 12:00am over n days, all day event
-                allDay = true;
-                end = eDate.add(end, {
-                    days: -1
-                });
-            }
+            end = eDate.add(end, {
+                days: -1
+            });
         }
 
         return [
             start,
-            end,
-            allDay
+            end
         ];
     },
 
@@ -399,19 +360,14 @@ Ext.define('Ext.calendar.form.field.DateRange', {
         if(Ext.isArray(v)){
             this.setDT(v[0], 'start');
             this.setDT(v[1], 'end');
-            this.allDay.setValue(!!v[2]);
-        }
-        else if(Ext.isDate(v)){
+        } else if(Ext.isDate(v)){
             this.setDT(v, 'start');
             this.setDT(v, 'end');
-            this.allDay.setValue(false);
-        }
-        else if(v[Ext.calendar.data.EventMappings.StartDate.name]){ //object
+        } else if(v[Ext.calendar.data.EventMappings.StartDate.name]){ //object
             this.setDT(v[Ext.calendar.data.EventMappings.StartDate.name], 'start');
             if(!this.setDT(v[Ext.calendar.data.EventMappings.EndDate.name], 'end')){
                 this.setDT(v[Ext.calendar.data.EventMappings.StartDate.name], 'end');
             }
-            this.allDay.setValue(!!v[Ext.calendar.data.EventMappings.IsAllDay.name]);
         }
     },
 

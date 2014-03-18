@@ -62,14 +62,15 @@ Ext.define('Ext.calendar.form.EventWindow', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Owner',
+                    name: Ext.calendar.data.EventMappings.Owner.name,
                     labelWidth: 100,
                     readOnly: true,
-                    value: 'username',
                     anchor: '100%'
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Room',
+                    name: Ext.calendar.data.EventMappings.CalendarId.name,
                     labelWidth: 100,
                     hidden: true
                 }
@@ -250,7 +251,8 @@ Ext.define('Ext.calendar.form.EventWindow', {
             rec = Ext.create('Ext.calendar.data.EventModel');
             rec.data[M.StartDate.name] = start;
             rec.data[M.EndDate.name] = end;
-            rec.data[M.IsAllDay.name] = !!o[M.IsAllDay.name] || start.getDate() != Ext.calendar.util.Date.add(end, {millis: 1}).getDate();
+            rec.data[M.Owner.name] = Ext.getUser();
+            rec.data[M.CalendarId.name] = Ext.currentCalendarId;
 
             f.reset();
             f.loadRecord(rec);
@@ -310,7 +312,6 @@ Ext.define('Ext.calendar.form.EventWindow', {
         var dates = this.dateRangeField.getValue();
         obj[M.StartDate.name] = dates[0];
         obj[M.EndDate.name] = dates[1];
-        obj[M.IsAllDay.name] = dates[2];
 
         record.beginEdit();
         record.set(obj);

@@ -124,7 +124,7 @@ Ext.define('Ext.calendar.App', {
                                 xtype: 'tbtext',
                                 width: 172,
                                 cls: 'user-name',
-                                text: 'username'
+                                text: Ext.getUser()
                             },
                             {
                                 xtype: 'tbspacer'
@@ -174,6 +174,8 @@ Ext.define('Ext.calendar.App', {
                                 Ext.defer(function() {
                                     Ext.getCmp('app-calendar').setActiveView(activeItemId);
                                 }, 10);
+
+                                Ext.currentCalendarId = newCard.CalendarId;
 
                             }
                         }
@@ -279,8 +281,7 @@ Ext.define('Ext.calendar.App', {
                                             'dayclick': {
                                                 fn: function(vw, dt, ad, el) {
                                                     this.showEditWindow({
-                                                        StartDate: dt,
-                                                        IsAllDay: ad
+                                                        StartDate: dt
                                                     }, el);
                                                 },
                                                 scope: this
@@ -295,7 +296,7 @@ Ext.define('Ext.calendar.App', {
                                             'eventmove': {
                                                 fn: function(vw, rec) {
                                                     var mappings = Ext.calendar.data.EventMappings,
-                                                        time = rec.data[mappings.IsAllDay.name] ? '' : ' \\a\\t H:i';
+                                                        time = ' \\a\\t H:i';
 
                                                     rec.commit();
 
@@ -349,6 +350,7 @@ Ext.define('Ext.calendar.App', {
                             fn: function(win, rec) {
                                 win.hide();
                                 rec.data.IsNew = false;
+                                rec.data.Owner = Ext.getUser();
                                 this.eventStore.add(rec);
                                 this.eventStore.sync();
                                 this.showMsg('Event ' + rec.data.Title + ' was added');
@@ -435,10 +437,8 @@ Ext.define('Ext.calendar.App', {
         }
     },
     function() {
-        /*
-         * A few Ext overrides needed to work around issues in the calendar
-         */
 
+        // A few Ext overrides needed to work around issues in the calendar
         Ext.form.Basic.override({
             reset: function() {
                 var me = this;
@@ -497,6 +497,10 @@ Ext.define('Ext.calendar.App', {
                 },
                 timeout: duration || 3000
             });
+        };
+
+        Ext.getUser = function() {
+            return 'username';
         };
 
     });
