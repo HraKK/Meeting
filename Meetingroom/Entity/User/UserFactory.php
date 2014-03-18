@@ -6,7 +6,7 @@ class UserFactory
 {
     public function getUser($username)
     {
-        $model = new \Meetingroom\Model\UserModel();
+        $model = new \Meetingroom\Model\User\UserModel();
         $userId = $model->getIdByUsername($username);
 
         if ($userId === false) {

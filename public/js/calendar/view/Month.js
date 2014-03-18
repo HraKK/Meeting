@@ -199,16 +199,16 @@ Ext.define('Ext.calendar.view.Month', {
         if (!this.eventBodyMarkup) {
             this.eventBodyMarkup = ['{Title}',
                 '<tpl if="_isReminder">',
-                '<i class="ext-cal-ic ext-cal-ic-rem">&#160;</i>',
+                    '<i class="ext-cal-ic ext-cal-ic-rem">&#160;</i>',
                 '</tpl>',
                 '<tpl if="_isRecurring">',
-                '<i class="ext-cal-ic ext-cal-ic-rcr">&#160;</i>',
+                    '<i class="ext-cal-ic ext-cal-ic-rcr">&#160;</i>',
                 '</tpl>',
                 '<tpl if="spanLeft">',
-                '<i class="ext-cal-spl">&#160;</i>',
+                    '<i class="ext-cal-spl">&#160;</i>',
                 '</tpl>',
                 '<tpl if="spanRight">',
-                '<i class="ext-cal-spr">&#160;</i>',
+                    '<i class="ext-cal-spr">&#160;</i>',
                 '</tpl>'
             ].join('');
         }
@@ -255,16 +255,15 @@ Ext.define('Ext.calendar.view.Month', {
             selector = this.getEventSelectorCls(evt[M.EventId.name]),
             title = evt[M.Title.name];
 
-        return Ext.applyIf({
+        return Ext.applyIf(
+            {
                 _selectorCls: selector,
-                _colorCls: 'ext-color-' + (evt[M.CalendarId.name] ?
-                    evt[M.CalendarId.name] : 'default') + (evt._renderAsAllDay ? '-ad' : ''),
+                _colorCls: 'ext-color-' + (evt[M.CalendarId.name] ? evt[M.CalendarId.name] : 'default'),
                 _elId: selector + '-' + evt._weekIndex,
-                _isRecurring: evt.Recurrence && evt.Recurrence != '',
-                _isReminder: evt[M.Reminder.name] && evt[M.Reminder.name] != '',
-                Title: (evt[M.IsAllDay.name] ? '' : Ext.Date.format(evt[M.StartDate.name], 'H:i ')) + (!title || title.length == 0 ? '(No title)' : title)
+                Title: Ext.Date.format(evt[M.StartDate.name], 'H:i ') + (!title || title.length == 0 ? '(No title)' : title)
             },
-            evt);
+            evt
+        );
     },
 
     // private
@@ -282,7 +281,7 @@ Ext.define('Ext.calendar.view.Month', {
     // private
     renderItems: function() {
         Ext.calendar.util.WeekEventRenderer.render({
-            eventGrid: this.allDayOnly ? this.allDayGrid : this.eventGrid,
+            eventGrid: this.eventGrid,
             viewStart: this.viewStart,
             tpl: this.getEventTemplate(),
             maxEventsPerDay: this.getMaxEventsPerDay(),

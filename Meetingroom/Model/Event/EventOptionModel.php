@@ -1,8 +1,8 @@
 <?php
 
-namespace Meetingroom\Model;
+namespace Meetingroom\Model\Event;
 
-class EventOptionModel extends AbstractCRUDModel
+class EventOptionModel extends \Meetingroom\Model\AbstractCRUDModel
 {
     protected $table = 'repeating_options';
     protected $fields = ['id', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];

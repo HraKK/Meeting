@@ -9,7 +9,7 @@ class UserManager
     protected function getUserModel()
     {
         if ($this->userModel === null) {
-            $this->userModel = new \Meetingroom\Model\UserModel();
+            $this->userModel = new \Meetingroom\Model\User\UserModel();
         }
 
         return $this->userModel;

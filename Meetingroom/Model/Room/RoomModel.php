@@ -1,8 +1,8 @@
 <?php
 
-namespace Meetingroom\Model;
+namespace Meetingroom\Model\Room;
 
-class RoomModel extends AbstractCRUDModel
+class RoomModel extends \Meetingroom\Model\AbstractCRUDModel
 {
     protected $table = 'rooms';
     protected $fields = ['id', 'title', 'description', 'attendees'];

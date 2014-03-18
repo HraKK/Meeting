@@ -43,5 +43,10 @@ Ext.calendar.data.EventMappings = {
         name: 'Owner',
         mapping: 'owner',
         type: 'string'
+    },
+    IsRepeatable: {
+        name: 'IsRepeatable',
+        mapping: 'repeatable',
+        type: 'boolean'
     }
 };

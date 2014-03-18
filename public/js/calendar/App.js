@@ -114,10 +114,6 @@ Ext.define('Ext.calendar.App', {
                                     '<h1>Meeting Room 2.0</h1>'
                             },
                             {
-                                xtype: 'container',
-                                html: '<span id="app-msg" class="x-hidden"></span>'
-                            },
-                            {
                                 xtype: 'tbfill'
                             },
                             {
@@ -217,11 +213,16 @@ Ext.define('Ext.calendar.App', {
                                 style: {
                                     background: '#add2ed'
                                 },
+                                layout: {
+                                    type: 'hbox',
+                                    align: 'stretch'
+                                },
                                 items: [
                                     {
                                         xtype: 'calendarpanel',
                                         id: 'app-calendar',
-                                        height: 548,
+                                        maxHeight: 534,
+                                        flex: 1,
                                         eventStore: this.eventStore,
                                         calendarStore: this.calendarStore,
                                         border: false,
@@ -280,8 +281,19 @@ Ext.define('Ext.calendar.App', {
                                             },
                                             'dayclick': {
                                                 fn: function(vw, dt, ad, el) {
+                                                    var StartDate = dt,
+                                                        EndDate;
+
+                                                    if (dt.getHours() < 9) {
+                                                        StartDate = Ext.calendar.util.Date.add(StartDate, {hours: 9});
+                                                        EndDate = Ext.calendar.util.Date.add(StartDate, {hours: 0.5});
+                                                    } else {
+                                                        EndDate = Ext.calendar.util.Date.add(StartDate, {hours: 0.5});
+                                                    }
+
                                                     this.showEditWindow({
-                                                        StartDate: dt
+                                                        StartDate: StartDate,
+                                                        EndDate: EndDate
                                                     }, el);
                                                 },
                                                 scope: this
@@ -342,6 +354,7 @@ Ext.define('Ext.calendar.App', {
         // it altogether. Because of this, it's up to the application code to tie the pieces together.
         // Note that this function is called from various event handlers in the CalendarPanel above.
         showEditWindow: function(rec, animateTarget) {
+
             if (!this.editWin) {
                 this.editWin = Ext.create('Ext.calendar.form.EventWindow', {
                     calendarStore: this.calendarStore,
@@ -351,6 +364,7 @@ Ext.define('Ext.calendar.App', {
                                 win.hide();
                                 rec.data.IsNew = false;
                                 rec.data.Owner = Ext.getUser();
+                                rec.data.CalendarId = Ext.currentCalendarId;
                                 this.eventStore.add(rec);
                                 this.eventStore.sync();
                                 this.showMsg('Event ' + rec.data.Title + ' was added');
@@ -384,7 +398,9 @@ Ext.define('Ext.calendar.App', {
                     }
                 });
             }
+
             this.editWin.show(rec, animateTarget);
+
         },
 
         // The CalendarPanel itself supports the standard Panel title config, but that title
@@ -392,23 +408,28 @@ Ext.define('Ext.calendar.App', {
         // we added a title to the layout's outer center region that is app-specific. This code
         // updates that outer title based on the currently-selected view range anytime the view changes.
         updateTitle: function(startDt, endDt) {
+
             var p = Ext.getCmp('app-center'),
                 fmt = Ext.Date.format;
 
             if (Ext.Date.clearTime(startDt).getTime() == Ext.Date.clearTime(endDt).getTime()) {
+
                 p.setTitle(fmt(startDt, 'F j, Y'));
-            }
-            else if (startDt.getFullYear() == endDt.getFullYear()) {
+
+            } else if (startDt.getFullYear() == endDt.getFullYear()) {
+
                 if (startDt.getMonth() == endDt.getMonth()) {
                     p.setTitle(fmt(startDt, 'F j') + ' - ' + fmt(endDt, 'j, Y'));
-                }
-                else {
+                } else {
                     p.setTitle(fmt(startDt, 'F j') + ' - ' + fmt(endDt, 'F j, Y'));
                 }
-            }
-            else {
+
+            } else {
+
                 p.setTitle(fmt(startDt, 'F j, Y') + ' - ' + fmt(endDt, 'F j, Y'));
+
             }
+
         },
 
         // This is an application-specific way to communicate CalendarPanel event messages back to the user.
@@ -431,6 +452,7 @@ Ext.define('Ext.calendar.App', {
             if (scrollbarWidth < 3) {
                 Ext.getBody().addCls('x-no-scrollbar');
             }
+
             if (Ext.isWindows) {
                 Ext.getBody().addCls('x-win');
             }
@@ -502,5 +524,12 @@ Ext.define('Ext.calendar.App', {
         Ext.getUser = function() {
             return 'username';
         };
+
+        Ext.getRandomId = function() {
+            var d = new Date(),
+                n = d.getTime();
+            n += parseInt((Math.random() * 1000).toFixed(0));
+            return n;
+        }
 
     });

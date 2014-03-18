@@ -81,17 +81,8 @@ h1 {
     color: #9F2727;
 }
 
-#app-msg {
-    color: #c8a52e;
-    padding: 2px 10px;
-    font-weight: bold;
-    font-size: 13px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
-}
-
-.x-window-header-default .x-tool-img {
+.x-window-header-default .x-tool-close,
+.x-panel-header .x-tool-close {
     float: right;
 }
 

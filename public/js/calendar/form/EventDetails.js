@@ -94,6 +94,7 @@ Ext.define('Ext.calendar.form.EventDetails', {
             allowBlank: false,
             anchor: '90%'
         });
+
         this.dateRangeField = new Ext.calendar.form.field.DateRange({
             fieldLabel: 'When',
             singleLine: false,

@@ -1,9 +1,10 @@
 <?php
+
 namespace Meetingroom\Entity\Room;
 
 class RoomEntity extends \Meetingroom\Entity\AbstractEntity
 {
-    protected $modelName = 'RoomModel';
+    protected $modelName = '\Meetingroom\Model\Room\RoomModel';
     
     protected $id;
     protected $title;
