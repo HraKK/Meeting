@@ -136,8 +136,8 @@ Ext.define('Ext.calendar.view.DayBody', {
 
         this.callParent(arguments);
 
-        // default scroll position to 7am:
-        // this.scrollTo(7 * 42);
+        // default scroll position to 7am: 7 * 42
+        this.scrollTo(0);
     },
 
     // private

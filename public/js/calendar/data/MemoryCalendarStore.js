@@ -15,13 +15,19 @@ Ext.define('Ext.calendar.data.MemoryCalendarStore', {
     ],
 
     proxy: {
-        type: 'memory',
+        type: 'ajax',
         reader: {
             type: 'json',
-            root: 'calendars'
+            root: 'rooms'
         },
         writer: {
             type: 'json'
+        },
+        api: {
+            read: '/js/calendar/json/rooms.json',
+            create: '',
+            update: '',
+            destroy: ''
         }
     },
 
@@ -31,12 +37,10 @@ Ext.define('Ext.calendar.data.MemoryCalendarStore', {
         var me = this,
             calendarData = Ext.calendar.data;
 
-        me.sorters = me.sorters || [
-            {
-                property: calendarData.CalendarMappings.Title.name,
-                direction: 'ASC'
-            }
-        ];
+        me.sorters = me.sorters || [{
+            property: calendarData.CalendarMappings.Title.name,
+            direction: 'ASC'
+        }];
 
         me.idProperty = me.idProperty || calendarData.CalendarMappings.CalendarId.name || 'id';
 

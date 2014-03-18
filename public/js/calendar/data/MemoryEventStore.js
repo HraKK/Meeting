@@ -94,6 +94,7 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
             if (resultSet) {
                 me.totalCount = resultSet.total;
             }
+
             if (successful) {
                 me.loadRecords(records, operation);
             }
