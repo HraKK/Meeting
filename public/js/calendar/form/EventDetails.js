@@ -99,27 +99,6 @@ Ext.define('Ext.calendar.form.EventDetails', {
             singleLine: false,
             anchor: '90%'
         });
-        this.reminderField = new Ext.calendar.form.field.ReminderCombo({
-            name: 'Reminder',
-            anchor: '70%'
-        });
-        this.notesField = new Ext.form.TextArea({
-            fieldLabel: 'Notes',
-            name: Ext.calendar.data.EventMappings.Notes.name,
-            grow: true,
-            growMax: 150,
-            anchor: '100%'
-        });
-        this.locationField = new Ext.form.Text({
-            fieldLabel: 'Location',
-            name: Ext.calendar.data.EventMappings.Location.name,
-            anchor: '100%'
-        });
-        this.urlField = new Ext.form.Text({
-            fieldLabel: 'Web Link',
-            name: Ext.calendar.data.EventMappings.Url.name,
-            anchor: '100%'
-        });
 
         var leftFields = [this.titleField, this.dateRangeField, this.reminderField],
             rightFields = [this.notesField, this.locationField, this.urlField];
@@ -207,7 +186,7 @@ Ext.define('Ext.calendar.form.EventDetails', {
 
         rec.beginEdit();
 
-        //TODO: This block is copied directly from BasicForm.updateRecord.
+        // This block is copied directly from BasicForm.updateRecord.
         // Unfortunately since that method internally calls begin/endEdit all
         // updates happen and the record dirty status is reset internally to
         // that call. We need the dirty status, plus currently the DateRangeField
@@ -233,7 +212,6 @@ Ext.define('Ext.calendar.form.EventDetails', {
 
         rec.set(M.StartDate.name, dates[0]);
         rec.set(M.EndDate.name, dates[1]);
-        rec.set(M.IsAllDay.name, dates[2]);
 
         dirty = rec.dirty;
         rec.endEdit();

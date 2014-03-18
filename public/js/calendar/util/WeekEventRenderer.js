@@ -27,7 +27,7 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
 
         render: function(o) {
             var w = 0,
-                grid = o.eventGrid,
+                grid = o.eventGrid || [],
                 dt = Ext.Date.clone(o.viewStart),
                 eventTpl = o.tpl,
                 max = o.maxEventsPerDay != undefined ? o.maxEventsPerDay : 999,
@@ -97,7 +97,6 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
                                     //skip non-starting span cells
                                     var item = evt.data || evt.event.data;
                                     item._weekIndex = w;
-                                    item._renderAsAllDay = item[Ext.calendar.data.EventMappings.IsAllDay.name] || evt.isSpanStart;
                                     item.spanLeft = item[Ext.calendar.data.EventMappings.StartDate.name].getTime() < startOfWeek.getTime();
                                     item.spanRight = item[Ext.calendar.data.EventMappings.EndDate.name].getTime() > endOfWeek.getTime();
                                     item.spanCls = (item.spanLeft ? (item.spanRight ? 'ext-cal-ev-spanboth' : 'ext-cal-ev-spanleft') : (item.spanRight ? 'ext-cal-ev-spanright' : ''));

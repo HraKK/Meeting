@@ -10,11 +10,14 @@ class BaseCriteriaBuilder
 {
 
     /**
+     * @param array $fields
      * @return string
      */
-    public function build()
+    public function build(array $fields = [])
     {
-        return 'SELECT * FROM events WHERE ';
+        $fields_str = (empty($fields)) ? '*' : implode(',', $fields);
+
+        return 'SELECT ' . $fields_str . ' FROM events WHERE ';
     }
 
 }

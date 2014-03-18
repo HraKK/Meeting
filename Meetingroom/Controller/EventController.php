@@ -8,6 +8,9 @@ use \Meetingroom\Entity\User\UserManager;
 use \Meetingroom\Entity\Room\RoomManager;
 use \Meetingroom\Entity\Event\EventManager;
 use \Meetingroom\Entity\Event\EventEntity;
+use \Meetingroom\Entity\Event\Lookupper\EventLookupper;
+use \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria;
+
 use \Meetingroom\Entity\Role\Group;
 
 class EventController extends AbstractController
@@ -37,13 +40,19 @@ class EventController extends AbstractController
     {
         $di = $this->getDI();
 
-        $lookupper = new \Meetingroom\Entity\Event\Lookupper\EventLookupper($di);
 
         $roomCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria(1);
-        $periodCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria(17, 3, 2014);
-        $lookupper->setPeriodCriteria($periodCriteria);
-        $lookupper->setRoomCriteria($roomCriteria);
-        var_dump('<pre>', $lookupper->lookup());
+        //$periodCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\WeekPeriodCriteria(17,3, 2014); // test week
+        //$periodCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\MonthPeriodCriteria(3, 2014);   // test month
+        $periodCriteria = new DayPeriodCriteria(17, 3, 2014);
+        $lookupper = new EventLookupper($di);
+
+        var_dump(
+            '<pre>',
+            $lookupper->setPeriodCriteria($periodCriteria)->setRoomCriteria($roomCriteria)->setFields(
+                ['id', 'title']
+            )->lookup()
+        );
 
 
         die();
