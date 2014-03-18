@@ -1,4 +1,5 @@
 <?php
+
 namespace Meetingroom\Controller;
 
 use \Meetingroom\Entity\Role\RoleFactory;
@@ -16,22 +17,7 @@ class EventController extends AbstractController
 {
     public function indexAction()
     {
-        $eventManager = new EventManager();
-        $events = $eventManager->loadEvents();
-//        $events[1]->id = 3;
-//        $id = $events[1]->id;
-//        
-//        var_dump($id);
-        exit;
-    }
 
-    public function showAction($id = 0)
-    {
-        $event = new EventEntity($id);
-        $user = (new UserFactory())->getUser('Alex');
-        $role = (new RoleFactory())->getRole($user, $event);
-        var_dump($role);
-        exit;
     }
 
 
@@ -71,6 +57,7 @@ class EventController extends AbstractController
     
     public function createAction()
     {
+        // @todo
         $this->session->set('username', 'Barif2');
         $username = $this->session->get('username');
         
@@ -78,6 +65,7 @@ class EventController extends AbstractController
         $userId = $userManager->getUserId($username);
         
         if ($userId === false) {
+            // @todo
             $userId = $userManager->createUser($username, 1, 'developer', 'barif');
         }
         
@@ -89,31 +77,31 @@ class EventController extends AbstractController
             echo json_encode(['status' => 'error']);
         }
         
-        $eventManager = new EventManager();
+        $event = new EventEntity();
+        $event->bind([
+            'title' => $this->request->getPost("title", "striptags"),
+            'room_id' => $roomId,
+            'user_id' => $userId,
+            'date_start' => $this->request->getPost("date_start", "string"),
+            'date_end' => $this->request->getPost("date_end", "string"),
+            'description' => $this->request->getPost("description", "striptags"),
+            'repeatable' => $this->request->getPost("repeatable", "int"),
+            'attendees' => $this->request->getPost("attendees", "int"),
+        ]);
         
-        $event = $eventManager->createEvent(
-                $this->request->getPost("title", "striptags"), 
-                $userId, 
-                $roomId, 
-                $this->request->getPost("date_start", "string"), 
-                $this->request->getPost("date_end", "string"), 
-                $this->request->getPost("description", "striptags"), 
-                $this->request->getPost("repeatable", "int"),  
-                $this->request->getPost("attendees", "int")
-        );
-        
-        //TODO repeatable
-        var_dump($event);
+        $check = $event->save();
+        // @todo repeatable
+        var_dump($check);
         exit;
     }
     
     public function updateAction()
     {
         $event = $this->validateEvent();
-        
+
         $roomId = $this->request->getPost("room_id", "int");
         
-        if($roomId !== $event->room_id) {
+        if($roomId !== $event->roomId) {
             $roomManager = new RoomManager();
             if(!$roomManager->isRoomExist($roomId)) {
                 die('room ain`t exist');
@@ -140,11 +128,7 @@ class EventController extends AbstractController
     public function deleteAction()
     {
         $event = $this->validateEvent();
-        
-        $eventManager = new EventManager();
-        $check = $eventManager->deleteEvent($event->id);
-        
-        echo $check ? 'success' : 'false';
+        echo $event->delete() ? 'success' : 'false';
         exit;
     }
     
