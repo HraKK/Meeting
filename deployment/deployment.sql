@@ -214,3 +214,15 @@ ALTER TABLE "public"."repeating_options" RENAME "4" TO "thu";
 ALTER TABLE "public"."repeating_options" RENAME "5" TO "fri";
 ALTER TABLE "public"."repeating_options" RENAME "6" TO "sat";
 ALTER TABLE "public"."repeating_options" RENAME "7" TO "sun";
+
+
+-- TEST DATA
+INSERT INTO events
+VALUES (4, 1, '2014-03-18 17:33:38', '2014-03-18 18:33:38', 1, 'zzsdfas', 'asdfcvxcz cv zxcvxz v', FALSE, 7);
+INSERT INTO events
+VALUES (1, 1, '2014-03-17 20:40:50.499974', '2014-03-17 21:50:50.499974', 1, 'meeting', 'meeting desc', TRUE, 3);
+
+INSERT INTO rooms VALUES (1, 'Yellow room', 'big ', 10);
+INSERT INTO rooms VALUES (2, 'Green room', 'small', 5);
+
+INSERT INTO repeating_options VALUES (1, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
