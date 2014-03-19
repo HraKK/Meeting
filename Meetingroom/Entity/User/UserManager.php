@@ -15,18 +15,8 @@ class UserManager
         return $this->userModel;
     }
 
-    public function getUserId($username)
+    public function getIdByUsername($username)
     {
         return $this->getUserModel()->getIdByUsername($username);
-    }
-    
-    public function createUser($username, $phone, $position, $nickname) 
-    {
-        return $this->getUserModel()->create([
-            'name' => $username, 
-            'phone' => $phone, 
-            'position' => $position, 
-            'nickname' => $nickname
-        ]);
     }
 }

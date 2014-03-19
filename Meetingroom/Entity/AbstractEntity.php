@@ -61,9 +61,16 @@ abstract class AbstractEntity
      */
     protected function load()
     {
-        $this->bind($this->getModel()->read($this->id));
+        $this->setLoaded();
+        $data = $this->getModel()->read($this->id);
+        return ($data) ? $this->bind($data) : $this;
     }
-
+    
+    protected function setLoaded()
+    {
+        $this->loaded = true;
+    }
+    
     /**
      * Link data from the db and class fields
      *
@@ -71,19 +78,19 @@ abstract class AbstractEntity
      * @return $this
      * @throws \Meetingroom\Entity\Exception\FieldNotExistException
      */
-    public function bind($data = [])
+    public function bind(array $data)
     {
+        $this->setLoaded();
+        
         if (empty($data)) {
             return $this;
         }
-
-        $this->loaded = true;
-
+        
         foreach ($this->fields as $db => $map) {
-            if (!isset($data[$db])) {
+            if(!isset($data[$db])) {
                 continue;
             }
-
+            
             $this->$map = $data[$db];
         }
 
@@ -96,22 +103,17 @@ abstract class AbstractEntity
      */
     public function isLoaded()
     {
-        return (bool)$this->loaded;
+        return (bool) $this->loaded;
     }
 
     public function save()
     {
-        return $this->id === null ? $this->insert(): $this->update();
+        return $this->id == null ? $this->insert(): $this->update();
     }
     
     public function insert()
     {
-        $values = [];
-        
-        foreach ($this->fields as $db => $map) {
-            $values[$db] = $this->$map;
-        }
-        
+        $values = $this->composeValues();
         $model = $this->getModel();
         $result = $model->create($values);
         $this->id  = ($result) ? $result : null;
@@ -120,16 +122,22 @@ abstract class AbstractEntity
     
     public function update()
     {
-        $values = [];
-
-        foreach ($this->fields as $db => $map) {
-            $values[$db] = $this->$map;
-        }
-
+        $values = $this->composeValues();
         $model = $this->getModel();
         return $model->update($this->id, $values);
     }
-
+    
+    protected function composeValues()
+    {
+        $values = [];
+        
+        foreach ($this->fields as $db => $map) {
+            $values[$db] = $this->$map;
+        }
+        
+        return $values;
+    }
+    
     public function delete()
     {
         return $this->getModel()->delete($this->id);

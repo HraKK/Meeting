@@ -20,7 +20,6 @@ Ext.define('Ext.calendar.App', {
             'Ext.calendar.data.MemoryCalendarStore',
             'Ext.calendar.data.MemoryEventStore',
             'Ext.calendar.data.Events',
-            'Ext.calendar.data.Calendars',
             'Ext.calendar.form.EventWindow'
         ],
 
@@ -77,9 +76,7 @@ Ext.define('Ext.calendar.App', {
             this.checkScrollOffset();
 
             // This is an example calendar store that enables event color-coding
-            this.calendarStore = Ext.create('Ext.calendar.data.MemoryCalendarStore', {
-                data: Ext.calendar.data.Calendars.getData()
-            });
+            this.calendarStore = Ext.create('Ext.calendar.data.MemoryCalendarStore');
 
             // A sample event store that loads static JSON from a local file. Obviously a real
             // implementation would likely be loading remote data via an HttpProxy, but the
@@ -145,17 +142,21 @@ Ext.define('Ext.calendar.App', {
                             afterrender: function(tabPanel) {
 
                                 // fill tab
-                                scope.calendarStore.each(function(record, index) {
-                                    tabPanel.add({
-                                        title: record.get('Title'),
-                                        tooltip: record.get('Description'),
-                                        iconCls: 'room-tab-icon room-tab-icon-' + record.get('CalendarId'),
-                                        CalendarId: record.get('CalendarId')
-                                    });
-                                });
+                                scope.calendarStore.on('load', function() {
 
-                                // set main room active
-                                tabPanel.setActiveTab(1);
+                                    this.each(function(record, index) {
+                                        tabPanel.add({
+                                            title: record.get('Title'),
+                                            tooltip: record.get('Description'),
+                                            iconCls: 'room-tab-icon room-tab-icon-' + record.get('CalendarId'),
+                                            CalendarId: record.get('CalendarId')
+                                        });
+                                    });
+
+                                    // set main room active
+                                    tabPanel.setActiveTab(1);
+
+                                });
 
                             },
                             tabchange: function(tabPanel, newCard, oldCard) {

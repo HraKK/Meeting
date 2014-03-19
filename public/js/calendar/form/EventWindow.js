@@ -206,13 +206,6 @@ Ext.define('Ext.calendar.form.EventWindow', {
         this.deleteButton = this.down('#delete-btn');
     },
 
-    // private
-    onEditDetailsClick: function(e) {
-        e.stopEvent();
-        this.updateRecord(this.activeRecord, true);
-        this.fireEvent('editdetails', this, this.activeRecord, this.animateTarget);
-    },
-
     /**
      * Shows the window, rendering it first if necessary, or activates it and brings it to front if hidden.
      * @param {Ext.data.Record/Object} o Either a {@link Ext.data.Record} if showing the form
@@ -325,6 +318,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
 
     // private
     onSave: function() {
+
         if (!this.formPanel.form.isValid()) {
             return;
         }
@@ -340,6 +334,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
 
         // Clear phantom and modified states.
         this.activeRecord.commit();
+
     },
 
     // private

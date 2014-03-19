@@ -2,55 +2,76 @@
 
 namespace Meetingroom\Controller;
 
+use \Meetingroom\Service\LDAP\LDAP;
+use \Meetingroom\Entity\User\UserFactory;
+use \Meetingroom\Entity\User\UserManager;
+
 class UserController extends \Phalcon\Mvc\Controller
 {
-    public function indexAction($page, $asd)
+    public function loginAction()
     {
-        print_r(func_get_args());
-    }
-
-    public function loadAction($username)
-    {
-        $userFactory = new \Meetingroom\Entity\User\UserFactory();
-        $user = $userFactory->getUser($username);
-        var_dump($user->getId());
-        exit;
-    }
-
-    public function testAction()
-    {
-        echo "<h1>User2!</h1>";
-        $di = $this->getDI();
-
-
-        $ldap = new \Meetingroom\Service\LDAP\LDAP($di);
-
-        $LDAPUser = $ldap->getUserInfo('sysgstats', 'pgGZErgMkNXF');
-
-
-        print "Nickname: " . $LDAPUser->getNickname() . "<br />";
-        print "Name: " . $LDAPUser->getName() . "<br />";
-        print "Email: " . $LDAPUser->getEmail() . "<br />";
-        print "Position: " . $LDAPUser->getPosition() . "<br />";
-
-
-        $acl = $di->get('acl');
-
-        //test
-        if ($acl->isAllowed("Users", "User", "test")) {
-            echo "Access granted!";
-        } else {
-            echo "Access denied :(";
+        $username = $this->request->getPost("username", "string");
+        $password = $this->request->getPost("password", "string");
+        
+        $ldapUser = $this->getLDAPUser($username, $password);
+        
+        if($ldapUser === false) {
+            die('wrong credentials');
         }
-        print "<hr />";
-
-        $roomManager = new \Meetingroom\Entity\Room\RoomManager();
-        //var_dump($roomManager->getAll());
-
-        $room = new \Meetingroom\Entity\Room\Room(1);
-        var_dump((array)$room);
-
-        die();
+        
+        $userManager = new UserManager();
+        $userId = $userManager->getIdByUsername($username);
+        
+        if ($userId === false) {
+            $userId = $this->createUser(
+                $ldapUser->getName(),
+                'phone',
+                $ldapUser->getPosition(),
+                $ldapUser->getNickname()
+            );
+        }
+        
+        $this->session->set('username', $username);
+        $this->session->set('userId', $userId);
+        
+        die('logged in');
     }
+    
+    public function checkSessionAction()
+    {
+        $username = $this->session->get('username');
+        die($username == null ? 'not authenticated' : 'authenticated');
+    }
+    
+    public function logoutAction()
+    {
+        $this->session->destroy();
+        die('logged out');
+    }
+    
+    protected function getLDAPUser($username, $password)
+    {
+        $di = $this->getDI();
+        $ldap = new LDAP($di);
+        return $ldap->getUserInfo($username, $password);
+    }
+    
+    protected function createUser($name, $phone, $position, $username)
+    {
+        $userFactory = new UserFactory();
+        $user = $userFactory->getUser($username); 
 
+        $userId = $user->bind([
+            'name' => $name,
+            'phone' => $phone,
+            'position' => $position,
+            'nickname' => $username
+        ])->insert();
+        
+        if(!$userId) {
+            die('user not created');
+        }
+        
+        return $userId;
+    }
 }
