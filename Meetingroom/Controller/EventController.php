@@ -18,7 +18,7 @@ class EventController extends AbstractController
     public function indexAction()
     {
         $model = new \Meetingroom\Model\Event\EventModel();
-        var_dump($model->getNextId());
+        var_dump($model->read(666));
         exit;
     }
 
@@ -61,11 +61,10 @@ class EventController extends AbstractController
         $username = $this->session->get('username');
         
         $userManager = new UserManager();
-        $userId = $userManager->getUserId($username);
+        $userId = $userManager->getIdByUsername($username);
         
         if ($userId === false) {
-            // @todo
-            $userId = $userManager->createUser($username, 1, 'developer', 'barif');
+            die('user not exist');
         }
         
         $roomId = $this->request->getPost("room_id", "int");

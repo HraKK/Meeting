@@ -2,55 +2,52 @@
 
 namespace Meetingroom\Controller;
 
+use \Meetingroom\Service\LDAP\LDAP;
+use \Meetingroom\Entity\User\UserFactory;
+use \Meetingroom\Entity\User\UserManager;
+
 class UserController extends \Phalcon\Mvc\Controller
 {
-    public function indexAction($page, $asd)
+    public function loginAction()
     {
-        print_r(func_get_args());
-    }
-
-    public function loadAction($username)
-    {
-        $userFactory = new \Meetingroom\Entity\User\UserFactory();
-        $user = $userFactory->getUser($username);
-        var_dump($user->getId());
+        $username = $this->request->getPost("username", "string");
+        $userManager = new UserManager();
+        $userId = $userManager->getIdByUsername($username);
+        
+        if ($userId === false) {
+            $userId = $this->createUser($username);
+        }
+        
+        $this->session->set('username', $username);
+        var_dump($userId);
         exit;
     }
-
-    public function testAction()
+    
+    protected function createUser($username)
     {
-        echo "<h1>User2!</h1>";
+        $userFactory = new UserFactory();
+        $user = $userFactory->getUser($username); 
         $di = $this->getDI();
-
-
-        $ldap = new \Meetingroom\Service\LDAP\LDAP($di);
-
-        $LDAPUser = $ldap->getUserInfo('sysgstats', 'pgGZErgMkNXF');
-
-
-        print "Nickname: " . $LDAPUser->getNickname() . "<br />";
-        print "Name: " . $LDAPUser->getName() . "<br />";
-        print "Email: " . $LDAPUser->getEmail() . "<br />";
-        print "Position: " . $LDAPUser->getPosition() . "<br />";
-
-
-        $acl = $di->get('acl');
-
-        //test
-        if ($acl->isAllowed("Users", "User", "test")) {
-            echo "Access granted!";
-        } else {
-            echo "Access denied :(";
+        $ldap = new LDAP($di);
+        
+        $password = $this->request->getPost("password", "string");
+        
+        $LDAPUser = $ldap->getUserInfo($username, $password);
+        if($LDAPUser === false) {
+            die('wrong credentials');
         }
-        print "<hr />";
-
-        $roomManager = new \Meetingroom\Entity\Room\RoomManager();
-        //var_dump($roomManager->getAll());
-
-        $room = new \Meetingroom\Entity\Room\Room(1);
-        var_dump((array)$room);
-
-        die();
+        
+        $userId = $user->bind([
+            'name' => $LDAPUser->getName(),
+            'phone' => '',
+            'position' => $LDAPUser->getPosition(),
+            'nickname' => $LDAPUser->getNickname()
+        ])->save();
+        
+        if(!$userId) {
+            die('user not created');
+        }
+        
+        return $userId;
     }
-
 }
