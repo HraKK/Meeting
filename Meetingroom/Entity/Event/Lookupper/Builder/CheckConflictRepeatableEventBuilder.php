@@ -51,7 +51,7 @@ class CheckConflictRepeatableEventBuilder
                 ) OR
                 (	-- условие для повторяющихся событий
                     e.repeatable=TRUE AND
-                    (" . implode(" AND ", $sql_weekday_part) . ") AND--день в который хочет стать событие
+                    (" . implode(" OR ", $sql_weekday_part) . ") AND--день в который хочет стать событие
 
                     (	--проверяем тут тоже самое что с да только  с временем
                         (e.date_end::time BETWEEN '" . $eventStartTime . "' AND '" . $eventEndTime . "') OR
@@ -59,14 +59,14 @@ class CheckConflictRepeatableEventBuilder
                         (e.date_start::time < '" . $eventStartTime . "' AND e.date_end::time >'" . $eventEndTime . "')
                     )
                 ) OR
-                (
+                ( --проверка одноразовых событий в будущем
                     e.date_start >  '" . $event->dateEnd . "' AND
                     (	--проверяем тут тоже самое что с да только  с временем
                         (e.date_end::time BETWEEN '" . $eventStartTime . "' AND '" . $eventEndTime . "') OR
                         (e.date_start::time BETWEEN '" . $eventStartTime . "' AND '" . $eventEndTime . "') OR
                         (e.date_start::time < '" . $eventStartTime . "' AND e.date_end::time >'" . $eventEndTime . "')
                     ) AND
-                    extract(dow from date_start) IN (" . implode(",", $weekday_arr_int) . ")
+                    extract(DOW from date_start) IN (" . implode(",", $weekday_arr_int) . ")
                 )
             )
         ";

@@ -3,7 +3,8 @@ namespace Meetingroom\Entity\Event\Lookupper;
 
 use \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteriaInterface;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface;
-
+use \Meetingroom\Entity\Event\EventEntity;
+use \Meetingroom\Entity\Event\EventOptionEntity;
 
 class EventLookupperModel extends \Meetingroom\Model\AbstractModel
 {
@@ -32,16 +33,16 @@ class EventLookupperModel extends \Meetingroom\Model\AbstractModel
         return $list;
     }
 
-
-    public function checkIsConflict(
-        \Meetingroom\Entity\Event\EventEntity $event,
-        \Meetingroom\Entity\Event\EventOptionEntity $options
-    ) {
+    /**
+     * @param EventEntity $event
+     * @param EventOptionEntity $options
+     * @return bool
+     */
+    public function checkIsConflict(EventEntity $event, EventOptionEntity $options = null)
+    {
         $eventBuilder = new \Meetingroom\Entity\Event\Lookupper\Builder\CheckConflictBuilder();
         $sql = $eventBuilder->build($event, $options);
-        var_dump($sql);
         $result = $this->execute($sql);
-        var_dump($result);
         return !empty($result); //if empty is meant no conflicts found, but method names IsConflict, so invert boolean result.
     }
 

@@ -28,8 +28,8 @@ class EventController extends AbstractController
         $entity = new \Meetingroom\Entity\Event\EventEntity();
         $event_fields = [
             'room_id' => '1',
-            'date_start' => '2014-03-22 21:00:00',
-            'date_end' => '2014-03-22 21:30:00',
+            'date_start' => '2014-01-22 18:00:00',
+            'date_end' => '2014-01-22 18:10:00',
             'user_id' => '1',
             'title' => 'test',
             'description' => 'description',
@@ -41,19 +41,16 @@ class EventController extends AbstractController
         $options = new \Meetingroom\Entity\Event\EventOptionEntity();
         $options_fields = [
             'mon' => true,
-            'tue' => false,
+            'tue' => true,
             'wed' => true,
             'thu' => false,
-            'fri' => false,
+            'fri' => true,
             'sat' => false,
             'sun' => true,
         ];
         $options->bind($options_fields);
 
-        //var_dump('<pre>',$entity);
-        var_dump($lookupper->checkIsConflict($entity, $options));
-
-        die('--fin--');
+        die(($lookupper->checkIsConflict($entity, $options)) ? " Конфликт " : "Ok");
     }
 
     public function lookuperAction($id = 0)

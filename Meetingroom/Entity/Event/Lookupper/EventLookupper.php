@@ -3,6 +3,8 @@ namespace Meetingroom\Entity\Event\Lookupper;
 
 use \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteriaInterface;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface;
+use \Meetingroom\Entity\Event\EventEntity;
+use \Meetingroom\Entity\Event\EventOptionEntity;
 
 /**
  * Class EventLookupper
@@ -63,8 +65,8 @@ class EventLookupper implements \Meetingroom\Entity\Event\Lookupper\EventLookupp
      * @return boolean
      */
     public function checkIsConflict(
-        \Meetingroom\Entity\Event\EventEntity $event,
-        \Meetingroom\Entity\Event\EventOptionEntity $options
+        EventEntity $event,
+        EventOptionEntity $options = null
     ) {
 
         $eventLookupperModel = new \Meetingroom\Entity\Event\Lookupper\EventLookupperModel();
