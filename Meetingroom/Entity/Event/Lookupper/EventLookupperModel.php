@@ -39,9 +39,9 @@ class EventLookupperModel extends \Meetingroom\Model\AbstractModel
     ) {
         $eventBuilder = new \Meetingroom\Entity\Event\Lookupper\Builder\CheckConflictBuilder();
         $sql = $eventBuilder->build($event, $options);
-        var_dump($sql);
+//        var_dump($sql);
         $result = $this->execute($sql);
-        var_dump($result);
+//        var_dump($result);
         return !empty($result); //if empty is meant no conflicts found, but method names IsConflict, so invert boolean result.
     }
 
