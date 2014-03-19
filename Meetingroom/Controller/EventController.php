@@ -96,11 +96,11 @@ class EventController extends AbstractController
             echo json_encode(['status' => 'error']);
         }
 
-
         $isRepeatable = $this->request->getPost("repeatable", "int");
+        $lookupper = new EventLookupper($this->di);
         
         $event = new EventEntity();
-        $check = $event->bind([
+        $event->bind([
             'title' => $this->request->getPost("title", "striptags"),
             'room_id' => $roomId,
             'user_id' => $userId,
@@ -109,27 +109,39 @@ class EventController extends AbstractController
             'description' => $this->request->getPost("description", "striptags"),
             'repeatable' => $isRepeatable,
             'attendees' => $this->request->getPost("attendees", "int"),
-        ])->save();
-        
-        if(!($check && $isRepeatable)) {
-            var_dump($check);
-            exit;
-        }
+        ]);
         
         $option = new EventOptionEntity();
-        $res = $option->bind([
-            'id' => $event->id,
-            'mon' => $this->request->getPost("mon", "int"),
-            'tue' => $this->request->getPost("tue", "int"),
-            'wed' => $this->request->getPost("wed", "int"),
-            'thu' => $this->request->getPost("thu", "int"),
-            'fri' => $this->request->getPost("fri", "int"),
-            'sat' => $this->request->getPost("sat", "int"),
-            'sun' => $this->request->getPost("sun", "int"),
-        ])->insert();
         
-        print_r($res);
-        exit;
+        if($isRepeatable) {
+            $option->bind([
+                'id' => $event->id,
+                'mon' => $this->request->getPost("mon", "int"),
+                'tue' => $this->request->getPost("tue", "int"),
+                'wed' => $this->request->getPost("wed", "int"),
+                'thu' => $this->request->getPost("thu", "int"),
+                'fri' => $this->request->getPost("fri", "int"),
+                'sat' => $this->request->getPost("sat", "int"),
+                'sun' => $this->request->getPost("sun", "int"),
+            ]);
+        }
+        $conflict = $lookupper->checkIsConflict($event, $option);
+        
+        if(!$conflict) {
+            $eventId = $event->save();
+            if(!$eventId){
+                die('event not created');
+            }
+            
+            if($isRepeatable) {
+                $option->bind(['id' => $event->id])->insert();
+            }
+            
+            die($eventId);
+        } else {
+            var_dump($conflict);
+            exit;
+        }
     }
     
     public function updateAction()
