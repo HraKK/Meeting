@@ -24,9 +24,34 @@ class EventController extends AbstractController
     {
         $di = $this->getDI();
         $lookupper = new EventLookupper($di);
-        $entity = new \Meetingroom\Entity\Event\EventEntity(1);
+
+        $entity = new \Meetingroom\Entity\Event\EventEntity();
+        $event_fields = [
+            'room_id' => '1',
+            'date_start' => '2014-03-22 21:00:00',
+            'date_end' => '2014-03-22 21:30:00',
+            'user_id' => '1',
+            'title' => 'test',
+            'description' => 'desription',
+            'repeatable' => true,
+            'attendees' => 4
+        ];
+        $entity->bind($event_fields);
+
+        $options = new \Meetingroom\Entity\Event\EventOptionEntity();
+        $options_fields = [
+            'mon' => true,
+            'tue' => false,
+            'wed' => true,
+            'thu' => false,
+            'fri' => false,
+            'sat' => false,
+            'sun' => true,
+        ];
+        $options->bind($options_fields);
+
         //var_dump('<pre>',$entity);
-        $lookupper->checkConflict($entity);
+        var_dump($lookupper->checkIsConflict($entity, $options));
 
         die('--fin--');
     }
@@ -37,7 +62,7 @@ class EventController extends AbstractController
         $roomCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria(1);
         //$periodCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\WeekPeriodCriteria(17,3, 2014); // test week
         //$periodCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\MonthPeriodCriteria(3, 2014);   // test month
-        $periodCriteria = new DayPeriodCriteria(17, 3, 2014);
+        $periodCriteria = new DayPeriodCriteria(18, 3, 2014);
         $lookupper = new EventLookupper($di);
 
         var_dump(
@@ -73,7 +98,8 @@ class EventController extends AbstractController
         if(!$isRoom) {
             echo json_encode(['status' => 'error']);
         }
-        
+
+
         $isRepeatable = $this->request->getPost("repeatable", "int");
         
         $event = new EventEntity();

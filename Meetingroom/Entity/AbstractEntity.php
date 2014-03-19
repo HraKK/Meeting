@@ -90,7 +90,7 @@ abstract class AbstractEntity
             if(!isset($data[$db])) {
                 continue;
             }
-
+            
             $this->$map = $data[$db];
         }
 
@@ -137,7 +137,7 @@ abstract class AbstractEntity
         
         return $values;
     }
-
+    
     public function delete()
     {
         return $this->getModel()->delete($this->id);

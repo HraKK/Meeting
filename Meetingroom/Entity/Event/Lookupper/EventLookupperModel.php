@@ -32,21 +32,17 @@ class EventLookupperModel extends \Meetingroom\Model\AbstractModel
         return $list;
     }
 
-    public function checkConflict($event)
-    {
-        //var_dump('<pre>',$event);
-        var_dump('<pre>', $event->date_start, $event->room_id);
-        die();
 
-        $weekday = strtolower(date("D", $event->date_start));
+    public function checkIsConflict(
+        \Meetingroom\Entity\Event\EventEntity $event,
+        \Meetingroom\Entity\Event\EventOptionEntity $options
+    ) {
         $eventBuilder = new \Meetingroom\Entity\Event\Lookupper\Builder\CheckConflictBuilder();
-
-        $sql = $eventBuilder->build($event->room_id, $weekday);
-
+        $sql = $eventBuilder->build($event, $options);
         var_dump($sql);
-
-        $result = $this->execute();
-        return !empty($result);
+        $result = $this->execute($sql);
+        var_dump($result);
+        return !empty($result); //if empty is meant no conflicts found, but method names IsConflict, so invert boolean result.
     }
 
     /**
