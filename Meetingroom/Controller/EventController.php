@@ -32,7 +32,7 @@ class EventController extends AbstractController
             'date_end' => '2014-03-22 21:30:00',
             'user_id' => '1',
             'title' => 'test',
-            'description' => 'desription',
+            'description' => 'description',
             'repeatable' => true,
             'attendees' => 4
         ];
