@@ -17,9 +17,6 @@ class EventController extends AbstractController
 {
     public function indexAction()
     {
-        $model = new \Meetingroom\Model\Event\EventModel();
-        var_dump($model->read(666));
-        exit;
     }
 
 
@@ -56,9 +53,11 @@ class EventController extends AbstractController
     
     public function createAction()
     {
-        // @todo
-        $this->session->set('username', 'Barif2');
         $username = $this->session->get('username');
+        
+        if($username == false) {
+            die('session timed out');
+        }
         
         $userManager = new UserManager();
         $userId = $userManager->getIdByUsername($username);
@@ -123,7 +122,6 @@ class EventController extends AbstractController
             }
         }
          
-        // @todo repeatable, check period
         $isRepeatable = $this->request->getPost("repeatable", "int");
         $check = $event->bind([
             'title' => $this->request->getPost("title", "striptags"),
@@ -166,8 +164,11 @@ class EventController extends AbstractController
     
     private function validateEvent()
     {
-        $this->session->set('username', 'Barif2');
         $username = $this->session->get('username');
+        
+        if($username == false) {
+            die('session timed out');
+        }
         
         $user = (new UserFactory())->getUser($username);
         

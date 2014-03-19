@@ -108,7 +108,7 @@ abstract class AbstractEntity
 
     public function save()
     {
-        return $this->id === null ? $this->insert(): $this->update();
+        return $this->id == null ? $this->insert(): $this->update();
     }
     
     public function insert()

@@ -11,38 +11,62 @@ class UserController extends \Phalcon\Mvc\Controller
     public function loginAction()
     {
         $username = $this->request->getPost("username", "string");
+        $password = $this->request->getPost("password", "string");
+        
+        $ldapUser = $this->getLDAPUser($username, $password);
+        
+        if($ldapUser === false) {
+            die('wrong credentials');
+        }
+        
         $userManager = new UserManager();
         $userId = $userManager->getIdByUsername($username);
         
         if ($userId === false) {
-            $userId = $this->createUser($username);
+            $userId = $this->createUser(
+                $ldapUser->getName(),
+                'phone',
+                $ldapUser->getPosition(),
+                $ldapUser->getNickname()
+            );
         }
         
         $this->session->set('username', $username);
-        var_dump($userId);
-        exit;
+        $this->session->set('userId', $userId);
+        
+        die('logged in');
     }
     
-    protected function createUser($username)
+    public function checkSessionAction()
+    {
+        $username = $this->session->get('username');
+        die($username == null ? 'not authenticated' : 'authenticated');
+    }
+    
+    public function logoutAction()
+    {
+        $this->session->destroy();
+        die('logged out');
+    }
+    
+    protected function getLDAPUser($username, $password)
+    {
+        $di = $this->getDI();
+        $ldap = new LDAP($di);
+        return $ldap->getUserInfo($username, $password);
+    }
+    
+    protected function createUser($name, $phone, $position, $username)
     {
         $userFactory = new UserFactory();
         $user = $userFactory->getUser($username); 
-        $di = $this->getDI();
-        $ldap = new LDAP($di);
-        
-        $password = $this->request->getPost("password", "string");
-        
-        $LDAPUser = $ldap->getUserInfo($username, $password);
-        if($LDAPUser === false) {
-            die('wrong credentials');
-        }
-        
+
         $userId = $user->bind([
-            'name' => $LDAPUser->getName(),
-            'phone' => '',
-            'position' => $LDAPUser->getPosition(),
-            'nickname' => $LDAPUser->getNickname()
-        ])->save();
+            'name' => $name,
+            'phone' => $phone,
+            'position' => $position,
+            'nickname' => $username
+        ])->insert();
         
         if(!$userId) {
             die('user not created');

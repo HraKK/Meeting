@@ -20,7 +20,7 @@ class AuthorizedEntity extends \Meetingroom\Entity\AbstractEntity implements \Me
         'nickname' => 'nickname'
     ];
     
-    public function charge($username)
+    public function loadByUsername($username)
     {
         $model = new \Meetingroom\Model\User\UserModel();
         $this->id = $model->getIdByUsername($username);
