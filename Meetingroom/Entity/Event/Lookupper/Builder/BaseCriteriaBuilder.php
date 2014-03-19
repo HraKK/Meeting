@@ -15,9 +15,9 @@ class BaseCriteriaBuilder
      */
     public function build(array $fields = [])
     {
-        $fields_str = (empty($fields)) ? '*' : implode(',', $fields);
+        $fields_str = (empty($fields)) ? '*' : 'events.' . implode(',events.', $fields);
 
-        return 'SELECT ' . $fields_str . ' FROM events WHERE ';
+        return 'SELECT ' . $fields_str . ' FROM events LEFT JOIN repeating_options ON  repeating_options.id=events.id WHERE ';
     }
 
 }

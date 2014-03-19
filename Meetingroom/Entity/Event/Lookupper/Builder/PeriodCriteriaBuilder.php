@@ -1,6 +1,8 @@
 <?php
 namespace Meetingroom\Entity\Event\Lookupper\Builder;
 
+use \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria;
+
 /**
  * Class PeriodCriteriaBuilder
  * Return period chunk of sql statement
@@ -16,7 +18,15 @@ class PeriodCriteriaBuilder
      */
     public function build(\Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface $criteria)
     {
-        return " events.date_start BETWEEN  '" . $criteria->getStartDate() . "' AND '" . $criteria->getEndDate() . "' ";
+        $dayCondition = '';
+        if ($criteria instanceof DayPeriodCriteria) {
+            $unixStartDate = strtotime($criteria->getStartDate());
+            $weekDay = strtolower(date('D', $unixStartDate));
+            $dayCondition = sprintf(' AND repeating_options.%s=TRUE ', $weekDay);
+        }
+
+        return " ((events.date_start BETWEEN  '" . $criteria->getStartDate() . "' AND '" . $criteria->getEndDate(
+        ) . "') OR (events.repeatable=TRUE " . $dayCondition . ")) ";
     }
 
 }

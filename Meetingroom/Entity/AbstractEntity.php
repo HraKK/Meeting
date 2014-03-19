@@ -63,7 +63,7 @@ abstract class AbstractEntity
     {
         $this->bind($this->getModel()->read($this->id));
     }
-    
+
     /**
      * Link data from the db and class fields
      *
@@ -80,10 +80,10 @@ abstract class AbstractEntity
         $this->loaded = true;
 
         foreach ($this->fields as $db => $map) {
-            if(!isset($data[$db])) {
+            if (!isset($data[$db])) {
                 continue;
             }
-            
+
             $this->$map = $data[$db];
         }
 
@@ -96,7 +96,7 @@ abstract class AbstractEntity
      */
     public function isLoaded()
     {
-        return (bool) $this->loaded;
+        return (bool)$this->loaded;
     }
 
     public function save()
@@ -121,15 +121,15 @@ abstract class AbstractEntity
     public function update()
     {
         $values = [];
-        
+
         foreach ($this->fields as $db => $map) {
             $values[$db] = $this->$map;
         }
-        
+
         $model = $this->getModel();
         return $model->update($this->id, $values);
     }
-    
+
     public function delete()
     {
         return $this->getModel()->delete($this->id);
