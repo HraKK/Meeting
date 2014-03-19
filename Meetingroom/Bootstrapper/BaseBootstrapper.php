@@ -25,6 +25,7 @@ class BaseBootstrapper implements BootstrapperInterface
         $this->initACL();
         $this->initSession();
         $this->initRequest();
+        $this->initFlashMessage();
     }
 
 
@@ -156,5 +157,11 @@ class BaseBootstrapper implements BootstrapperInterface
             }
         );
     }
-
+    
+    protected function initFlashMessage()
+    {
+        $this->di->set('flash', function() {
+            return new \Phalcon\Flash\Direct();
+        });
+    }
 }

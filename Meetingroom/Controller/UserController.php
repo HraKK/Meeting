@@ -10,13 +10,30 @@ class UserController extends \Phalcon\Mvc\Controller
 {
     public function loginAction()
     {
+        $this->view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_ACTION_VIEW);
+        
+        $username = $this->session->get('username');
+        
+        if($this->request->isPost()) {
+            $this->checkCredentials();
+        } elseif(!empty($username)) {
+            $this->response->redirect();
+        }
+    }
+    
+    protected function checkCredentials() 
+    {
         $username = $this->request->getPost("username", "string");
         $password = $this->request->getPost("password", "string");
+        
+        if(empty($username) || empty($password)) {
+            return $this->flashSession->error("username and password SHOULD NOT be empty");
+        }
         
         $ldapUser = $this->getLDAPUser($username, $password);
         
         if($ldapUser === false) {
-            die('wrong credentials');
+            return $this->flashSession->error("wrong credentials");
         }
         
         $userManager = new UserManager();
@@ -34,19 +51,14 @@ class UserController extends \Phalcon\Mvc\Controller
         $this->session->set('username', $username);
         $this->session->set('userId', $userId);
         
-        die('logged in');
-    }
-    
-    public function checkSessionAction()
-    {
-        $username = $this->session->get('username');
-        die($username == null ? 'not authenticated' : 'authenticated');
+        $this->response->redirect('user/login');
     }
     
     public function logoutAction()
     {
         $this->session->destroy();
-        die('logged out');
+        $this->flashSession->error("logged out");
+        $this->response->redirect('user/login');
     }
     
     protected function getLDAPUser($username, $password)
@@ -69,7 +81,8 @@ class UserController extends \Phalcon\Mvc\Controller
         ])->insert();
         
         if(!$userId) {
-            die('user not created');
+            $this->flashSession->error("user not signed up");
+            $this->response->redirect('user/login');
         }
         
         return $userId;
