@@ -57,7 +57,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
                     maxValue: 99,
                     minValue: 0,
                     emptyText: 'Attendees Title',
-                    anchor: '100%'
+                    anchor: '50%'
                 },
                 {
                     xtype: 'textfield',
@@ -65,7 +65,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
                     name: Ext.calendar.data.EventMappings.Owner.name,
                     labelWidth: 100,
                     readOnly: true,
-                    anchor: '100%'
+                    anchor: '50%'
                 },
                 {
                     xtype: 'textfield',
@@ -142,9 +142,6 @@ Ext.define('Ext.calendar.form.EventWindow', {
             },
             config)]);
     },
-
-    // private
-    newId: 10000,
 
     // private
     initComponent: function() {
@@ -233,6 +230,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
         f.reset();
 
         if (o.data) {
+
             rec = o;
             this.setTitle(rec.phantom ? this.titleTextAdd : this.titleTextEdit);
 
@@ -252,8 +250,6 @@ Ext.define('Ext.calendar.form.EventWindow', {
             f.loadRecord(rec);
         }
 
-        var isRepeatable = rec.data[M.IsRepeatable.name];
-
         if (this.calendarStore) {
             this.calendarField.setValue(rec.data[M.CalendarId.name]);
         }
@@ -262,13 +258,6 @@ Ext.define('Ext.calendar.form.EventWindow', {
         this.activeRecord = rec;
 
         return this;
-    },
-
-    // private
-    roundTime: function(dt, incr) {
-        incr = incr || 15;
-        var m = parseInt(dt.getMinutes(), 10);
-        return dt.add('mi', incr - (m % incr));
     },
 
     // private
@@ -326,14 +315,17 @@ Ext.define('Ext.calendar.form.EventWindow', {
         if (!this.formPanel.form.isValid()) {
             return;
         }
+
         if (!this.updateRecord(this.activeRecord)) {
             this.onCancel();
             return;
         }
+
         if (this.activeRecord.data.StartDate.getTime() == this.activeRecord.data.EndDate.getTime()) {
             Ext.noty('Wrong time selected', 'error', 1000);
             return;
         }
+
         this.fireEvent(this.activeRecord.phantom ? 'eventadd' : 'eventupdate', this, this.activeRecord, this.animateTarget);
 
         // Clear phantom and modified states.

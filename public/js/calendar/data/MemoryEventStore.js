@@ -95,8 +95,7 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
             // and lose updates to the store, just use store's latest data
             me.totalCount = me.data.length;
             records = me.data.items;
-        }
-        else {
+        } else {
             // this is the initial load, so defer to the proxy's result
             var resultSet = operation.getResultSet(),
                 successful = operation.wasSuccessful();
