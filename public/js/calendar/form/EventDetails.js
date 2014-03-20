@@ -50,7 +50,7 @@ Ext.define('Ext.calendar.form.EventDetails', {
     cls: 'ext-evt-edit-form',
 
     // private properties:
-    newId: 10000,
+
     layout: 'column',
 
     // private

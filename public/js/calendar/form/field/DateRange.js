@@ -208,11 +208,13 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             {
                 xtype: 'combo',
                 name: 'RepeatedOn',
+                flex: 1,
                 disabled: true,
+                editable: false,
                 hidden: true,
                 itemId: this.id + '-repeat-on',
                 store: Ext.create('Ext.calendar.data.Days'),
-                emptyText: 'Select day(s) of week',
+                emptyText: 'Please select days to repeat on',
                 displayField: 'name',
                 valueField: 'value',
                 multiSelect: true,
@@ -282,12 +284,6 @@ Ext.define('Ext.calendar.form.field.DateRange', {
         var eDate = Ext.calendar.util.Date,
             start = this.getDT('start'),
             end = this.getDT('end');
-
-        if (Ext.isDate(start) && Ext.isDate(end) && start.getTime() !== end.getTime()) {
-            end = eDate.add(end, {
-                days: -1
-            });
-        }
 
         return [
             start,

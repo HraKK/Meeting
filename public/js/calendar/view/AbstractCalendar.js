@@ -323,6 +323,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
                     this.sortEventRecordsForDay(evts);
                     this.prepareEventGrid(evts, w, d);
                 }
+
                 dt = Ext.calendar.util.Date.add(dt, {days: 1});
             }
         }
@@ -644,7 +645,8 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
             start = this.viewStart.getTime(),
             end = this.viewEnd.getTime(),
             evStart = data[M.StartDate.name].getTime(),
-            evEnd = Ext.calendar.util.Date.add(data[M.EndDate.name], {seconds: -1}).getTime();
+            evEnd = data[M.EndDate.name].getTime();
+        evEnd = Ext.calendar.util.Date.add(data[M.EndDate.name], {seconds: -1}).getTime();
 
         return this.rangesOverlap(start, end, evStart, evEnd);
     },

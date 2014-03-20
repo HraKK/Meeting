@@ -40,4 +40,5 @@ Ext.define('Ext.calendar.data.CalendarModel', {
     },
     function() {
         Ext.calendar.data.CalendarModel.reconfigure();
-    });
+    }
+);

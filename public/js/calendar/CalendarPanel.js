@@ -532,6 +532,7 @@ Ext.define('Ext.calendar.CalendarPanel', {
     onNextClick: function() {
         this.startDate = this.layout.activeItem.moveNext();
         this.updateNavState();
+
         this.fireViewChange();
     },
 

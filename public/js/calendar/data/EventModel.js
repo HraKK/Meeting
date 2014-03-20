@@ -81,4 +81,5 @@ Ext.define('Ext.calendar.data.EventModel', {
     },
     function() {
         Ext.calendar.data.EventModel.reconfigure();
-    });
+    }
+);
