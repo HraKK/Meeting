@@ -19,6 +19,7 @@ Ext.define('Ext.calendar.App', {
             'Ext.calendar.CalendarPanel',
             'Ext.calendar.data.MemoryCalendarStore',
             'Ext.calendar.data.MemoryEventStore',
+            'Ext.calendar.data.Days',
             'Ext.calendar.form.EventWindow'
         ],
 

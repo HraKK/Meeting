@@ -19,7 +19,9 @@
             "url": "http://chuys.com",
             "notes": "Order the queso",
             "rem": "15",
-            "owner": "alancarr"
+            "owner": "alancarr",
+            "repeatable": true,
+            "repeated_on": [1, 3]
         },
         {
             "id": 1003,
