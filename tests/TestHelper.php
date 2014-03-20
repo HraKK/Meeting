@@ -6,7 +6,6 @@ ini_set('date.timezone', 'Europe/Kiev');
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-
 // требуется для phalcon/incubator
 include __DIR__ . "/../vendor/autoload.php";
 
@@ -34,6 +33,6 @@ $application = new \Phalcon\Mvc\Application($di);
 $bootstrapper = new \Meetingroom\Bootstrapper\BaseBootstrapper();
 $bootstrapper->bootstrap($application);
 
-//DI::reset();
+DI::reset();
 
 DI::setDefault($di);
