@@ -23,13 +23,25 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
     ],
 
     proxy: {
-        type: 'memory',
+        type: 'ajax',
         reader: {
             type: 'json',
-            root: 'evts'
+            root: 'events'
         },
         writer: {
             type: 'json'
+        },
+        actionMethods: {
+            create: 'POST',
+            read: 'GET',
+            update: 'POST',
+            destroy: 'POST'
+        },
+        api: {
+            read: '/js/calendar/json/events.json',
+            create: '/js/calendar/json/events.json',
+            update: '/js/calendar/json/events.json',
+            destroy: '/js/calendar/json/events.json'
         }
     },
 
