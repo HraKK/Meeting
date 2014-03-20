@@ -1,6 +1,8 @@
 <?php
 namespace Meetingroom\Bootstrapper;
 
+use \Meetingroom\Entity\User\UserFactory;
+
 /**
  * Class BaseBootstrapper
  * @package Meetingroom\Bootstrapper
@@ -26,6 +28,7 @@ class BaseBootstrapper implements BootstrapperInterface
         $this->initSession();
         $this->initRequest();
         $this->initFlashMessage();
+        $this->initUser();
     }
 
 
@@ -122,15 +125,32 @@ class BaseBootstrapper implements BootstrapperInterface
             function () {
                 $acl = new \Phalcon\Acl\Adapter\Memory();
                 $acl->setDefaultAction(\Phalcon\Acl::DENY);
-                $roleUsers = new \Phalcon\Acl\Role("Users");
-                $roleGuests = new \Phalcon\Acl\Role("Guests");
-                $acl->addRole($roleGuests);
-                $acl->addRole($roleUsers);
-                $userResource = new \Phalcon\Acl\Resource("User");
-                $acl->addResource($userResource, ['index', 'test']);
+                
+                $roleUser = new \Phalcon\Acl\Role("ROLE_USER");
+                $roleGuest = new \Phalcon\Acl\Role("ROLE_GUEST");
+                $roleOwner = new \Phalcon\Acl\Role("ROLE_OWNER");
+                
+                $acl->addRole($roleGuest);
+                $acl->addRole($roleUser, $roleGuest);
+                $acl->addRole($roleOwner, $roleUser);
+                
+                $userResource = new \Phalcon\Acl\Resource("user");
+                $eventResource = new \Phalcon\Acl\Resource("event");
+                $indexResource = new \Phalcon\Acl\Resource("index");
+                
+                $acl->addResource($userResource, ['login', 'logout']);
+                $acl->addResource($eventResource, ['create', 'update', 'delete']);
+                $acl->addResource($indexResource, ['index']);
 
-                $acl->allow("Guests", "User", "index");
-                $acl->allow("Users", "User", "test");
+                $acl->allow("ROLE_GUEST", "user", "login");
+                
+                $acl->allow("ROLE_USER", "user", "logout");
+                $acl->allow("ROLE_USER", "event", "create");
+                $acl->allow("ROLE_USER", "index", "index");
+                
+                $acl->allow("ROLE_OWNER", "event", "delete");
+                $acl->allow("ROLE_OWNER", "event", "update");
+
                 return $acl;
             }
         );
@@ -162,6 +182,16 @@ class BaseBootstrapper implements BootstrapperInterface
     {
         $this->di->set('flash', function() {
             return new \Phalcon\Flash\Direct();
+        });
+    }
+    
+    protected  function initUser()
+    {
+        $di = $this->di;
+        $di->set('user', function() use ($di) {
+            $session = $di->get('session');
+            $username = $session->get('username');
+            return (new UserFactory())->getUser($username);
         });
     }
 }

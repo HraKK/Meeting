@@ -11,6 +11,12 @@ class IndexController extends AbstractController
 {
     public function indexAction()
     {
+        $role = $this->session->get('role');
+        $allow = $this->acl->isAllowed($role, 'index', 'index');
+        if(!$allow) {
+            die('Not permitted');
+        }
+        
         $roomManager = new RoomManager();
         $rooms = $roomManager->getAll();
         

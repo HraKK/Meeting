@@ -3,7 +3,6 @@
 namespace Meetingroom\Controller;
 
 use \Meetingroom\Entity\Role\RoleFactory;
-use \Meetingroom\Entity\User\UserFactory;
 use \Meetingroom\Entity\User\UserManager;
 use \Meetingroom\Entity\Room\RoomManager;
 use \Meetingroom\Entity\Event\EventOptionEntity;
@@ -17,6 +16,7 @@ class EventController extends AbstractController
 {
     public function indexAction()
     {
+        
     }
 
 
@@ -87,17 +87,10 @@ class EventController extends AbstractController
     
     public function createAction()
     {
-        $username = $this->session->get('username');
-        
-        if($username == false) {
-            die('session timed out');
-        }
-        
-        $userManager = new UserManager();
-        $userId = $userManager->getIdByUsername($username);
-        
-        if ($userId === false) {
-            die('user not exist');
+        $role = $this->session->get('role');
+        $allow = $this->acl->isAllowed($role, 'event', 'create');
+        if(!$allow) {
+            die('Not permitted');
         }
         
         $roomId = $this->request->getPost("room_id", "int");
@@ -112,12 +105,22 @@ class EventController extends AbstractController
         $lookupper = new EventLookupper($this->di);
         
         $event = new EventEntity();
-        $event->bind([
+
+        $start = $this->request->getPost("date_start", "string");
+        $dateStart = $this->validateTimestamp($start);
+                
+        $end = $this->request->getPost("date_end", "string");
+        $dateEnd = $this->validateTimestamp($end);
+                
+        if($dateEnd==false || $dateStart==false) {
+            die('Date MUST have format Y-m-d H:i:s');
+        }
+        var_dump([
             'title' => $this->request->getPost("title", "striptags"),
             'room_id' => $roomId,
-            'user_id' => $userId,
-            'date_start' => $this->request->getPost("date_start", "string"),
-            'date_end' => $this->request->getPost("date_end", "string"),
+            'user_id' => $this->user->id,
+            'date_start' => $dateStart,
+            'date_end' => $dateEnd,
             'description' => $this->request->getPost("description", "striptags"),
             'repeatable' => $isRepeatable,
             'attendees' => $this->request->getPost("attendees", "int"),
@@ -137,6 +140,7 @@ class EventController extends AbstractController
                 'sun' => $this->request->getPost("sun", "int"),
             ]);
         }
+        
         $conflict = $lookupper->checkIsConflict($event, $option);
         
         if(!$conflict) {
@@ -158,7 +162,14 @@ class EventController extends AbstractController
     
     public function updateAction()
     {
-        $event = $this->validateEvent();
+        $event = $this->getEventByRequest();
+        
+        $role = (new RoleFactory())->getRole($this->user, $event);
+        
+        $allow = $this->acl->isAllowed($role, 'event', 'update');
+        if(!$allow) {
+            die('Not permitted');
+        }
 
         $roomId = $this->request->getPost("room_id", "int");
         
@@ -170,59 +181,76 @@ class EventController extends AbstractController
         }
          
         $isRepeatable = $this->request->getPost("repeatable", "int");
-        $check = $event->bind([
+        $lookupper = new EventLookupper($this->di);
+        
+        $start = $this->request->getPost("date_start", "string");
+        $dateStart = $this->validateTimestamp($start);
+                
+        $end = $this->request->getPost("date_end", "string");
+        $dateEnd = $this->validateTimestamp($end);
+                
+        if($dateEnd==false || $dateStart==false) {
+            die('Date MUST have format Y-m-d H:i:s');
+        }
+        
+        $event->bind([
             'title' => $this->request->getPost("title", "striptags"),
             'room_id' => $roomId,
-            'date_start' => $this->request->getPost("date_start", "string"),
-            'date_end' => $this->request->getPost("date_end", "string"),
+            'date_start' => $start,
+            'date_end' => $end,
             'description' => $this->request->getPost("description", "striptags"),
             'repeatable' => $isRepeatable,
             'attendees' => $this->request->getPost("attendees", "int"),
-        ])->save();
-        
-        
-        if(!($check && $isRepeatable)) {
-            var_dump($check);
-            exit;
-        }
+        ]);
         
         $option = new EventOptionEntity();
-        $res = $option->bind([
-            'id' => $event->id,
-            'mon' => $this->request->getPost("mon", "int"),
-            'tue' => $this->request->getPost("tue", "int"),
-            'wed' => $this->request->getPost("wed", "int"),
-            'thu' => $this->request->getPost("thu", "int"),
-            'fri' => $this->request->getPost("fri", "int"),
-            'sat' => $this->request->getPost("sat", "int"),
-            'sun' => $this->request->getPost("sun", "int"),
-        ])->update();
         
-        print_r($res);
-        exit;
+        if($isRepeatable) {
+            $option->bind([
+                'id' => $event->id,
+                'mon' => $this->request->getPost("mon", "int"),
+                'tue' => $this->request->getPost("tue", "int"),
+                'wed' => $this->request->getPost("wed", "int"),
+                'thu' => $this->request->getPost("thu", "int"),
+                'fri' => $this->request->getPost("fri", "int"),
+                'sat' => $this->request->getPost("sat", "int"),
+                'sun' => $this->request->getPost("sun", "int"),
+            ]);
+        }
+        
+        $conflict = $lookupper->checkIsConflict($event, $option);
+        
+        if(!$conflict) {
+            $eventId = $event->save();
+            
+            if($isRepeatable) {
+                $option->update();
+            }
+            
+            die($eventId);
+        } else {
+            var_dump($conflict);
+            exit;
+        }
     }
     
     public function deleteAction()
     {
-        $event = $this->validateEvent();
+        $event = $this->getEventByRequest();
+        
+        $role = (new RoleFactory())->getRole($this->user, $event);
+        
+        $allow = $this->acl->isAllowed($role, 'event', 'delete');
+        if(!$allow) {
+            die('Not permitted');
+        }
+        
         echo $event->delete() ? 'success' : 'false';
         exit;
     }
     
-    private function validateEvent()
+    protected function getEventByRequest()
     {
-        $username = $this->session->get('username');
-        
-        if($username == false) {
-            die('session timed out');
-        }
-        
-        $user = (new UserFactory())->getUser($username);
-        
-        if ($user->getId() == false) {
-            die('user not found');
-        }
-        
         $eventId = $this->request->getPost("event_id", "int");
         
         $event = new EventEntity($eventId);
@@ -230,12 +258,17 @@ class EventController extends AbstractController
             die('event not found');
         }
         
-        $role = (new RoleFactory())->getRole($user, $event);
-        
-        if($role !== Group::OWNER) {
-            die('user is not owner');
-        }
-        
         return $event;
+    }
+    
+    protected function validateTimestamp($timestamp) 
+    {
+        try {
+            $date = new \DateTime($timestamp);
+        } catch (\Exception $exc) {
+            return false;
+        }
+
+        return ($date->format('Y-m-d H:i:s') == $timestamp) ? $timestamp : false;
     }
 }
