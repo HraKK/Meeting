@@ -102,8 +102,7 @@ class EventController extends AbstractController
         if($dateEnd==false || $dateStart==false) {
             die('Date MUST have format Y-m-d H:i:s');
         }
-        
-        $event->bind([
+        var_dump([
             'title' => $this->request->getPost("title", "striptags"),
             'room_id' => $roomId,
             'user_id' => $this->user->id,
