@@ -26,12 +26,6 @@ Ext.define('Ext.calendar.form.field.DateRange', {
     isRepeatableText: 'Is Repeatable',
 
     /**
-     * @cfg {String/Boolean} singleLine
-     * `true` to render the fields all on one line, `false` to break the start date/time and end date/time
-     * into two stacked rows of fields to preserve horizontal space (defaults to `true`).
-     */
-    singleLine: true,
-    /**
      * @cfg {String} dateFormat
      * The date display format used by the date fields (defaults to 'n/j/Y')
      */
@@ -61,31 +55,25 @@ Ext.define('Ext.calendar.form.field.DateRange', {
 
         me.addCls('ext-dt-range');
 
-        if (me.singleLine) {
-            me.layout = me.fieldLayout;
-            me.items = me.getFieldConfigs();
-        }
-        else {
-            me.items = [
-                {
-                    xtype: 'container',
-                    layout: me.fieldLayout,
-                    items: [
-                        me.getStartDateConfig(),
-                        me.getStartTimeConfig(),
-                        me.getDateSeparatorConfig()
-                    ]
-                },
-                {
-                    xtype: 'container',
-                    layout: me.fieldLayout,
-                    items: [
-                        me.getEndDateConfig(),
-                        me.getEndTimeConfig()
-                    ]
-                }
-            ];
-        }
+        me.items = [
+            {
+                xtype: 'container',
+                layout: me.fieldLayout,
+                items: [
+                    me.getStartDateConfig(),
+                    me.getStartTimeConfig(),
+                    me.getDateSeparatorConfig(),
+                    me.getEndTimeConfig(),
+                    me.getEndDateConfig()
+                ]
+            },
+            {
+                xtype: 'container',
+                padding: '5 0 0 0',
+                layout: me.fieldLayout,
+                items: me.getIsRepeatableConfig()
+            }
+        ];
 
         me.callParent(arguments);
         me.initRefs();
@@ -109,18 +97,6 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             }
             return valid;
         };
-    },
-
-    getFieldConfigs: function() {
-        var me = this;
-        return [
-            me.getStartDateConfig(),
-            me.getStartTimeConfig(),
-            me.getDateSeparatorConfig(),
-            me.getEndTimeConfig(),
-            me.getEndDateConfig(),
-            me.getIsRepeatableConfig()
-        ];
     },
 
     getStartDateConfig: function() {
@@ -213,26 +189,45 @@ Ext.define('Ext.calendar.form.field.DateRange', {
     },
 
     getIsRepeatableConfig: function() {
-        return {
-            xtype: 'checkbox',
-            name: 'IsRepeatable',
-            boxLabel: this.isRepeatableText,
-            margins: {
-                top: 2,
-                right: 5,
-                bottom: 0,
-                left: 0
+        return [
+            {
+                xtype: 'checkbox',
+                name: 'IsRepeatable',
+                boxLabel: this.isRepeatableText,
+                margins: {
+                    top: 2,
+                    right: 5,
+                    bottom: 0,
+                    left: 0
+                },
+                inputValue: true,
+                uncheckedValue: false,
+                handler: this.onIsRepeatableChange,
+                scope: this
             },
-            inputValue: true,
-            uncheckedValue: false,
-            handler: this.onIsRepeatableChange,
-            scope: this
-        };
+            {
+                xtype: 'combo',
+                disabled: true, // TODO
+                store: Ext.create('Ext.calendar.data.Days'),
+                emptyText: 'Select day(s) of week',
+                displayField: 'name',
+                valueField: 'value',
+                multiSelect: true,
+                allowBlank: false
+            }
+        ];
     },
 
     onIsRepeatableChange: function(chk, checked) {
 
-        // TODO: #1
+        Ext.suspendLayouts();
+        // TODO
+        /*
+         this.startTime.setDisabled(checked).setVisible(!checked);
+         this.endTime.setDisabled(checked).setVisible(!checked);
+         */
+        Ext.resumeLayouts(true);
+
     },
 
     getDateSeparatorConfig: function() {
@@ -242,32 +237,6 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             text: this.toText,
             margins: { top: 4, right: 5, bottom: 0, left: 0 }
         };
-    },
-
-    isSingleLine: function() {
-        var me = this;
-
-        if (me.calculatedSingleLine === undefined) {
-            if (me.singleLine == 'auto') {
-                var ownerCtEl = me.ownerCt.getEl(),
-                    w = me.ownerCt.getWidth() - ownerCtEl.getPadding('lr'),
-                    el = ownerCtEl.down('.x-panel-body');
-
-                if (el) {
-                    w -= el.getPadding('lr');
-                }
-
-                el = ownerCtEl.down('.x-form-item-label')
-                if (el) {
-                    w -= el.getWidth() - el.getPadding('lr');
-                }
-                me.calculatedSingleLine = w <= me.singleLineMinWidth ? false : true;
-            }
-            else {
-                me.calculatedSingleLine = me.singleLine !== undefined ? me.singleLine : true;
-            }
-        }
-        return me.calculatedSingleLine;
     },
 
     // private
