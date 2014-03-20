@@ -7,7 +7,8 @@ use \Meetingroom\Entity\OwnableInterface;
 class EventEntity extends \Meetingroom\Entity\AbstractEntity implements OwnableInterface
 {
     protected $modelName = '\Meetingroom\Model\Event\EventModel';
-    
+    protected $DTOName = '\Meetingroom\DTO\Event\EventDTO';
+
     protected $id = null;
     protected $roomId = null;
     protected $dateStart = null;
@@ -34,4 +35,6 @@ class EventEntity extends \Meetingroom\Entity\AbstractEntity implements OwnableI
     {
         return $this->userId;
     }
+
+
 }

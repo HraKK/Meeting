@@ -26,6 +26,7 @@ class EventController extends AbstractController
         $lookupper = new EventLookupper($di);
 
         $entity = new \Meetingroom\Entity\Event\EventEntity();
+
         $event_fields = [
             //'id'=>'',///null,//4, //test exclude
             'room_id' => '1',
@@ -38,6 +39,7 @@ class EventController extends AbstractController
             'attendees' => 4
         ];
         $entity->bind($event_fields);
+
 
         $options = new \Meetingroom\Entity\Event\EventOptionEntity();
         $options_fields = [
@@ -54,21 +56,12 @@ class EventController extends AbstractController
         $conflict_events = $lookupper->checkIsConflict($entity, $options);
         $eventsDTO = [];
         foreach ($conflict_events as $event) {
-            $eventDTO = new \Meetingroom\DTO\Event\EventDTO();
-            $eventDTO->id = $event->id;
-            $eventDTO->roomId = $event->roomId;
-            $eventDTO->dateStart = $event->dateStart;
-            $eventDTO->dateEnd = $event->dateEnd;
-            $eventDTO->userId = $event->userId;
-            $eventDTO->title = $event->title;
-            $eventDTO->desription = $event->desription;
-            $eventDTO->attendees = $event->attendees;
 
-            $eventsDTO[] = $eventDTO;
+            $eventsDTO[] = $event->getDTO();
 
         }
-        var_dump('<pre>', $eventsDTO);
 
+        var_dump('<pre>', $eventsDTO);
         die();
     }
 
