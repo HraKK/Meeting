@@ -2,15 +2,11 @@
 
 namespace Meetingroom\Controller;
 
-use \Meetingroom\Entity\Role\RoleFactory;
-use \Meetingroom\Entity\User\UserManager;
 use \Meetingroom\Entity\Room\RoomManager;
 use \Meetingroom\Entity\Event\EventOptionEntity;
 use \Meetingroom\Entity\Event\EventEntity;
 use \Meetingroom\Entity\Event\Lookupper\EventLookupper;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria;
-
-use \Meetingroom\Entity\Role\Group;
 
 class EventController extends AbstractController
 {
@@ -87,11 +83,7 @@ class EventController extends AbstractController
     
     public function createAction()
     {
-        $role = $this->session->get('role');
-        $allow = $this->acl->isAllowed($role, 'event', 'create');
-        if(!$allow) {
-            die('Not permitted');
-        }
+        $this->permitOrDie('event', 'create');
         
         $title = $this->request->getPost("title", "striptags");
         $roomId = $this->request->getPost("room_id", "int");
@@ -120,7 +112,7 @@ class EventController extends AbstractController
 
         $lookupper = new EventLookupper($this->di);
         $event = new EventEntity();
-        $time = $this->validateTimestamp($dateStart, $dateEnd);
+        $time = $this->isValidTimestamp($dateStart, $dateEnd);
         if($time !== true) {
             die($time);
         }
@@ -174,12 +166,8 @@ class EventController extends AbstractController
     {
         $event = $this->getEventByRequest();
         
-        $role = (new RoleFactory())->getRole($this->user, $event);
-        
-        $allow = $this->acl->isAllowed($role, 'event', 'update');
-        if(!$allow) {
-            die('Not permitted');
-        }
+        $role = $this->getRoleFactory()->getRoleInEvent($this->user, $event);
+        $this->permitOrDie('event', 'update', $role);
 
         $title = $this->request->getPost("title", "striptags");
         $roomId = $this->request->getPost("room_id", "int");
@@ -210,7 +198,7 @@ class EventController extends AbstractController
          
         $lookupper = new EventLookupper($this->di);
         
-        $time = $this->validateTimestamp($dateStart, $dateEnd);
+        $time = $this->isValidTimestamp($dateStart, $dateEnd);
         if($time !== true) {
             die($time);
         }
@@ -260,12 +248,8 @@ class EventController extends AbstractController
     {
         $event = $this->getEventByRequest();
         
-        $role = (new RoleFactory())->getRole($this->user, $event);
-        
-        $allow = $this->acl->isAllowed($role, 'event', 'delete');
-        if(!$allow) {
-            die('Not permitted');
-        }
+        $role = $this->getRoleFactory()->getRoleInEvent($this->user, $event);
+        $this->permitOrDie('event', 'delete', $role);
         
         echo $event->delete() ? 'success' : 'false';
         exit;
@@ -283,7 +267,7 @@ class EventController extends AbstractController
         return $event;
     }
     
-    protected function validateTimestamp($dateStart, $dateEnd) 
+    protected function isValidTimestamp($dateStart, $dateEnd) 
     {
         try {
             $date1 = new \DateTime($dateStart);
