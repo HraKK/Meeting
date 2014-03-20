@@ -77,21 +77,17 @@ Ext.define('Ext.calendar.template.BoxLayout', {
                     if (showMonth) {
                         if (isToday) {
                             title = this.getTodayText();
+                        } else {
+                            title = Ext.Date.format(dt, 'l, F j');
                         }
-                        else {
-                            title = Ext.Date.format(dt, this.dayCount == 1 ? 'l, F j, Y' : (first ? 'M j, Y' : 'M j'));
-                        }
-                    }
-                    else {
-                        var dayFmt = (w == 0 && this.showHeader !== true) ? 'D j' : 'j';
-                        title = isToday ? this.getTodayText() : Ext.Date.format(dt, dayFmt);
+                    } else {
+                        title = isToday ? this.getTodayText() : Ext.Date.format(dt, 'l, F j');
                     }
 
                     weeks[w].push({
                         title: title,
                         date: Ext.Date.clone(dt),
                         titleCls: 'ext-cal-dtitle ' + (isToday ? ' ext-cal-dtitle-today' : '') +
-                            (w == 0 ? ' ext-cal-dtitle-first' : '') +
                             (prevMonth ? ' ext-cal-dtitle-prev' : '') +
                             (nextMonth ? ' ext-cal-dtitle-next' : ''),
                         cellCls: 'ext-cal-day ' + (isToday ? ' ext-cal-day-today' : '') +

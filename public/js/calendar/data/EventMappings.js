@@ -26,13 +26,13 @@ Ext.calendar.data.EventMappings = {
         name: 'StartDate',
         mapping: 'start',
         type: 'date',
-        dateFormat: 'c'
+        dateFormat: 'timestamp'
     },
     EndDate: {
         name: 'EndDate',
         mapping: 'end',
         type: 'date',
-        dateFormat: 'c'
+        dateFormat: 'timestamp'
     },
     IsNew: {
         name: 'IsNew',
