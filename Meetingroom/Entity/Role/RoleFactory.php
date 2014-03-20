@@ -7,12 +7,17 @@ use \Meetingroom\Entity\OwnableInterface;
 
 class RoleFactory
 {
-    public function getRole(UserInterface $user, OwnableInterface $obj)
+    public function getRoleInEvent(UserInterface $user, OwnableInterface $obj)
     {
         if($user->getId() === null) {
             return Group::GUEST;
         }
         
         return ($obj->ownerId() === $user->getId()) ? Group::OWNER : Group::USER;
+    }
+    
+    public function getRole(UserInterface $user)
+    {
+        return ($user->getId() === null) ? Group::GUEST: Group::USER;
     }
 }

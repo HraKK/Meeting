@@ -15,20 +15,15 @@ class UserController extends AbstractController
     
     public function loginAction()
     {
-        $role = $this->session->get('role');
-        $allow = $this->acl->isAllowed($role, 'user', 'login');
-        if(!$allow) {
-            die('Not permitted');
-        }
+        $this->permitOrDie('user', 'login');
         
         $this->view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_ACTION_VIEW);
         
-        $auth = $this->session->get('auth');
+        $auth = $this->session->has('auth');
 
         if($this->request->isPost()) {
             $this->checkCredentials();
-        } elseif(!empty($auth)) {
-            $this->session->set('role', 'ROLE_USER');
+        } elseif($auth) {
             $this->response->redirect();
         }
     }
@@ -37,7 +32,7 @@ class UserController extends AbstractController
     {
         $username = $this->request->getPost("username", "string");
         $password = $this->request->getPost("password", "string");
-        
+
         if(empty($username) || empty($password)) {
             return $this->flashSession->error("username and password SHOULD NOT be empty");
         }
@@ -64,16 +59,12 @@ class UserController extends AbstractController
         $this->session->set('username', $username);
         $this->session->set('userId', $userId);
         
-        $this->response->redirect('user/login');
+        $this->response->redirect();
     }
     
     public function logoutAction()
     {
-        $role = $this->session->get('role');
-        $allow = $this->acl->isAllowed($role, 'user', 'logout');
-        if(!$allow) {
-            die('Not permitted');
-        }
+        $this->permitOrDie('user', 'logout');
         
         $this->session->destroy();
         $this->flashSession->error("logged out");
