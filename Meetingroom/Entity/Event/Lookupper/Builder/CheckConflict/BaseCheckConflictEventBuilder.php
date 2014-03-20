@@ -24,6 +24,12 @@ class BaseCheckConflictEventBuilder
         //-- есть ли события  у которых дата конца между новым событием
         //-- есть ли события у кторых дата начала между новым событием
         // --есть ли события у которых дата начала раньше а конец позже нашего нового события
+
+        //Exclude self id from search result
+        $exclude_id = '';
+        if (isset($event->id) && $event->id != false) {
+            $exclude_id = "e.id<>" . $event->id;
+        }
         $sql =
             "
             SELECT e.id
@@ -31,6 +37,7 @@ class BaseCheckConflictEventBuilder
             LEFT JOIN repeating_options r ON ( r.id = e.id)
             WHERE
              e.room_id=" . $event->roomId . " AND
+             " . $exclude_id . "
             (
                 (
                     (e.date_end BETWEEN '" . $event->dateStart . "' AND '" . $event->dateEnd . "')   OR
