@@ -20,15 +20,7 @@ Ext.define('Ext.calendar.data.MemoryCalendarStore', {
             type: 'json',
             root: 'rooms'
         },
-        writer: {
-            type: 'json'
-        },
-        api: {
-            read: '/js/calendar/json/rooms.json',
-            create: '',
-            update: '',
-            destroy: ''
-        }
+        url: '/js/calendar/json/rooms.json'
     },
 
     autoLoad: true,

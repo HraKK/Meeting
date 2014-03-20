@@ -1,8 +1,5 @@
-/app/config.php
-/nbproject
 .idea
-/Meetingroom/config.php
-/Meetingroom/config.ini
-/public/.htaccess
-
+/app/config.php
 /Meetingroom/Config/config.ini
+/nbproject
+/public/.htaccess

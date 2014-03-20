@@ -40,10 +40,14 @@ class EventLookupperModel extends \Meetingroom\Model\AbstractModel
      */
     public function checkIsConflict(EventEntity $event, EventOptionEntity $options = null)
     {
-        $eventBuilder = new \Meetingroom\Entity\Event\Lookupper\Builder\CheckConflictBuilder();
+        $eventBuilder = new \Meetingroom\Entity\Event\Lookupper\Builder\CheckConflict\CheckConflictBuilder();
         $sql = $eventBuilder->build($event, $options);
-        $result = $this->execute($sql);
-        return !empty($result); //if empty is meant no conflicts found, but method names IsConflict, so invert boolean result.
+        $conflict_ids = $this->execute($sql);
+        $result = [];
+        foreach ($conflict_ids as $event) {
+            $result[] = new EventEntity($event['id']);
+        }
+        return $result; //if empty is meant no conflicts found, but method names IsConflict, so invert boolean result.
     }
 
     /**
@@ -57,7 +61,7 @@ class EventLookupperModel extends \Meetingroom\Model\AbstractModel
         PeriodCriteriaInterface $periodCriteria,
         array $fields = []
     ) {
-        $eventBuilder = new \Meetingroom\Entity\Event\Lookupper\Builder\EventBuilder();
+        $eventBuilder = new \Meetingroom\Entity\Event\Lookupper\Builder\Criteria\EventBuilder();
 
         return $eventBuilder->build($roomCriteria, $periodCriteria, $fields);
 

@@ -1,5 +1,5 @@
 <?php
-namespace Meetingroom\Entity\Event\Lookupper\Builder;
+namespace Meetingroom\Entity\Event\Lookupper\Builder\CheckConflict;
 
 use \Meetingroom\Entity\Event\EventEntity;
 use \Meetingroom\Entity\Event\EventOptionEntity;
@@ -19,12 +19,17 @@ class CheckConflictBuilder
      */
     public function build(EventEntity $event, EventOptionEntity $options = null)
     {
+        $sql = '';
+
+        $conflictBuilder = new BaseCheckConflictEventBuilder();
+        $sql .= $conflictBuilder->build($event);
+
         if ($event->repeatable) {
             $conflictBuilder = new CheckConflictRepeatableEventBuilder();
-            $sql = $conflictBuilder->build($event, $options);
+            $sql .= $conflictBuilder->build($event, $options);
         } else {
             $conflictBuilder = new CheckConflictSingleEventBuilder();
-            $sql = $conflictBuilder->build($event);
+            $sql .= $conflictBuilder->build($event);
         }
 
         return $sql;

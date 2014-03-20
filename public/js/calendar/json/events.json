@@ -1,0 +1,104 @@
+{
+    "events": [
+        {
+            "id": 1001,
+            "room": 1,
+            "title": "Vacation",
+            "start": 1395307800,
+            "end": 1395313200,
+            "notes": "Have fun",
+            "owner": "stevejobs"
+        },
+        {
+            "id": 1002,
+            "room": 2,
+            "title": "Lunch with Matt",
+            "start": 1395307800,
+            "end": 1395313200,
+            "loc": "Chuy's!",
+            "url": "http://chuys.com",
+            "notes": "Order the queso",
+            "rem": "15",
+            "owner": "alancarr"
+        },
+        {
+            "id": 1003,
+            "room": 3,
+            "title": "Project due",
+            "start": 1395307800,
+            "end": 1395313200,
+            "owner": "zelazny"
+        },
+        {
+            "id": 1004,
+            "room": 4,
+            "title": "Sarah's birthday",
+            "start": 1395307800,
+            "end": 1395313200,
+            "notes": "Need to get a gift",
+            "owner": "tommy"
+        },
+        {
+            "id": 1005,
+            "room": 5,
+            "title": "A long one...",
+            "start": 1395307800,
+            "end": 1395313200,
+            "owner": "bogi"
+        },
+        {
+            "id": 1006,
+            "room": 4,
+            "title": "School holiday",
+            "start": 1395298800,
+            "end": 1395300600,
+            "rem": "2880",
+            "owner": "moo"
+        },
+        {
+            "id": 1007,
+            "room": 3,
+            "title": "Haircut",
+            "start": 1395298800,
+            "end": 1395300600,
+            "notes": "Get cash on the way",
+            "owner": "tyler"
+        },
+        {
+            "id": 1008,
+            "room": 2,
+            "title": "An old event",
+            "start": 1395298800,
+            "end": 1395300600,
+            "owner": "maxanter"
+        },
+        {
+            "id": 1009,
+            "room": 1,
+            "title": "Board meeting",
+            "start": 1395298800,
+            "end": 1395300600,
+            "loc": "ABC Inc.",
+            "rem": "60",
+            "owner": "cooper"
+        },
+        {
+            "id": 1010,
+            "room": 2,
+            "title": "Jenny's final exams",
+            "start": 1395320400,
+            "end": 1395322200,
+            "owner": "stevejobs"
+        },
+        {
+            "id": 1011,
+            "room": 3,
+            "title": "Movie night",
+            "start": 1395320400,
+            "end": 1395322200,
+            "notes": "Don't forget the tickets!",
+            "rem": "60",
+            "owner": "stevejobs"
+        }
+    ]
+}

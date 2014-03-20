@@ -1,5 +1,5 @@
 <?php
-namespace Meetingroom\Entity\Event\Lookupper\Builder;
+namespace Meetingroom\Entity\Event\Lookupper\Builder\Criteria;
 
 /**
  * Class RoomCriteriaBuilder
