@@ -1,7 +1,7 @@
 <?php
 namespace Test;
 
-class UnitTest extends \PHPUnit_Framework_TestCase
+class UnitTest extends UnitTestCase
 {
 
     public function testTestCase()
