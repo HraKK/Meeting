@@ -6,7 +6,7 @@ class RoomModel extends \Meetingroom\Model\AbstractCRUDModel
 {
     protected $table = 'rooms';
     protected $fields = ['id', 'title', 'description', 'attendees'];
-    
+
     public function getAll()
     {
         $result = $this->db->query("SELECT id, title, description, attendees FROM rooms ");

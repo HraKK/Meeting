@@ -17,9 +17,6 @@ class EventController extends AbstractController
 {
     public function indexAction()
     {
-        $model = new \Meetingroom\Model\Event\EventModel();
-        var_dump($model->read(666));
-        exit;
     }
 
 
@@ -27,11 +24,51 @@ class EventController extends AbstractController
     {
         $di = $this->getDI();
         $lookupper = new EventLookupper($di);
-        $entity = new \Meetingroom\Entity\Event\EventEntity(1);
-        //var_dump('<pre>',$entity);
-        $lookupper->checkConflict($entity);
 
-        die('--fin--');
+        $entity = new \Meetingroom\Entity\Event\EventEntity();
+        $event_fields = [
+            'room_id' => '1',
+            'date_start' => '2014-01-22 18:00:00',
+            'date_end' => '2014-01-22 18:10:00',
+            'user_id' => '1',
+            'title' => 'test',
+            'description' => 'description',
+            'repeatable' => true,
+            'attendees' => 4
+        ];
+        $entity->bind($event_fields);
+
+        $options = new \Meetingroom\Entity\Event\EventOptionEntity();
+        $options_fields = [
+            'mon' => true,
+            'tue' => true,
+            'wed' => true,
+            'thu' => false,
+            'fri' => true,
+            'sat' => false,
+            'sun' => true,
+        ];
+        $options->bind($options_fields);
+
+        $conflict_events = $lookupper->checkIsConflict($entity, $options);
+        $eventsDTO = [];
+        foreach ($conflict_events as $event) {
+            $eventDTO = new \Meetingroom\DTO\Event\EventDTO();
+            $eventDTO->id = $event->id;
+            $eventDTO->roomId = $event->roomId;
+            $eventDTO->dateStart = $event->dateStart;
+            $eventDTO->dateEnd = $event->dateEnd;
+            $eventDTO->userId = $event->userId;
+            $eventDTO->title = $event->title;
+            $eventDTO->desription = $event->desription;
+            $eventDTO->attendees = $event->attendees;
+
+            $eventsDTO[] = $eventDTO;
+
+        }
+        var_dump('<pre>', $eventsDTO);
+
+        die();
     }
 
     public function lookuperAction($id = 0)
@@ -40,7 +77,7 @@ class EventController extends AbstractController
         $roomCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria(1);
         //$periodCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\WeekPeriodCriteria(17,3, 2014); // test week
         //$periodCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\MonthPeriodCriteria(3, 2014);   // test month
-        $periodCriteria = new DayPeriodCriteria(17, 3, 2014);
+        $periodCriteria = new DayPeriodCriteria(18, 3, 2014);
         $lookupper = new EventLookupper($di);
 
         var_dump(
@@ -56,9 +93,11 @@ class EventController extends AbstractController
     
     public function createAction()
     {
-        // @todo
-        $this->session->set('username', 'Barif2');
         $username = $this->session->get('username');
+        
+        if($username == false) {
+            die('session timed out');
+        }
         
         $userManager = new UserManager();
         $userId = $userManager->getIdByUsername($username);
@@ -74,11 +113,12 @@ class EventController extends AbstractController
         if(!$isRoom) {
             echo json_encode(['status' => 'error']);
         }
-        
+
         $isRepeatable = $this->request->getPost("repeatable", "int");
+        $lookupper = new EventLookupper($this->di);
         
         $event = new EventEntity();
-        $check = $event->bind([
+        $event->bind([
             'title' => $this->request->getPost("title", "striptags"),
             'room_id' => $roomId,
             'user_id' => $userId,
@@ -87,27 +127,39 @@ class EventController extends AbstractController
             'description' => $this->request->getPost("description", "striptags"),
             'repeatable' => $isRepeatable,
             'attendees' => $this->request->getPost("attendees", "int"),
-        ])->save();
-        
-        if(!($check && $isRepeatable)) {
-            var_dump($check);
-            exit;
-        }
+        ]);
         
         $option = new EventOptionEntity();
-        $res = $option->bind([
-            'id' => $event->id,
-            'mon' => $this->request->getPost("mon", "int"),
-            'tue' => $this->request->getPost("tue", "int"),
-            'wed' => $this->request->getPost("wed", "int"),
-            'thu' => $this->request->getPost("thu", "int"),
-            'fri' => $this->request->getPost("fri", "int"),
-            'sat' => $this->request->getPost("sat", "int"),
-            'sun' => $this->request->getPost("sun", "int"),
-        ])->insert();
         
-        print_r($res);
-        exit;
+        if($isRepeatable) {
+            $option->bind([
+                'id' => $event->id,
+                'mon' => $this->request->getPost("mon", "int"),
+                'tue' => $this->request->getPost("tue", "int"),
+                'wed' => $this->request->getPost("wed", "int"),
+                'thu' => $this->request->getPost("thu", "int"),
+                'fri' => $this->request->getPost("fri", "int"),
+                'sat' => $this->request->getPost("sat", "int"),
+                'sun' => $this->request->getPost("sun", "int"),
+            ]);
+        }
+        $conflict = $lookupper->checkIsConflict($event, $option);
+        
+        if(!$conflict) {
+            $eventId = $event->save();
+            if(!$eventId){
+                die('event not created');
+            }
+            
+            if($isRepeatable) {
+                $option->bind(['id' => $event->id])->insert();
+            }
+            
+            die($eventId);
+        } else {
+            var_dump($conflict);
+            exit;
+        }
     }
     
     public function updateAction()
@@ -123,7 +175,6 @@ class EventController extends AbstractController
             }
         }
          
-        // @todo repeatable, check period
         $isRepeatable = $this->request->getPost("repeatable", "int");
         $check = $event->bind([
             'title' => $this->request->getPost("title", "striptags"),
@@ -166,8 +217,11 @@ class EventController extends AbstractController
     
     private function validateEvent()
     {
-        $this->session->set('username', 'Barif2');
         $username = $this->session->get('username');
+        
+        if($username == false) {
+            die('session timed out');
+        }
         
         $user = (new UserFactory())->getUser($username);
         

@@ -90,7 +90,7 @@ abstract class AbstractEntity
             if(!isset($data[$db])) {
                 continue;
             }
-
+            
             $this->$map = $data[$db];
         }
 
@@ -108,7 +108,7 @@ abstract class AbstractEntity
 
     public function save()
     {
-        return $this->id === null ? $this->insert(): $this->update();
+        return $this->id == null ? $this->insert(): $this->update();
     }
     
     public function insert()
@@ -137,7 +137,7 @@ abstract class AbstractEntity
         
         return $values;
     }
-
+    
     public function delete()
     {
         return $this->getModel()->delete($this->id);

@@ -3,7 +3,8 @@ namespace Meetingroom\Entity\Event\Lookupper;
 
 use \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteriaInterface;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface;
-
+use \Meetingroom\Entity\Event\EventEntity;
+use \Meetingroom\Entity\Event\EventOptionEntity;
 
 class EventLookupperModel extends \Meetingroom\Model\AbstractModel
 {
@@ -32,21 +33,21 @@ class EventLookupperModel extends \Meetingroom\Model\AbstractModel
         return $list;
     }
 
-    public function checkConflict($event)
+    /**
+     * @param EventEntity $event
+     * @param EventOptionEntity $options
+     * @return bool
+     */
+    public function checkIsConflict(EventEntity $event, EventOptionEntity $options = null)
     {
-        //var_dump('<pre>',$event);
-        var_dump('<pre>', $event->date_start, $event->room_id);
-        die();
-
-        $weekday = strtolower(date("D", $event->date_start));
-        $eventBuilder = new \Meetingroom\Entity\Event\Lookupper\Builder\CheckConflictBuilder();
-
-        $sql = $eventBuilder->build($event->room_id, $weekday);
-
-        var_dump($sql);
-
-        $result = $this->execute();
-        return !empty($result);
+        $eventBuilder = new \Meetingroom\Entity\Event\Lookupper\Builder\CheckConflict\CheckConflictBuilder();
+        $sql = $eventBuilder->build($event, $options);
+        $conflict_ids = $this->execute($sql);
+        $result = [];
+        foreach ($conflict_ids as $event) {
+            $result[] = new EventEntity($event['id']);
+        }
+        return $result; //if empty is meant no conflicts found, but method names IsConflict, so invert boolean result.
     }
 
     /**
@@ -60,7 +61,7 @@ class EventLookupperModel extends \Meetingroom\Model\AbstractModel
         PeriodCriteriaInterface $periodCriteria,
         array $fields = []
     ) {
-        $eventBuilder = new \Meetingroom\Entity\Event\Lookupper\Builder\EventBuilder();
+        $eventBuilder = new \Meetingroom\Entity\Event\Lookupper\Builder\Criteria\EventBuilder();
 
         return $eventBuilder->build($roomCriteria, $periodCriteria, $fields);
 
