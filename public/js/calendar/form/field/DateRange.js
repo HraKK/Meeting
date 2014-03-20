@@ -207,7 +207,10 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             },
             {
                 xtype: 'combo',
-                disabled: true, // TODO
+                name: 'RepeatedOn',
+                disabled: true,
+                hidden: true,
+                itemId: this.id + '-repeat-on',
                 store: Ext.create('Ext.calendar.data.Days'),
                 emptyText: 'Select day(s) of week',
                 displayField: 'name',
@@ -219,15 +222,12 @@ Ext.define('Ext.calendar.form.field.DateRange', {
     },
 
     onIsRepeatableChange: function(chk, checked) {
+        var me = this,
+            repeatOnCombo = me.down('#' + me.id + '-repeat-on');
 
         Ext.suspendLayouts();
-        // TODO
-        /*
-         this.startTime.setDisabled(checked).setVisible(!checked);
-         this.endTime.setDisabled(checked).setVisible(!checked);
-         */
+        repeatOnCombo.setDisabled(!checked).setVisible(checked);
         Ext.resumeLayouts(true);
-
     },
 
     getDateSeparatorConfig: function() {
