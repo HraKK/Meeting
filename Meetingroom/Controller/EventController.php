@@ -50,7 +50,25 @@ class EventController extends AbstractController
         ];
         $options->bind($options_fields);
 
-        die(($lookupper->checkIsConflict($entity, $options)) ? " Конфликт " : "Ok");
+        $conflict_events = $lookupper->checkIsConflict($entity, $options);
+        $eventsDTO = [];
+        foreach ($conflict_events as $event) {
+            $eventDTO = new \Meetingroom\DTO\Event\EventDTO();
+            $eventDTO->id = $event->id;
+            $eventDTO->roomId = $event->roomId;
+            $eventDTO->dateStart = $event->dateStart;
+            $eventDTO->dateEnd = $event->dateEnd;
+            $eventDTO->userId = $event->userId;
+            $eventDTO->title = $event->title;
+            $eventDTO->desription = $event->desription;
+            $eventDTO->attendees = $event->attendees;
+
+            $eventsDTO[] = $eventDTO;
+
+        }
+        var_dump('<pre>', $eventsDTO);
+
+        die();
     }
 
     public function lookuperAction($id = 0)

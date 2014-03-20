@@ -1,5 +1,5 @@
 <?php
-namespace Meetingroom\Entity\Event\Lookupper\Builder;
+namespace Meetingroom\Entity\Event\Lookupper\Builder\Criteria;
 
 use \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteriaInterface;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\PeriodCriteriaInterface;
