@@ -9,11 +9,18 @@ abstract class AbstractEntity
     protected $loaded = false;
     protected $model = null;
     protected $modelName = null;
+    protected $DTO = null;
+    protected $DTOName = null;
     protected $fields = [];
 
     public function getModel()
     {
         return $this->model === null ? new $this->modelName : $this->model;
+    }
+
+    public function getDTO()
+    {
+        return $this->DTO === null ? new $this->DTOName($this->getProperties()) : $this->DTO;
     }
 
     /**
@@ -142,4 +149,20 @@ abstract class AbstractEntity
     {
         return $this->getModel()->delete($this->id);
     }
+
+    /**
+     * Return entity data in array
+     *
+     * @return array fields with data
+     * @author Denis Maximovskikh <denkin.syneforge.com>
+     */
+    public function getProperties()
+    {
+        $fields_array = [];
+        foreach ($this->fields as $bd_field => $class_field) {
+            $fields_array[$class_field] = $this->$class_field;
+        }
+        return $fields_array;
+    }
+
 }

@@ -6,17 +6,29 @@ use \Meetingroom\Service\LDAP\LDAP;
 use \Meetingroom\Entity\User\UserFactory;
 use \Meetingroom\Entity\User\UserManager;
 
-class UserController extends \Phalcon\Mvc\Controller
+class UserController extends AbstractController
 {
+    public function indexAction()
+    {
+        
+    }
+    
     public function loginAction()
     {
+        $role = $this->session->get('role');
+        $allow = $this->acl->isAllowed($role, 'user', 'login');
+        if(!$allow) {
+            die('Not permitted');
+        }
+        
         $this->view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_ACTION_VIEW);
         
-        $username = $this->session->get('username');
-        
+        $auth = $this->session->get('auth');
+
         if($this->request->isPost()) {
             $this->checkCredentials();
-        } elseif(!empty($username)) {
+        } elseif(!empty($auth)) {
+            $this->session->set('role', 'ROLE_USER');
             $this->response->redirect();
         }
     }
@@ -48,6 +60,7 @@ class UserController extends \Phalcon\Mvc\Controller
             );
         }
         
+        $this->session->set('auth', true);
         $this->session->set('username', $username);
         $this->session->set('userId', $userId);
         
@@ -56,6 +69,12 @@ class UserController extends \Phalcon\Mvc\Controller
     
     public function logoutAction()
     {
+        $role = $this->session->get('role');
+        $allow = $this->acl->isAllowed($role, 'user', 'logout');
+        if(!$allow) {
+            die('Not permitted');
+        }
+        
         $this->session->destroy();
         $this->flashSession->error("logged out");
         $this->response->redirect('user/login');

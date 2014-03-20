@@ -4,7 +4,7 @@ namespace Meetingroom\Entity\Role;
 
 class Group
 {
-    const GUEST = 1;
-    const USER = 2;
-    const OWNER = 3;
+    const GUEST = 'ROLE_GUEST';
+    const USER = 'ROLE_USER';
+    const OWNER = 'ROLE_OWNER';
 }

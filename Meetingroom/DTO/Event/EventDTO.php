@@ -6,7 +6,7 @@ namespace Meetingroom\DTO\Event;
  * @package Meetingroom\DTO\Event
  * @author Denis Maximovskikh <denkin.syneforge.com>
  */
-class EventDTO
+class EventDTO extends \Meetingroom\DTO\AbstractDTO
 {
 
     public $id;

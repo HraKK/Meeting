@@ -13,9 +13,9 @@ class UserFactory
             $user = new GuestEntity();
         } else {
             $user = new AuthorizedEntity();
-            $user->load($username);
+            $user->loadByUsername($username);
         }
-
+        
         return $user;
     }
 
