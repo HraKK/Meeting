@@ -20,13 +20,14 @@ class EventController extends AbstractController
     }
 
 
-    public function checkConflictAction($id = 0)
+    public function checkIsConflictAction($id = 0)
     {
         $di = $this->getDI();
         $lookupper = new EventLookupper($di);
 
         $entity = new \Meetingroom\Entity\Event\EventEntity();
         $event_fields = [
+            //'id'=>'',///null,//4, //test exclude
             'room_id' => '1',
             'date_start' => '2014-01-22 18:00:00',
             'date_end' => '2014-01-22 18:10:00',

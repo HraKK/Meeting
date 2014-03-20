@@ -27,8 +27,8 @@ class BaseCheckConflictEventBuilder
 
         //Exclude self id from search result
         $exclude_id = '';
-        if (isset($event->id) && $event->id != false) {
-            $exclude_id = "e.id<>" . $event->id;
+        if ($event->id) {
+            $exclude_id = "e.id<>" . $event->id . " AND ";
         }
         $sql =
             "
