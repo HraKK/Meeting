@@ -311,7 +311,7 @@ Ext.define('Ext.calendar.App', {
 
                                                     rec.commit();
 
-                                                    this.showMsg('Event ' + rec.data[mappings.Title.name] + ' was moved to ' +
+                                                    this.showMsg('Event <b>' + rec.data[mappings.Title.name] + '</b> was moved to ' +
                                                         Ext.Date.format(rec.data[mappings.StartDate.name], ('F jS' + time)));
                                                 },
                                                 scope: this
@@ -319,14 +319,14 @@ Ext.define('Ext.calendar.App', {
                                             'eventresize': {
                                                 fn: function(vw, rec) {
                                                     rec.commit();
-                                                    this.showMsg('Event ' + rec.data.Title + ' was updated');
+                                                    this.showMsg('Event <b>' + rec.data.Title + '</b> was updated');
                                                 },
                                                 scope: this
                                             },
                                             'eventdelete': {
                                                 fn: function(win, rec) {
                                                     this.eventStore.remove(rec);
-                                                    this.showMsg('Event ' + rec.data.Title + ' was deleted');
+                                                    this.showMsg('Event <b>' + rec.data.Title + '</b> was deleted');
                                                 },
                                                 scope: this
                                             },
@@ -360,13 +360,21 @@ Ext.define('Ext.calendar.App', {
                     listeners: {
                         'eventadd': {
                             fn: function(win, rec) {
-                                win.hide();
+                                var me = this;
                                 rec.data.IsNew = false;
                                 rec.data.Owner = Ext.getUser();
                                 rec.data.CalendarId = Ext.currentCalendarId;
                                 this.eventStore.add(rec);
-                                this.eventStore.sync();
-                                this.showMsg('Event ' + rec.data.Title + ' was added');
+                                this.eventStore.sync({
+                                    success: function() {
+                                        win.hide();
+                                        me.showMsg('Event <b>' + rec.data.Title + '</b> was added');
+                                    },
+                                    failure: function() {
+                                        me.showMsg('Can\'t create <b>' + rec.data.Title + '</b> event', 'error');
+                                    }
+                                });
+
                             },
                             scope: this
                         },
@@ -375,7 +383,7 @@ Ext.define('Ext.calendar.App', {
                                 win.hide();
                                 rec.commit();
                                 this.eventStore.sync();
-                                this.showMsg('Event ' + rec.data.Title + ' was updated');
+                                this.showMsg('Event <b>' + rec.data.Title + '</b> was updated');
                             },
                             scope: this
                         },
@@ -384,7 +392,7 @@ Ext.define('Ext.calendar.App', {
                                 this.eventStore.remove(rec);
                                 this.eventStore.sync();
                                 win.hide();
-                                this.showMsg('Event ' + rec.data.Title + ' was deleted');
+                                this.showMsg('Event <b>' + rec.data.Title + '</b> was deleted');
                             },
                             scope: this
                         },

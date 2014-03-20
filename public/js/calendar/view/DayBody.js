@@ -241,7 +241,8 @@ Ext.define('Ext.calendar.view.DayBody', {
 
     // private
     renderItems: function() {
-        var day = 0,
+        var me = this,
+            day = 0,
             evts = [],
             ev,
             d,
@@ -322,6 +323,27 @@ Ext.define('Ext.calendar.view.DayBody', {
             target = this.id + '-day-col-' + Ext.Date.format(evts[i].date, 'Ymd');
 
             Ext.core.DomHelper.append(target, markup);
+
+            if (evt.IsRepeatable) {
+
+                // TODO: implement correct clones generation here
+                var evtClone = Ext.clone(evt),
+                    markupClone,
+                    timeClone,
+                    targetClone;
+
+                evtClone.StartDate = Ext.calendar.util.Date.add(evtClone.StartDate, {days: 1});
+                evtClone.EndDate = Ext.calendar.util.Date.add(evtClone.EndDate, {days: 1});
+
+                markupClone = me.getEventTemplate().apply(evtClone);
+                timeClone = Ext.calendar.util.Date.add(evts[i].date, {days: 1});
+                targetClone = me.id + '-day-col-' + Ext.Date.format(timeClone, 'Ymd');
+
+                if (Ext.get(targetClone) != null) {
+                    Ext.core.DomHelper.append(targetClone, markupClone);
+                }
+
+            }
         }
 
         this.fireEvent('eventsrendered', this);

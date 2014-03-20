@@ -224,12 +224,15 @@ Ext.define('Ext.calendar.form.field.DateRange', {
     },
 
     onIsRepeatableChange: function(chk, checked) {
+
         var me = this,
             repeatOnCombo = me.down('#' + me.id + '-repeat-on');
 
         Ext.suspendLayouts();
         repeatOnCombo.setDisabled(!checked).setVisible(checked);
+        // TODO: if checked > select current day of week
         Ext.resumeLayouts(true);
+
     },
 
     getDateSeparatorConfig: function() {
