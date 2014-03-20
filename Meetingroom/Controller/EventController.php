@@ -2,15 +2,11 @@
 
 namespace Meetingroom\Controller;
 
-use \Meetingroom\Entity\Role\RoleFactory;
-use \Meetingroom\Entity\User\UserManager;
 use \Meetingroom\Entity\Room\RoomManager;
 use \Meetingroom\Entity\Event\EventOptionEntity;
 use \Meetingroom\Entity\Event\EventEntity;
 use \Meetingroom\Entity\Event\Lookupper\EventLookupper;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria;
-
-use \Meetingroom\Entity\Role\Group;
 
 class EventController extends AbstractController
 {
@@ -87,43 +83,49 @@ class EventController extends AbstractController
     
     public function createAction()
     {
-        $role = $this->session->get('role');
-        $allow = $this->acl->isAllowed($role, 'event', 'create');
-        if(!$allow) {
-            die('Not permitted');
-        }
+        $this->permitOrDie('event', 'create');
         
+        $title = $this->request->getPost("title", "striptags");
         $roomId = $this->request->getPost("room_id", "int");
-        $roomManager = new RoomManager();
-        $isRoom = $roomManager->isRoomExist($roomId);
-
-        if(!$isRoom) {
-            echo json_encode(['status' => 'error']);
-        }
-
         $isRepeatable = $this->request->getPost("repeatable", "int");
-        $lookupper = new EventLookupper($this->di);
+        $dateStart = $this->request->getPost("date_start", "string");
+        $dateEnd = $this->request->getPost("date_end", "string");
+        $description = $this->request->getPost("description", "striptags");
+        $attendees = $this->request->getPost("attendees", "int");
         
-        $event = new EventEntity();
-
-        $start = $this->request->getPost("date_start", "string");
-        $dateStart = $this->validateTimestamp($start);
-                
-        $end = $this->request->getPost("date_end", "string");
-        $dateEnd = $this->validateTimestamp($end);
-                
-        if($dateEnd==false || $dateStart==false) {
-            die('Date MUST have format Y-m-d H:i:s');
+        $mon = $this->request->getPost("mon", "int");
+        $tue = $this->request->getPost("tue", "int");
+        $wed = $this->request->getPost("wed", "int");
+        $thu = $this->request->getPost("thu", "int");
+        $fri = $this->request->getPost("fri", "int");
+        $sat = $this->request->getPost("sat", "int");
+        $sun = $this->request->getPost("sun", "int");
+        
+        if(strlen($title) < 3) {
+            die('Title should be longer');
         }
-        var_dump([
-            'title' => $this->request->getPost("title", "striptags"),
+        
+        $roomManager = new RoomManager();
+        if(!$roomManager->isRoomExist($roomId)) {
+            die('room ain`t exist');
+        }
+
+        $lookupper = new EventLookupper($this->di);
+        $event = new EventEntity();
+        $time = $this->isValidTimestamp($dateStart, $dateEnd);
+        if($time !== true) {
+            die($time);
+        }
+        
+        $event->bind([
+            'title' => $title,
             'room_id' => $roomId,
             'user_id' => $this->user->id,
             'date_start' => $dateStart,
             'date_end' => $dateEnd,
-            'description' => $this->request->getPost("description", "striptags"),
+            'description' => $description,
             'repeatable' => $isRepeatable,
-            'attendees' => $this->request->getPost("attendees", "int"),
+            'attendees' => $attendees
         ]);
         
         $option = new EventOptionEntity();
@@ -131,13 +133,13 @@ class EventController extends AbstractController
         if($isRepeatable) {
             $option->bind([
                 'id' => $event->id,
-                'mon' => $this->request->getPost("mon", "int"),
-                'tue' => $this->request->getPost("tue", "int"),
-                'wed' => $this->request->getPost("wed", "int"),
-                'thu' => $this->request->getPost("thu", "int"),
-                'fri' => $this->request->getPost("fri", "int"),
-                'sat' => $this->request->getPost("sat", "int"),
-                'sun' => $this->request->getPost("sun", "int"),
+                'mon' => $mon,
+                'tue' => $tue,
+                'wed' => $wed,
+                'thu' => $thu,
+                'fri' => $fri,
+                'sat' => $sat,
+                'sun' => $sun,
             ]);
         }
         
@@ -164,14 +166,28 @@ class EventController extends AbstractController
     {
         $event = $this->getEventByRequest();
         
-        $role = (new RoleFactory())->getRole($this->user, $event);
-        
-        $allow = $this->acl->isAllowed($role, 'event', 'update');
-        if(!$allow) {
-            die('Not permitted');
-        }
+        $role = $this->getRoleFactory()->getRoleInEvent($this->user, $event);
+        $this->permitOrDie('event', 'update', $role);
 
+        $title = $this->request->getPost("title", "striptags");
         $roomId = $this->request->getPost("room_id", "int");
+        $isRepeatable = $this->request->getPost("repeatable", "int");
+        $dateStart = $this->request->getPost("date_start", "string");
+        $dateEnd = $this->request->getPost("date_end", "string");
+        $description = $this->request->getPost("description", "striptags");
+        $attendees = $this->request->getPost("attendees", "int");
+        
+        $mon = $this->request->getPost("mon", "int");
+        $tue = $this->request->getPost("tue", "int");
+        $wed = $this->request->getPost("wed", "int");
+        $thu = $this->request->getPost("thu", "int");
+        $fri = $this->request->getPost("fri", "int");
+        $sat = $this->request->getPost("sat", "int");
+        $sun = $this->request->getPost("sun", "int");
+        
+        if(strlen($title) < 3) {
+            die('Title should be longer');
+        }
         
         if($roomId !== $event->roomId) {
             $roomManager = new RoomManager();
@@ -180,27 +196,21 @@ class EventController extends AbstractController
             }
         }
          
-        $isRepeatable = $this->request->getPost("repeatable", "int");
         $lookupper = new EventLookupper($this->di);
         
-        $start = $this->request->getPost("date_start", "string");
-        $dateStart = $this->validateTimestamp($start);
-                
-        $end = $this->request->getPost("date_end", "string");
-        $dateEnd = $this->validateTimestamp($end);
-                
-        if($dateEnd==false || $dateStart==false) {
-            die('Date MUST have format Y-m-d H:i:s');
+        $time = $this->isValidTimestamp($dateStart, $dateEnd);
+        if($time !== true) {
+            die($time);
         }
         
         $event->bind([
-            'title' => $this->request->getPost("title", "striptags"),
+            'title' => $title,
             'room_id' => $roomId,
-            'date_start' => $start,
-            'date_end' => $end,
-            'description' => $this->request->getPost("description", "striptags"),
+            'date_start' => $dateStart,
+            'date_end' => $dateEnd,
+            'description' => $description,
             'repeatable' => $isRepeatable,
-            'attendees' => $this->request->getPost("attendees", "int"),
+            'attendees' => $attendees
         ]);
         
         $option = new EventOptionEntity();
@@ -208,13 +218,13 @@ class EventController extends AbstractController
         if($isRepeatable) {
             $option->bind([
                 'id' => $event->id,
-                'mon' => $this->request->getPost("mon", "int"),
-                'tue' => $this->request->getPost("tue", "int"),
-                'wed' => $this->request->getPost("wed", "int"),
-                'thu' => $this->request->getPost("thu", "int"),
-                'fri' => $this->request->getPost("fri", "int"),
-                'sat' => $this->request->getPost("sat", "int"),
-                'sun' => $this->request->getPost("sun", "int"),
+                'mon' => $mon,
+                'tue' => $tue,
+                'wed' => $wed,
+                'thu' => $thu,
+                'fri' => $fri,
+                'sat' => $sat,
+                'sun' => $sun
             ]);
         }
         
@@ -238,12 +248,8 @@ class EventController extends AbstractController
     {
         $event = $this->getEventByRequest();
         
-        $role = (new RoleFactory())->getRole($this->user, $event);
-        
-        $allow = $this->acl->isAllowed($role, 'event', 'delete');
-        if(!$allow) {
-            die('Not permitted');
-        }
+        $role = $this->getRoleFactory()->getRoleInEvent($this->user, $event);
+        $this->permitOrDie('event', 'delete', $role);
         
         echo $event->delete() ? 'success' : 'false';
         exit;
@@ -261,14 +267,28 @@ class EventController extends AbstractController
         return $event;
     }
     
-    protected function validateTimestamp($timestamp) 
+    protected function isValidTimestamp($dateStart, $dateEnd) 
     {
         try {
-            $date = new \DateTime($timestamp);
+            $date1 = new \DateTime($dateStart);
+            $date2 = new \DateTime($dateEnd);
         } catch (\Exception $exc) {
-            return false;
+            return 'Timestamp format is Y-m-d H:i:s';
         }
 
-        return ($date->format('Y-m-d H:i:s') == $timestamp) ? $timestamp : false;
+        if(($date1->format('Y-m-d H:i:s') != $dateStart) || 
+            ($date2->format('Y-m-d H:i:s') != $dateEnd)) {
+            return 'Timestamp format is Y-m-d H:i:s';
+        }
+        
+        if($date1->format('Y-m-d') != $date2->format('Y-m-d')) {
+            return 'Event should start and end in same day';
+        }
+        
+        if($date2<=$date1) {
+            return 'Date end should be greater than date start';
+        }
+            
+        return true;
     }
 }

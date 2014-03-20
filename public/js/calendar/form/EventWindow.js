@@ -230,9 +230,12 @@ Ext.define('Ext.calendar.form.EventWindow', {
         var rec,
             f = this.formPanel.form;
 
+        f.reset();
+
         if (o.data) {
             rec = o;
             this.setTitle(rec.phantom ? this.titleTextAdd : this.titleTextEdit);
+
             f.loadRecord(rec);
         } else {
             this.setTitle(this.titleTextAdd);
@@ -246,9 +249,10 @@ Ext.define('Ext.calendar.form.EventWindow', {
             rec.data[M.Owner.name] = Ext.getUser();
             rec.data[M.CalendarId.name] = Ext.currentCalendarId;
 
-            f.reset();
             f.loadRecord(rec);
         }
+
+        var isRepeatable = rec.data[M.IsRepeatable.name];
 
         if (this.calendarStore) {
             this.calendarField.setValue(rec.data[M.CalendarId.name]);
