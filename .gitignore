@@ -5,3 +5,4 @@
 /public/.htaccess
 /vendor/
 /tests/report/
+/composer.lock
