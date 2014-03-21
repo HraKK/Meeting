@@ -14,7 +14,7 @@ Ext.calendar.data.EventMappings = {
     },
     CalendarId: {
         name: 'CalendarId',
-        mapping: 'room',
+        mapping: 'room_id',
         type: 'int'
     },
     Title: {
@@ -22,15 +22,20 @@ Ext.calendar.data.EventMappings = {
         mapping: 'title',
         type: 'string'
     },
+    Description: {
+        name: 'Description',
+        mapping: 'description',
+        type: 'string'
+    },
     StartDate: {
         name: 'StartDate',
-        mapping: 'start',
+        mapping: 'date_start',
         type: 'date',
         dateFormat: 'timestamp'
     },
     EndDate: {
         name: 'EndDate',
-        mapping: 'end',
+        mapping: 'date_end',
         type: 'date',
         dateFormat: 'timestamp'
     },
