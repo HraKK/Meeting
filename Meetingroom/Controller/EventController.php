@@ -7,79 +7,42 @@ use \Meetingroom\Entity\Event\EventOptionEntity;
 use \Meetingroom\Entity\Event\EventEntity;
 use \Meetingroom\Entity\Event\Lookupper\EventLookupper;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria;
+use \Meetingroom\Validate\Timestamp\Timestamp;
+use \Meetingroom\Validate\Timestamp\TimestampCompare;
 
 class EventController extends AbstractController
 {
     public function indexAction()
     {
-        
-    }
-
-
-    public function checkIsConflictAction($id = 0)
-    {
-        $di = $this->getDI();
-        $lookupper = new EventLookupper($di);
-
-        $entity = new \Meetingroom\Entity\Event\EventEntity();
-
-        $event_fields = [
-            //'id'=>'',///null,//4, //test exclude
-            'room_id' => '1',
-            'date_start' => '2014-01-22 18:00:00',
-            'date_end' => '2014-01-22 18:10:00',
-            'user_id' => '1',
-            'title' => 'test',
-            'description' => 'description',
-            'repeatable' => true,
-            'attendees' => 4
-        ];
-        $entity->bind($event_fields);
-
-
-        $options = new \Meetingroom\Entity\Event\EventOptionEntity();
-        $options_fields = [
-            'mon' => true,
-            'tue' => true,
-            'wed' => true,
-            'thu' => false,
-            'fri' => true,
-            'sat' => false,
-            'sun' => true,
-        ];
-        $options->bind($options_fields);
-
-        $conflict_events = $lookupper->checkIsConflict($entity, $options);
-        $eventsDTO = [];
-        foreach ($conflict_events as $event) {
-
-            $eventsDTO[] = $event->getDTO();
-
+        if(!$this->isAllowed('index', 'index')) {
+            $this->onDenied();
         }
+        
+        $roomId = $this->request->getPost("room_id", "int");
+        $day = $this->request->getPost("day", "int");
+        $month = $this->request->getPost("month", "int");
+        $year = $this->request->getPost("year", "int");
+        
+        $roomManager = new RoomManager();
+        $rooms = $roomManager->getAll();
+        
+        $roomCriteria = new RoomCriteria($id);
+        $periodCriteria = new DayPeriodCriteria($day, $month, $year);
+        $lookupper = new EventLookupper($this->di);
 
-        var_dump('<pre>', $eventsDTO);
-        die();
+        $events = $lookupper
+            ->setPeriodCriteria($periodCriteria)
+            ->setRoomCriteria($roomCriteria)
+            ->setFields(['id', 'title'])
+            ->lookup();
+        
+        $eventsDTO = [];
+        foreach ($events as $event) {
+            $eventsDTO[] = $event->getDTO();
+        }
+        
+        $this->sendOutput(['success' => true, 'events' => $eventsDTO]);
     }
-
-    public function lookuperAction($id = 0)
-    {
-        $di = $this->getDI();
-        $roomCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria(1);
-        //$periodCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\WeekPeriodCriteria(17,3, 2014); // test week
-        //$periodCriteria = new \Meetingroom\Entity\Event\Lookupper\Criteria\MonthPeriodCriteria(3, 2014);   // test month
-        $periodCriteria = new DayPeriodCriteria(18, 3, 2014);
-        $lookupper = new EventLookupper($di);
-
-        var_dump(
-            '<pre>',
-            $lookupper->setPeriodCriteria($periodCriteria)->setRoomCriteria($roomCriteria)->setFields(
-                ['id', 'title']
-            )->lookup()
-        );
-
-        die();
-    }
-
     
     public function createAction()
     {
@@ -109,22 +72,25 @@ class EventController extends AbstractController
         
         $roomManager = new RoomManager();
         if(!$roomManager->isRoomExist($roomId)) {
-            die('room ain`t exist');
+            $this->sendError('room ain`t exist');
         }
 
         $lookupper = new EventLookupper($this->di);
         $event = new EventEntity();
-        $time = $this->isValidTimestamp($dateStart, $dateEnd);
-        if($time !== true) {
-            die($time);
+        
+        $start = strtotime($dateStart);
+        $end = strtotime($dateEnd);
+        
+        if($start === false || $end === false || $end <= $start) {
+            $this->sendError('wrong date');
         }
         
         $event->bind([
             'title' => $title,
             'room_id' => $roomId,
             'user_id' => $this->user->id,
-            'date_start' => $dateStart,
-            'date_end' => $dateEnd,
+            'date_start' => $start,
+            'date_end' => $end,
             'description' => $description,
             'repeatable' => $isRepeatable,
             'attendees' => $attendees
@@ -150,16 +116,16 @@ class EventController extends AbstractController
         if(!$conflict) {
             $eventId = $event->save();
             if(!$eventId){
-                die('event not created');
+                $this->sendError('event not created');
             }
             
             if($isRepeatable) {
                 $option->bind(['id' => $event->id])->insert();
             }
             
-            die($eventId);
+            $this->sendOutput(['success' => true]);
         } else {
-            var_dump($conflict);
+            $this->sendError('event conflict with other events');
             exit;
         }
     }
@@ -190,28 +156,30 @@ class EventController extends AbstractController
         $sun = $this->request->getPost("sun", "int");
         
         if(strlen($title) < 3) {
-            die('Title should be longer');
+            $this->sendError('Title should be longer');
         }
         
         if($roomId !== $event->roomId) {
             $roomManager = new RoomManager();
             if(!$roomManager->isRoomExist($roomId)) {
-                die('room ain`t exist');
+                $this->sendError('room ain`t exist');
             }
         }
          
         $lookupper = new EventLookupper($this->di);
         
-        $time = $this->isValidTimestamp($dateStart, $dateEnd);
-        if($time !== true) {
-            die($time);
+        $start = strtotime($dateStart);
+        $end = strtotime($dateEnd);
+        
+        if($start === false || $end === false || $end <= $start) {
+            $this->sendError('Wrong date');
         }
         
         $event->bind([
             'title' => $title,
             'room_id' => $roomId,
-            'date_start' => $dateStart,
-            'date_end' => $dateEnd,
+            'date_start' => $start,
+            'date_end' => $end,
             'description' => $description,
             'repeatable' => $isRepeatable,
             'attendees' => $attendees
@@ -241,9 +209,9 @@ class EventController extends AbstractController
                 $option->update();
             }
             
-            die($eventId);
+            $this->sendOutput(['success' => true]);
         } else {
-            var_dump($conflict);
+            $this->sendError('event conflict with other events');
             exit;
         }
     }
@@ -257,8 +225,7 @@ class EventController extends AbstractController
             $this->onDenied();
         }
         
-        echo $event->delete() ? 'success' : 'false';
-        exit;
+        $event->delete() ? $this->sendOutput(['success' => true]) : $this->sendError('false');
     }
     
     protected function getEventByRequest()
@@ -267,34 +234,9 @@ class EventController extends AbstractController
         
         $event = new EventEntity($eventId);
         if($event->isLoaded() === false) {
-            die('event not found');
+            $this->sendError('event not found');
         }
         
         return $event;
-    }
-    
-    protected function isValidTimestamp($dateStart, $dateEnd) 
-    {
-        try {
-            $date1 = new \DateTime($dateStart);
-            $date2 = new \DateTime($dateEnd);
-        } catch (\Exception $exc) {
-            return 'Timestamp format is Y-m-d H:i:s';
-        }
-
-        if(($date1->format('Y-m-d H:i:s') != $dateStart) || 
-            ($date2->format('Y-m-d H:i:s') != $dateEnd)) {
-            return 'Timestamp format is Y-m-d H:i:s';
-        }
-        
-        if($date1->format('Y-m-d') != $date2->format('Y-m-d')) {
-            return 'Event should start and end in same day';
-        }
-        
-        if($date2<=$date1) {
-            return 'Date end should be greater than date start';
-        }
-            
-        return true;
     }
 }

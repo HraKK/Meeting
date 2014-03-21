@@ -41,6 +41,13 @@ Ext.define('Ext.calendar.form.EventWindow', {
                     anchor: '100%'
                 },
                 {
+                    xtype: 'textarea',
+                    anchor: '100%',
+                    fieldLabel: 'Description',
+                    name: Ext.calendar.data.EventMappings.Description.name,
+                    labelWidth: 100
+                },
+                {
                     xtype: 'daterangefield',
                     itemId: 'date-range',
                     name: 'dates',
