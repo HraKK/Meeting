@@ -46,7 +46,7 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
     },
 
     // private
-    constructor: function(config) {
+    constructor: function (config) {
         this.callParent(arguments);
 
         this.sorters = this.sorters || [
@@ -64,7 +64,7 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
 
     // private - override to make sure that any records added in-memory
     // still get a unique PK assigned at the data level
-    interceptCreateRecords: function(records, operation, success) {
+    interceptCreateRecords: function (records, operation, success) {
         if (success) {
             var i = 0,
                 rec,
@@ -78,15 +78,15 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
 
     // If the store started with preloaded inline data, we have to make sure the records are set up
     // properly as valid "saved" records otherwise they may get "added" on initial edit.
-    initRecs: function() {
-        this.each(function(rec) {
+    initRecs: function () {
+        this.each(function (rec) {
             rec.store = this;
             rec.phantom = false;
         }, this);
     },
 
     // private - override the default logic for memory storage
-    onProxyLoad: function(operation) {
+    onProxyLoad: function (operation) {
         var me = this,
             records;
 

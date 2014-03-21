@@ -131,7 +131,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     getEventTemplate: Ext.emptyFn,
     // must be implemented by a subclass
     // private
-    initComponent: function() {
+    initComponent: function () {
         this.setStartDate(this.startDate || new Date());
 
         this.callParent(arguments);
@@ -229,7 +229,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    afterRender: function() {
+    afterRender: function () {
         this.callParent(arguments);
 
         this.renderTemplate();
@@ -257,7 +257,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    forceSize: function() {
+    forceSize: function () {
         if (this.el && this.el.down) {
             var hd = this.el.down('.ext-cal-hd-ct'),
                 bd = this.el.down('.ext-cal-body-ct');
@@ -273,19 +273,19 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         }
     },
 
-    refresh: function() {
+    refresh: function () {
         this.prepareData();
         this.renderTemplate();
         this.renderItems();
     },
 
-    getWeekCount: function() {
+    getWeekCount: function () {
         var days = Ext.calendar.util.Date.diffDays(this.viewStart, this.viewEnd);
         return Math.ceil(days / this.dayCount);
     },
 
     // private
-    prepareData: function() {
+    prepareData: function () {
         var lastInMonth = Ext.Date.getLastDateOfMonth(this.startDate),
             w = 0, d,
             dt = Ext.Date.clone(this.viewStart),
@@ -296,7 +296,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         ];
         this.evtMaxCount = [];
 
-        var evtsInView = this.store.queryBy(function(rec) {
+        var evtsInView = this.store.queryBy(function (rec) {
                 return this.isEventVisible(rec.data);
             },
             this
@@ -312,7 +312,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
 
             for (d = 0; d < this.dayCount; d++) {
                 if (evtsInView.getCount() > 0) {
-                    var evts = evtsInView.filterBy(function(rec) {
+                    var evts = evtsInView.filterBy(function (rec) {
                             var startDt,
                                 startsOnDate,
                                 spansFromPrevView;
@@ -339,12 +339,12 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    prepareEventGrid: function(evts, w, d) {
+    prepareEventGrid: function (evts, w, d) {
         var me = this,
             row = 0,
             max = me.maxEventsPerDay ? me.maxEventsPerDay : 999;
 
-        evts.each(function(evt) {
+        evts.each(function (evt) {
             var M = Ext.calendar.data.EventMappings,
                 days = Ext.calendar.util.Date.diffDays(
                     Ext.calendar.util.Date.max(me.viewStart, evt.data[M.StartDate.name]),
@@ -366,7 +366,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    prepareEventGridSpans: function(evt, grid, w, d, days) {
+    prepareEventGridSpans: function (evt, grid, w, d, days) {
         // this event spans multiple days/weeks, so we have to preprocess
         // the events and store special span events as placeholders so that
         // the render routine can build the necessary TD spans correctly.
@@ -410,7 +410,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    findEmptyRowIndex: function(w, d) {
+    findEmptyRowIndex: function (w, d) {
         var grid = this.eventGrid,
             day = grid[w] ? grid[w][d] || [] : [],
             i = 0,
@@ -425,7 +425,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    renderTemplate: function() {
+    renderTemplate: function () {
         if (this.tpl) {
             this.tpl.overwrite(this.el, this.getParams());
             this.lastRenderStart = Ext.Date.clone(this.viewStart);
@@ -433,11 +433,11 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         }
     },
 
-    disableStoreEvents: function() {
+    disableStoreEvents: function () {
         this.monitorStoreEvents = false;
     },
 
-    enableStoreEvents: function(refresh) {
+    enableStoreEvents: function (refresh) {
         this.monitorStoreEvents = true;
         if (refresh === true) {
             this.refresh();
@@ -445,18 +445,18 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    onResize: function() {
+    onResize: function () {
         this.callParent(arguments);
         this.refresh();
     },
 
     // private
-    onInitDrag: function() {
+    onInitDrag: function () {
         this.fireEvent('initdrag', this);
     },
 
     // private
-    onEventDrop: function(rec, dt) {
+    onEventDrop: function (rec, dt) {
 
         if (Ext.calendar.util.Date.compare(rec.data[Ext.calendar.data.EventMappings.StartDate.name], dt) === 0) {
             // no changes
@@ -479,7 +479,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    onCalendarEndDrag: function(start, end, onComplete) {
+    onCalendarEndDrag: function (start, end, onComplete) {
         if (start && end) {
             // set this flag for other event handlers that might conflict while we're waiting
             this.dragPending = true;
@@ -494,7 +494,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    onCalendarEndDragComplete: function(onComplete) {
+    onCalendarEndDragComplete: function (onComplete) {
         // callback for the drop zone to clean up
         onComplete();
         // clear flag for other events to resume normally
@@ -502,7 +502,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    onUpdate: function(ds, rec, operation) {
+    onUpdate: function (ds, rec, operation) {
         if (this.monitorStoreEvents === false) {
             return;
         }
@@ -516,12 +516,12 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         }
     },
 
-    doUpdateFx: function(els, o) {
+    doUpdateFx: function (els, o) {
         this.highlightEvent(els, null, o);
     },
 
     // private
-    onAdd: function(ds, records, index) {
+    onAdd: function (ds, records, index) {
         if (this.monitorStoreEvents === false) {
             return;
         }
@@ -536,14 +536,14 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         }
     },
 
-    doAddFx: function(els, o) {
+    doAddFx: function (els, o) {
         els.fadeIn(Ext.apply(o, {
             duration: 2000
         }));
     },
 
     // private
-    onRemove: function(ds, rec) {
+    onRemove: function (ds, rec) {
         if (this.monitorStoreEvents === false) {
             return;
         }
@@ -560,7 +560,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         }
     },
 
-    doRemoveFx: function(els, o) {
+    doRemoveFx: function (els, o) {
         els.fadeOut(o);
     },
 
@@ -573,13 +573,13 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * @param {Object} o (optional) Object literal with any of the {@link Ext.Fx} config
      * options. See {@link Ext.Fx#highlight} for usage examples.
      */
-    highlightEvent: function(els, color, o) {
+    highlightEvent: function (els, color, o) {
         if (this.enableFx) {
             var c;
             !(Ext.isIE || Ext.isOpera) ?
                 els.highlight(color, o) :
                 // Fun IE/Opera handling:
-                els.each(function(el) {
+                els.each(function (el) {
                         el.highlight(color, Ext.applyIf({
                                 attr: 'color'
                             },
@@ -597,7 +597,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * Retrieve an Event object's id from its corresponding node in the DOM.
      * @param {String/Element/HTMLElement} el An {@link Ext.core.Element}, DOM node or id
      */
-    getEventIdFromEl: function(el) {
+    getEventIdFromEl: function (el) {
         el = Ext.get(el);
         var id = el.id.split(this.eventElIdDelimiter)[1],
             lastHypen = id.lastIndexOf('-');
@@ -612,7 +612,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    getEventId: function(eventId) {
+    getEventId: function (eventId) {
         if (eventId === undefined && this.tempEventId) {
             eventId = this.tempEventId;
         }
@@ -625,7 +625,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * @param {Boolean} forSelect
      * @return {String} The selector class
      */
-    getEventSelectorCls: function(eventId, forSelect) {
+    getEventSelectorCls: function (eventId, forSelect) {
         var prefix = forSelect ? '.' : '';
         return prefix + this.id + this.eventElIdDelimiter + this.getEventId(eventId);
     },
@@ -637,7 +637,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * that comprise the rendered event.  Any event that spans across a view
      * boundary will contain more than one internal Element.
      */
-    getEventEls: function(eventId) {
+    getEventEls: function (eventId) {
         var els = Ext.select(this.getEventSelectorCls(this.getEventId(eventId), true), false, this.el.dom);
         return new Ext.CompositeElement(els);
     },
@@ -646,18 +646,18 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * Returns true if the view is currently displaying today's date, else false.
      * @return {Boolean} True or false
      */
-    isToday: function() {
+    isToday: function () {
         var today = Ext.Date.clearTime(new Date()).getTime();
         return this.viewStart.getTime() <= today && this.viewEnd.getTime() >= today;
     },
 
     // private
-    onDataChanged: function(store) {
+    onDataChanged: function (store) {
         this.refresh();
     },
 
     // private
-    isEventVisible: function(evt) {
+    isEventVisible: function (evt) {
         var M = Ext.calendar.data.EventMappings,
             data = evt.data || evt,
             start = this.viewStart.getTime(),
@@ -674,7 +674,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         }
     },
 
-    rangesOverlap: function(start1, end1, start2, end2) {
+    rangesOverlap: function (start1, end1, start2, end2) {
         var startsInRange = (start1 >= start2 && start1 <= end2),
             endsInRange = (end1 >= start2 && end1 <= end2),
             spansRange = (start1 <= start2 && end1 >= end2);
@@ -683,7 +683,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    isOverlapping: function(evt1, evt2) {
+    isOverlapping: function (evt1, evt2) {
         var ev1 = evt1.data ? evt1.data : evt1,
             ev2 = evt2.data ? evt2.data : evt2,
             M = Ext.calendar.data.EventMappings,
@@ -702,11 +702,11 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         return (start1 <= end2 && end1 >= start2);
     },
 
-    getDayEl: function(dt) {
+    getDayEl: function (dt) {
         return Ext.get(this.getDayId(dt));
     },
 
-    getDayId: function(dt) {
+    getDayId: function (dt) {
         if (Ext.isDate(dt)) {
             dt = Ext.Date.format(dt, 'Ymd');
         }
@@ -719,7 +719,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * to the user use {@link #getViewBounds}.
      * @return {Date} The start date
      */
-    getStartDate: function() {
+    getStartDate: function () {
         return this.startDate;
     },
 
@@ -728,7 +728,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * earliest and latest dates that match the view requirements and contain the date passed to this function.
      * @param {Date} dt The date used to calculate the new view boundaries
      */
-    setStartDate: function(start, refresh) {
+    setStartDate: function (start, refresh) {
         this.startDate = Ext.Date.clearTime(start);
         this.setViewBounds(start);
         this.store.load({
@@ -744,7 +744,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    setViewBounds: function(startDate) {
+    setViewBounds: function (startDate) {
         var start = startDate || this.startDate,
             offset = start.getDay() - this.startDay,
             Dt = Ext.calendar.util.Date;
@@ -777,7 +777,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    getViewBounds: function() {
+    getViewBounds: function () {
         return {
             start: this.viewStart,
             end: this.viewEnd
@@ -792,11 +792,11 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * @param {MixedCollection} evts A {@link Ext.util.MixedCollection MixedCollection}  
      * of {@link #Ext.calendar.EventRecord EventRecord} objects
      */
-    sortEventRecordsForDay: function(evts) {
+    sortEventRecordsForDay: function (evts) {
         if (evts.length < 2) {
             return;
         }
-        evts.sortBy(Ext.bind(function(evtA, evtB) {
+        evts.sortBy(Ext.bind(function (evtA, evtB) {
             var a = evtA.data,
                 b = evtB.data,
                 M = Ext.calendar.data.EventMappings;
@@ -840,7 +840,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * @param {Date} dt The date to display
      * @return {Date} The new view start date
      */
-    moveTo: function(dt, noRefresh) {
+    moveTo: function (dt, noRefresh) {
         if (Ext.isDate(dt)) {
             this.setStartDate(dt);
             if (noRefresh !== false) {
@@ -855,7 +855,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * Updates the view to the next consecutive date(s)
      * @return {Date} The new view start date
      */
-    moveNext: function(noRefresh) {
+    moveNext: function (noRefresh) {
         return this.moveTo(Ext.calendar.util.Date.add(this.viewEnd, {days: 1}));
     },
 
@@ -863,7 +863,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * Updates the view to the previous consecutive date(s)
      * @return {Date} The new view start date
      */
-    movePrev: function(noRefresh) {
+    movePrev: function (noRefresh) {
         var days = Ext.calendar.util.Date.diffDays(this.viewStart, this.viewEnd) + 1;
         return this.moveDays(-days, noRefresh);
     },
@@ -873,7 +873,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * @param {Number} value The number of months (positive or negative) by which to shift the view
      * @return {Date} The new view start date
      */
-    moveMonths: function(value, noRefresh) {
+    moveMonths: function (value, noRefresh) {
         return this.moveTo(Ext.calendar.util.Date.add(this.startDate, {months: value}), noRefresh);
     },
 
@@ -882,7 +882,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * @param {Number} value The number of weeks (positive or negative) by which to shift the view
      * @return {Date} The new view start date
      */
-    moveWeeks: function(value, noRefresh) {
+    moveWeeks: function (value, noRefresh) {
         return this.moveTo(Ext.calendar.util.Date.add(this.startDate, {days: value * 7}), noRefresh);
     },
 
@@ -891,7 +891,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * @param {Number} value The number of days (positive or negative) by which to shift the view
      * @return {Date} The new view start date
      */
-    moveDays: function(value, noRefresh) {
+    moveDays: function (value, noRefresh) {
         return this.moveTo(Ext.calendar.util.Date.add(this.startDate, {days: value}), noRefresh);
     },
 
@@ -899,7 +899,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * Updates the view to show today
      * @return {Date} Today's date
      */
-    moveToday: function(noRefresh) {
+    moveToday: function (noRefresh) {
         return this.moveTo(new Date(), noRefresh);
     },
 
@@ -907,7 +907,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * Sets the event store used by the calendar to display {@link Ext.calendar.EventRecord events}.
      * @param {Ext.data.Store} store
      */
-    setStore: function(store, initial) {
+    setStore: function (store, initial) {
         if (!initial && this.store) {
             this.store.un("datachanged", this.onDataChanged, this);
             this.store.un("add", this.onAdd, this);
@@ -928,17 +928,17 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         }
     },
 
-    getEventRecord: function(id) {
+    getEventRecord: function (id) {
         var idx = this.store.find(Ext.calendar.data.EventMappings.EventId.name, id);
         return this.store.getAt(idx);
     },
 
-    getEventRecordFromEl: function(el) {
+    getEventRecordFromEl: function (el) {
         return this.getEventRecord(this.getEventIdFromEl(el));
     },
 
     // private
-    getParams: function() {
+    getParams: function () {
         return {
             viewStart: this.viewStart,
             viewEnd: this.viewEnd,
@@ -949,7 +949,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         };
     },
 
-    getTitle: function() {
+    getTitle: function () {
         return Ext.Date.format(this.startDate, 'G:i Y');
     },
 
@@ -958,7 +958,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * click handling that calls this first.  This method returns true if it
      * can handle the click (and so the subclass should ignore it) else false.
      */
-    onClick: function(e, t) {
+    onClick: function (e, t) {
         var el = e.getTarget(this.eventSelector, 5);
         if (el) {
             var id = this.getEventIdFromEl(el);
@@ -968,7 +968,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    onMouseOver: function(e, t) {
+    onMouseOver: function (e, t) {
         if (this.trackMouseOver !== false && (this.dragZone == undefined || !this.dragZone.dragging)) {
             if (!this.handleEventMouseEvent(e, t, 'over')) {
                 this.handleDayMouseEvent(e, t, 'over');
@@ -977,7 +977,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    onMouseOut: function(e, t) {
+    onMouseOut: function (e, t) {
         if (this.trackMouseOver !== false && (this.dragZone == undefined || !this.dragZone.dragging)) {
             if (!this.handleEventMouseEvent(e, t, 'out')) {
                 this.handleDayMouseEvent(e, t, 'out');
@@ -986,7 +986,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    handleEventMouseEvent: function(e, t, type) {
+    handleEventMouseEvent: function (e, t, type) {
         var el = e.getTarget(this.eventSelector, 5, true),
             rel,
             els,
@@ -1010,13 +1010,13 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    getDateFromId: function(id, delim) {
+    getDateFromId: function (id, delim) {
         var parts = id.split(delim);
         return parts[parts.length - 1];
     },
 
     // private
-    handleDayMouseEvent: function(e, t, type) {
+    handleDayMouseEvent: function (e, t, type) {
         t = e.getTarget('td', 3);
         if (t) {
             if (t.id && t.id.indexOf(this.dayElIdDelimiter) > -1) {
@@ -1041,12 +1041,12 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     // private
-    renderItems: function() {
+    renderItems: function () {
         throw 'This method must be implemented by a subclass';
     },
 
     // private
-    destroy: function() {
+    destroy: function () {
         this.callParent(arguments);
 
         if (this.el) {

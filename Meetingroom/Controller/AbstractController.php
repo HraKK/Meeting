@@ -20,9 +20,25 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
         $this->view->setTemplateAfter('common');
     }
 
-    public function getFormData(array $fields)
+
+    /**
+     * @param array $fields
+     * @return array|\Phalcon\Validation\Message\Group
+     */
+    public function getFormData(array $fields = [])
     {
-        return $this->validator->validate($_REQUEST);
+        $array = $this->validator->validate($_REQUEST);
+        $fields = (empty($fields)) ? array_keys($_REQUEST) : $fields;
+
+        if (count($array)) {
+            $this->validator->getMessages();
+        }
+
+        $return = [];
+        foreach ($fields as $key => $value) {
+            $return[$value] = $this->validator->getValue($value);
+        }
+        return $return;
     }
 
     public function onDenied()
@@ -34,9 +50,9 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
         } elseif ($role == Group::USER) {
             $response = $this->getDI()->getShared('response');
             $response->resetHeaders()
-                    ->setStatusCode(403, null)
-                    ->setContent('Denied')
-                    ->send();
+                ->setStatusCode(403, null)
+                ->setContent('Denied')
+                ->send();
         }
     }
 
@@ -58,7 +74,7 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
     {
         $this->sendOutput(['msg' => $msg, 'success' => false]);
     }
-    
+
     protected function sendOutput(array $content)
     {
         echo json_encode($content);

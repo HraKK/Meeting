@@ -9,23 +9,52 @@ use \Meetingroom\Entity\Event\Lookupper\EventLookupper;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria;
 use \Meetingroom\Validate\Timestamp\Timestamp;
 use \Meetingroom\Validate\Timestamp\TimestampCompare;
+use Phalcon\Validation\Validator\Regex as RegexValidator;
 
 class EventController extends AbstractController
 {
+
+    public function initialize()
+    {
+        parent::initialize();
+
+        $this->validator = new \Phalcon\Validation();
+
+        $this->validator->add(
+            'room_id',
+            new RegexValidator(array(
+                'pattern' => '/^\d*$/',
+                'message' => 'Room id must be integer'
+            ))
+        );
+        $this->validator->setFilters('room_id', 'int');
+//        ..etc
+    }
+
+    /**
+     * @example /event/test_validation?room_id=12aa23&aa=bb
+     * @todo delete before stage
+     */
+    public function test_validationAction()
+    {
+        var_dump($this->getFormData()); //['room_id']
+        die();
+    }
+
     public function indexAction()
     {
-        if(!$this->isAllowed('index', 'index')) {
+        if (!$this->isAllowed('index', 'index')) {
             $this->onDenied();
         }
-        
+
         $roomId = $this->request->getPost("room_id", "int");
         $day = $this->request->getPost("day", "int");
         $month = $this->request->getPost("month", "int");
         $year = $this->request->getPost("year", "int");
-        
+
         $roomManager = new RoomManager();
         $rooms = $roomManager->getAll();
-        
+
         $roomCriteria = new RoomCriteria($id);
         $periodCriteria = new DayPeriodCriteria($day, $month, $year);
         $lookupper = new EventLookupper($this->di);
@@ -35,12 +64,12 @@ class EventController extends AbstractController
             ->setRoomCriteria($roomCriteria)
             ->setFields(['id', 'title'])
             ->lookup();
-        
+
         $eventsDTO = [];
         foreach ($events as $event) {
             $eventsDTO[] = $event->getDTO();
         }
-        
+
         $this->sendOutput(['success' => true, 'events' => $eventsDTO]);
     }
     
@@ -77,11 +106,11 @@ class EventController extends AbstractController
 
         $lookupper = new EventLookupper($this->di);
         $event = new EventEntity();
-        
+
         $start = strtotime($dateStart);
         $end = strtotime($dateEnd);
-        
-        if($start === false || $end === false || $end <= $start) {
+
+        if ($start === false || $end === false || $end <= $start) {
             $this->sendError('wrong date');
         }
         
@@ -89,10 +118,10 @@ class EventController extends AbstractController
             'title' => $title,
             'room_id' => $roomId,
             'user_id' => $this->user->id,
-            'date_start' => $start,
-            'date_end' => $end,
-            'description' => $description,
-            'repeatable' => $isRepeatable,
+                'date_start' => $start,
+                'date_end' => $end,
+                'description' => $description,
+                'repeatable' => $isRepeatable,
             'attendees' => $attendees
         ]);
         
@@ -122,7 +151,7 @@ class EventController extends AbstractController
             if($isRepeatable) {
                 $option->bind(['id' => $event->id])->insert();
             }
-            
+
             $this->sendOutput(['success' => true]);
         } else {
             $this->sendError('event conflict with other events');
@@ -167,21 +196,21 @@ class EventController extends AbstractController
         }
          
         $lookupper = new EventLookupper($this->di);
-        
+
         $start = strtotime($dateStart);
         $end = strtotime($dateEnd);
-        
-        if($start === false || $end === false || $end <= $start) {
+
+        if ($start === false || $end === false || $end <= $start) {
             $this->sendError('Wrong date');
         }
         
         $event->bind([
             'title' => $title,
             'room_id' => $roomId,
-            'date_start' => $start,
-            'date_end' => $end,
-            'description' => $description,
-            'repeatable' => $isRepeatable,
+                'date_start' => $start,
+                'date_end' => $end,
+                'description' => $description,
+                'repeatable' => $isRepeatable,
             'attendees' => $attendees
         ]);
         
@@ -208,7 +237,7 @@ class EventController extends AbstractController
             if($isRepeatable) {
                 $option->update();
             }
-            
+
             $this->sendOutput(['success' => true]);
         } else {
             $this->sendError('event conflict with other events');
@@ -224,7 +253,7 @@ class EventController extends AbstractController
         if(!$this->isAllowed('event', 'delete', $role)) {
             $this->onDenied();
         }
-        
+
         $event->delete() ? $this->sendOutput(['success' => true]) : $this->sendError('false');
     }
     

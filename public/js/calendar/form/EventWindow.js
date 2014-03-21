@@ -18,7 +18,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
         'Ext.calendar.data.EventMappings'
     ],
 
-    constructor: function(config) {
+    constructor: function (config) {
         var formPanelCfg = {
             xtype: 'form',
             fieldDefaults: {
@@ -113,7 +113,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
                 layout: 'fit',
 
                 defaultFocus: 'title',
-                onEsc: function(key, event) {
+                onEsc: function (key, event) {
                     event.target.blur(); // Remove the focus to avoid doing the validity checks when the window is shown again.
                     this.onCancel();
                 },
@@ -151,7 +151,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
     },
 
     // private
-    initComponent: function() {
+    initComponent: function () {
         this.callParent();
 
         this.formPanel = this.items.items[0];
@@ -199,7 +199,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
     },
 
     // private
-    afterRender: function() {
+    afterRender: function () {
         this.callParent();
 
         this.el.addCls('ext-cal-event-win');
@@ -219,13 +219,13 @@ Ext.define('Ext.calendar.form.EventWindow', {
      * animate while opening (defaults to null with no animation)
      * @return {Ext.Window} this
      */
-    show: function(o, animateTarget) {
+    show: function (o, animateTarget) {
         // Work around the CSS day cell height hack needed for initial render in IE8/strict:
         var me = this,
             anim = (Ext.isIE8 && Ext.isStrict) ? null : animateTarget,
             M = Ext.calendar.data.EventMappings;
 
-        this.callParent([anim, function() {
+        this.callParent([anim, function () {
             me.titleField.focus(true);
         }]);
 
@@ -268,13 +268,13 @@ Ext.define('Ext.calendar.form.EventWindow', {
     },
 
     // private
-    onCancel: function() {
+    onCancel: function () {
         this.cleanup(true);
         this.fireEvent('eventcancel', this);
     },
 
     // private
-    cleanup: function(hide) {
+    cleanup: function (hide) {
         if (this.activeRecord && this.activeRecord.dirty) {
             this.activeRecord.reject();
         }
@@ -288,14 +288,14 @@ Ext.define('Ext.calendar.form.EventWindow', {
     },
 
     // private
-    updateRecord: function(record, keepEditing) {
+    updateRecord: function (record, keepEditing) {
         var fields = record.fields,
             values = this.formPanel.getForm().getValues(),
             name,
             M = Ext.calendar.data.EventMappings,
             obj = {};
 
-        fields.each(function(f) {
+        fields.each(function (f) {
             name = f.name;
             if (name in values) {
                 obj[name] = values[name];
@@ -317,7 +317,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
     },
 
     // private
-    onSave: function() {
+    onSave: function () {
 
         if (!this.formPanel.form.isValid()) {
             return;
@@ -341,7 +341,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
     },
 
     // private
-    onDelete: function() {
+    onDelete: function () {
         this.fireEvent('eventdelete', this, this.activeRecord, this.animateTarget);
     }
 });
