@@ -309,6 +309,8 @@ Ext.define('Ext.calendar.view.DayBody', {
             }
         }
 
+        var isWeekView = this.eventGrid[0].length > 1;
+
         // rendering loop
         for (i = 0; i < l; i++) {
 
@@ -323,30 +325,55 @@ Ext.define('Ext.calendar.view.DayBody', {
 
             if (evt.IsRepeatable == true) {
 
-                if (evts[i].date.getDay()) {
+                if (isWeekView && evts[i].date.getDay()) {
                     continue;
                 }
 
-                var evtClone,
+                var j,
+                    evtClone,
                     todayDay = (new Date()).getDay() - 1,
                     evtCloneDay,
                     markupClone,
                     timeClone,
                     targetClone;
 
-                for (var j = 0; j < evt.RepeatedOn.length; j++) {
-                    evtCloneDay = evt.RepeatedOn[j] - todayDay;
-                    evtClone = Ext.clone(evt);
-                    evtClone.StartDate = Ext.calendar.util.Date.add(evtClone.StartDate, {days: evtCloneDay});
-                    evtClone.EndDate = Ext.calendar.util.Date.add(evtClone.EndDate, {days: evtCloneDay});
+                if (isWeekView) {
 
-                    markupClone = me.getEventTemplate().apply(evtClone);
-                    timeClone = Ext.calendar.util.Date.add(evts[i].date, {days: evtCloneDay - 2});
-                    targetClone = me.id + '-day-col-' + Ext.Date.format(timeClone, 'Ymd');
+                    for (j = 0; j < evt.RepeatedOn.length; j++) {
+                        evtCloneDay = evt.RepeatedOn[j] - todayDay;
+                        evtClone = Ext.clone(evt);
+                        evtClone.StartDate = Ext.calendar.util.Date.add(evtClone.StartDate, {days: evtCloneDay});
+                        evtClone.EndDate = Ext.calendar.util.Date.add(evtClone.EndDate, {days: evtCloneDay});
 
-                    if (Ext.get(targetClone) != null) {
-                        Ext.core.DomHelper.append(targetClone, markupClone);
+                        markupClone = me.getEventTemplate().apply(evtClone);
+                        timeClone = Ext.calendar.util.Date.add(evts[i].date, {days: evtCloneDay - 2});
+                        targetClone = me.id + '-day-col-' + Ext.Date.format(timeClone, 'Ymd');
+
+                        if (Ext.get(targetClone) != null) {
+                            Ext.core.DomHelper.append(targetClone, markupClone);
+                        }
                     }
+
+                } else {
+
+                    for (j = 0; j < evt.RepeatedOn.length; j++) {
+
+                        evtCloneDay = evts[i].date.getDay() - 1;
+
+                        if (evt.RepeatedOn[j] != evtCloneDay) {
+                            continue;
+                        }
+
+                        evtClone = Ext.clone(evt);
+                        markupClone = me.getEventTemplate().apply(evtClone);
+                        targetClone = me.id + '-day-col-' + Ext.Date.format(evts[i].date, 'Ymd');
+
+                        if (Ext.get(targetClone) != null) {
+                            Ext.core.DomHelper.append(targetClone, markupClone);
+                        }
+
+                    }
+
                 }
 
             } else {

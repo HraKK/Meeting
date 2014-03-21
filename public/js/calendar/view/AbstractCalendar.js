@@ -457,15 +457,25 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
 
     // private
     onEventDrop: function(rec, dt) {
+
         if (Ext.calendar.util.Date.compare(rec.data[Ext.calendar.data.EventMappings.StartDate.name], dt) === 0) {
             // no changes
             return;
         }
-        var diff = dt.getTime() - rec.data[Ext.calendar.data.EventMappings.StartDate.name].getTime();
+
+        var diff = dt.getTime() - rec.data[Ext.calendar.data.EventMappings.StartDate.name].getTime(),
+            isWeekView = this.eventGrid[0].length > 1,
+            flag = true;
+
+        if (isWeekView && rec.data.IsRepeatable && rec.data[Ext.calendar.data.EventMappings.StartDate.name].getDay() != dt.getDay()) {
+            flag = false;
+        }
+
         rec.set(Ext.calendar.data.EventMappings.StartDate.name, dt);
         rec.set(Ext.calendar.data.EventMappings.EndDate.name, Ext.calendar.util.Date.add(rec.data[Ext.calendar.data.EventMappings.EndDate.name], {millis: diff}));
 
-        this.fireEvent('eventmove', this, rec);
+        this.fireEvent('eventmove', this, rec, flag);
+
     },
 
     // private
