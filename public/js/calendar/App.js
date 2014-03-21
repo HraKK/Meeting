@@ -305,14 +305,19 @@ Ext.define('Ext.calendar.App', {
                                                 scope: this
                                             },
                                             'eventmove': {
-                                                fn: function(vw, rec) {
+                                                fn: function(vw, rec, success) {
+
                                                     var mappings = Ext.calendar.data.EventMappings,
                                                         time = ' \\a\\t H:i';
 
-                                                    rec.commit();
+                                                    if (success) {
+                                                        rec.commit();
+                                                        this.showMsg('Event <b>' + rec.data[mappings.Title.name] + '</b> was moved to ' + Ext.Date.format(rec.data[mappings.StartDate.name], ('F jS' + time)));
+                                                    } else {
+                                                        rec.reject();
+                                                        this.showMsg('Can\' move <b>' + rec.data[mappings.Title.name] + '</b> event because it is repeatable', 'error');
+                                                    }
 
-                                                    this.showMsg('Event <b>' + rec.data[mappings.Title.name] + '</b> was moved to ' +
-                                                        Ext.Date.format(rec.data[mappings.StartDate.name], ('F jS' + time)));
                                                 },
                                                 scope: this
                                             },
