@@ -311,7 +311,9 @@ Ext.define('Ext.calendar.view.DayBody', {
 
         // rendering loop
         for (i = 0; i < l; i++) {
+
             evt = evts[i].data;
+
             if (evt._overlap !== undefined) {
                 colWidth = 100 / (overlapCols + 1);
                 evtWidth = 100 - (colWidth * evt._overlap);
@@ -319,29 +321,36 @@ Ext.define('Ext.calendar.view.DayBody', {
                 evt._left = colWidth * evt._overcol;
             }
 
-            markup = this.getEventTemplate().apply(evt);
-            target = this.id + '-day-col-' + Ext.Date.format(evts[i].date, 'Ymd');
+            if (evt.IsRepeatable == true) {
 
-            Ext.core.DomHelper.append(target, markup);
-
-            if (evt.IsRepeatable) {
-
-                // TODO: implement correct clones generation here
-                var evtClone = Ext.clone(evt),
+                var evtClone,
+                    todayDay = (new Date()).getDay() - 2,
+                    evtCloneDay,
                     markupClone,
                     timeClone,
                     targetClone;
 
-                evtClone.StartDate = Ext.calendar.util.Date.add(evtClone.StartDate, {days: 1});
-                evtClone.EndDate = Ext.calendar.util.Date.add(evtClone.EndDate, {days: 1});
+                for (var j = 0; j < evt.RepeatedOn.length; j++) {
+                    evtCloneDay = evt.RepeatedOn[j] - todayDay;
+                    evtClone = Ext.clone(evt);
+                    evtClone.StartDate = Ext.calendar.util.Date.add(evtClone.StartDate, {days: evtCloneDay});
+                    evtClone.EndDate = Ext.calendar.util.Date.add(evtClone.EndDate, {days: evtCloneDay});
 
-                markupClone = me.getEventTemplate().apply(evtClone);
-                timeClone = Ext.calendar.util.Date.add(evts[i].date, {days: 1});
-                targetClone = me.id + '-day-col-' + Ext.Date.format(timeClone, 'Ymd');
+                    markupClone = me.getEventTemplate().apply(evtClone);
+                    timeClone = Ext.calendar.util.Date.add(evts[i].date, {days: evtCloneDay});
+                    targetClone = me.id + '-day-col-' + Ext.Date.format(timeClone, 'Ymd');
 
-                if (Ext.get(targetClone) != null) {
-                    Ext.core.DomHelper.append(targetClone, markupClone);
+                    if (Ext.get(targetClone) != null) {
+                        Ext.core.DomHelper.append(targetClone, markupClone);
+                    }
                 }
+
+            } else {
+
+                markup = this.getEventTemplate().apply(evt);
+                target = this.id + '-day-col-' + Ext.Date.format(evts[i].date, 'Ymd');
+
+                Ext.core.DomHelper.append(target, markup);
 
             }
         }
