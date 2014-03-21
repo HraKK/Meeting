@@ -2,3 +2,7 @@
 1. install php modules (php5-ldap, php5-pear, php5-pgsql)
 2. create config file
 3. create PostgreSQL db
+
+### Run tests
+1. Run composer `php composer.phar install` or `update`
+2. Run tests `./vendor/bin/phpunit -c tests/PHPunit.xml`

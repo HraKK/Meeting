@@ -1,4 +1,10 @@
 {
+    "autoload": {
+        "psr-0":  {
+            "Meetingroom": "./Meetingroom/",
+            "": "./tests/"
+        }
+    },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
         "phalcon/incubator": "1.2.*@dev"
