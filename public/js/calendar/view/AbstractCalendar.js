@@ -733,8 +733,8 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         this.setViewBounds(start);
         this.store.load({
             params: {
-                start: Ext.Date.format(this.viewStart, 'm-d-Y'),
-                end: Ext.Date.format(this.viewEnd, 'm-d-Y')
+                date_start: Ext.Date.format(this.viewStart, 'm-d-Y H:i:s'),
+                date_end: Ext.Date.format(this.viewEnd, 'm-d-Y H:i:s')
             }
         });
         if (refresh === true) {

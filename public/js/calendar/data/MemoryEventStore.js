@@ -38,10 +38,10 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
             destroy: 'POST'
         },
         api: {
-            read: '/js/calendar/json/events.json',
-            create: '/js/calendar/json/events.json',
-            update: '/js/calendar/json/events.json',
-            destroy: '/js/calendar/json/events.json'
+            read: '/',
+            create: '/event/create',
+            update: '/event/update',
+            destroy: '/event/delete'
         }
     },
 
