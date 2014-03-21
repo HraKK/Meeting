@@ -117,20 +117,19 @@ class EventController extends AbstractController
         $lookupper = new EventLookupper($this->di);
         $event = new EventEntity();
         
-        $start = new Timestamp($dateStart);
-        $end = new Timestamp($dateEnd);
-        $compare = new TimestampCompare($start, $end);
+        $start = strtotime($dateStart);
+        $end = strtotime($dateEnd);
         
-        if(($start->isValid() && $end->isValid() && $compare->isValid()) == false) {
-            die($compare->getMessage());
+        if($start === false || $end === false || $end <= $start) {
+            die('error');
         }
         
         $event->bind([
             'title' => $title,
             'room_id' => $roomId,
             'user_id' => $this->user->id,
-            'date_start' => $dateStart,
-            'date_end' => $dateEnd,
+            'date_start' => $start,
+            'date_end' => $end,
             'description' => $description,
             'repeatable' => $isRepeatable,
             'attendees' => $attendees
@@ -208,19 +207,18 @@ class EventController extends AbstractController
          
         $lookupper = new EventLookupper($this->di);
         
-        $start = new Timestamp($dateStart);
-        $end = new Timestamp($dateEnd);
-        $compare = new TimestampCompare($start, $end);
+        $start = strtotime($dateStart);
+        $end = strtotime($dateEnd);
         
-        if(($start->isValid() && $end->isValid() && $compare->isValid()) == false) {
-            die($compare->getMessage());
+        if($start === false || $end === false || $end <= $start) {
+            die('error');
         }
         
         $event->bind([
             'title' => $title,
             'room_id' => $roomId,
-            'date_start' => $dateStart,
-            'date_end' => $dateEnd,
+            'date_start' => $start,
+            'date_end' => $end,
             'description' => $description,
             'repeatable' => $isRepeatable,
             'attendees' => $attendees
