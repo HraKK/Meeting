@@ -1,8 +1,9 @@
 {
     "autoload": {
         "psr-0":  {
-            "Meetingroom": "./Meetingroom/",
-            "": "./tests/"
+            "Meetingroom\\": "./",
+            "Test": "tests/Test",
+            "UnitTestCase": "tests/"
         }
     },
     "require-dev": {

@@ -241,7 +241,8 @@ Ext.define('Ext.calendar.view.DayBody', {
 
     // private
     renderItems: function() {
-        var day = 0,
+        var me = this,
+            day = 0,
             evts = [],
             ev,
             d,
@@ -308,9 +309,13 @@ Ext.define('Ext.calendar.view.DayBody', {
             }
         }
 
+        var isWeekView = this.eventGrid[0].length > 1;
+
         // rendering loop
         for (i = 0; i < l; i++) {
+
             evt = evts[i].data;
+
             if (evt._overlap !== undefined) {
                 colWidth = 100 / (overlapCols + 1);
                 evtWidth = 100 - (colWidth * evt._overlap);
@@ -318,10 +323,67 @@ Ext.define('Ext.calendar.view.DayBody', {
                 evt._left = colWidth * evt._overcol;
             }
 
-            markup = this.getEventTemplate().apply(evt);
-            target = this.id + '-day-col-' + Ext.Date.format(evts[i].date, 'Ymd');
+            if (evt.IsRepeatable == true) {
 
-            Ext.core.DomHelper.append(target, markup);
+                if (isWeekView && evts[i].date.getDay()) {
+                    continue;
+                }
+
+                var j,
+                    evtClone,
+                    todayDay = (new Date()).getDay() - 1,
+                    evtCloneDay,
+                    markupClone,
+                    timeClone,
+                    targetClone;
+
+                if (isWeekView) {
+
+                    for (j = 0; j < evt.RepeatedOn.length; j++) {
+                        evtCloneDay = evt.RepeatedOn[j] - todayDay;
+                        evtClone = Ext.clone(evt);
+                        evtClone.StartDate = Ext.calendar.util.Date.add(evtClone.StartDate, {days: evtCloneDay});
+                        evtClone.EndDate = Ext.calendar.util.Date.add(evtClone.EndDate, {days: evtCloneDay});
+
+                        markupClone = me.getEventTemplate().apply(evtClone);
+                        timeClone = Ext.calendar.util.Date.add(evts[i].date, {days: evtCloneDay - 2});
+                        targetClone = me.id + '-day-col-' + Ext.Date.format(timeClone, 'Ymd');
+
+                        if (Ext.get(targetClone) != null) {
+                            Ext.core.DomHelper.append(targetClone, markupClone);
+                        }
+                    }
+
+                } else {
+
+                    for (j = 0; j < evt.RepeatedOn.length; j++) {
+
+                        evtCloneDay = evts[i].date.getDay() - 1;
+
+                        if (evt.RepeatedOn[j] != evtCloneDay) {
+                            continue;
+                        }
+
+                        evtClone = Ext.clone(evt);
+                        markupClone = me.getEventTemplate().apply(evtClone);
+                        targetClone = me.id + '-day-col-' + Ext.Date.format(evts[i].date, 'Ymd');
+
+                        if (Ext.get(targetClone) != null) {
+                            Ext.core.DomHelper.append(targetClone, markupClone);
+                        }
+
+                    }
+
+                }
+
+            } else {
+
+                markup = this.getEventTemplate().apply(evt);
+                target = this.id + '-day-col-' + Ext.Date.format(evts[i].date, 'Ymd');
+
+                Ext.core.DomHelper.append(target, markup);
+
+            }
         }
 
         this.fireEvent('eventsrendered', this);

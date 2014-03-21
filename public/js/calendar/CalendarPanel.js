@@ -516,12 +516,6 @@ Ext.define('Ext.calendar.CalendarPanel', {
     },
 
     // private
-    showWeek: function(dt) {
-        this.setActiveView(this.id + '-week');
-        this.setStartDate(dt);
-    },
-
-    // private
     onPrevClick: function() {
         this.startDate = this.layout.activeItem.movePrev();
         this.updateNavState();

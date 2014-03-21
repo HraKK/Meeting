@@ -11,7 +11,9 @@ class IndexController extends AbstractController
 {
     public function indexAction()
     {
-        $this->permitOrDie('index', 'index');
+        if(!$this->isAllowed('index', 'index')) {
+            $this->onDenied();
+        }
         
         $roomManager = new RoomManager();
         $rooms = $roomManager->getAll();

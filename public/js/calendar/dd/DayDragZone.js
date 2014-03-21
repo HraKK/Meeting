@@ -34,6 +34,7 @@ Ext.define('Ext.calendar.dd.DayDragZone', {
                 ddel: t,
                 eventStart: rec.data[Ext.calendar.data.EventMappings.StartDate.name],
                 eventEnd: rec.data[Ext.calendar.data.EventMappings.EndDate.name],
+                IsRepeatable: rec.data[Ext.calendar.data.EventMappings.IsRepeatable.name],
                 proxy: this.proxy
             };
         }

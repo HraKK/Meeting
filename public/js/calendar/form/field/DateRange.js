@@ -122,8 +122,9 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             itemId: this.id + '-start-time',
             hidden: this.showTimes === false,
             labelWidth: 0,
+            editable: false,
             hideLabel: true,
-            width: 70,
+            width: 85,
             format: this.timeFormat,
             minValue: '09:00',
             maxValue: '19:30',
@@ -163,8 +164,9 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             itemId: this.id + '-end-time',
             hidden: this.showTimes === false,
             labelWidth: 0,
+            editable: false,
             hideLabel: true,
-            width: 70,
+            width: 85,
             format: this.timeFormat,
             minValue: '09:30',
             maxValue: '20:00',
@@ -224,12 +226,24 @@ Ext.define('Ext.calendar.form.field.DateRange', {
     },
 
     onIsRepeatableChange: function(chk, checked) {
+
         var me = this,
-            repeatOnCombo = me.down('#' + me.id + '-repeat-on');
+            repeatOnCombo = me.down('#' + me.id + '-repeat-on'),
+            startDate = me.startDate,
+            startDateValue = startDate.getValue(),
+            endDate = me.endDate;
 
         Ext.suspendLayouts();
         repeatOnCombo.setDisabled(!checked).setVisible(checked);
+
+        if (checked && startDateValue != null && repeatOnCombo.getValue().length == 0) {
+            repeatOnCombo.select(startDateValue.getDay() - 1);
+        }
+
+        startDate.setDisabled(checked).setVisible(!checked);
+        endDate.setDisabled(checked).setVisible(!checked);
         Ext.resumeLayouts(true);
+
     },
 
     getDateSeparatorConfig: function() {

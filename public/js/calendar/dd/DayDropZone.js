@@ -52,8 +52,7 @@ Ext.define('Ext.calendar.dd.DayDropZone', {
             this.dragEndDate = endDt || Ext.calendar.util.Date.max(this.dragCreateDt, curr);
 
             dt = Ext.Date.format(this.dragStartDate, 'H:i-') + Ext.Date.format(this.dragEndDate, 'H:i');
-        }
-        else {
+        } else {
             evtEl = Ext.get(data.ddel);
             dayCol = evtEl.parent().parent();
             box = evtEl.getBox();
@@ -64,8 +63,7 @@ Ext.define('Ext.calendar.dd.DayDropZone', {
                 if (this.dragOffset === undefined) {
                     this.dragOffset = n.timeBox.y - box.y;
                     box.y = n.timeBox.y - this.dragOffset;
-                }
-                else {
+                } else {
                     box.y = n.timeBox.y;
                 }
                 dt = Ext.Date.format(n.date, 'n/j H:i');
@@ -82,8 +80,7 @@ Ext.define('Ext.calendar.dd.DayDropZone', {
                 box.height = Math.ceil(Math.abs(e.xy[1] - box.y) / n.timeBox.height) * n.timeBox.height;
                 if (e.xy[1] < box.y) {
                     box.y -= box.height;
-                }
-                else {
+                } else {
                     n.date = Ext.Date.add(n.date, Ext.Date.MINUTE, 30);
                 }
                 this.shim(this.resizeDt, box);
@@ -102,7 +99,12 @@ Ext.define('Ext.calendar.dd.DayDropZone', {
         }
 
         data.proxy.updateMsg(Ext.util.Format.format(text, dt));
-        return this.dropAllowed;
+
+        if (data.IsRepeatable && data.eventStart.getDay() != n.date.getDay()) {
+            return false;
+        } else {
+            return this.dropAllowed;
+        }
     },
 
     shim: function(dt, box) {

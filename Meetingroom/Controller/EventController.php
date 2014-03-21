@@ -83,7 +83,9 @@ class EventController extends AbstractController
     
     public function createAction()
     {
-        $this->permitOrDie('event', 'create');
+        if(!$this->isAllowed('event', 'create')) {
+            $this->onDenied();
+        }
         
         $title = $this->request->getPost("title", "striptags");
         $roomId = $this->request->getPost("room_id", "int");
@@ -167,8 +169,10 @@ class EventController extends AbstractController
         $event = $this->getEventByRequest();
         
         $role = $this->getRoleFactory()->getRoleInEvent($this->user, $event);
-        $this->permitOrDie('event', 'update', $role);
-
+        if(!$this->isAllowed('event', 'update', $role)) {
+            $this->onDenied();
+        }
+        
         $title = $this->request->getPost("title", "striptags");
         $roomId = $this->request->getPost("room_id", "int");
         $isRepeatable = $this->request->getPost("repeatable", "int");
@@ -249,7 +253,9 @@ class EventController extends AbstractController
         $event = $this->getEventByRequest();
         
         $role = $this->getRoleFactory()->getRoleInEvent($this->user, $event);
-        $this->permitOrDie('event', 'delete', $role);
+        if(!$this->isAllowed('event', 'delete', $role)) {
+            $this->onDenied();
+        }
         
         echo $event->delete() ? 'success' : 'false';
         exit;
