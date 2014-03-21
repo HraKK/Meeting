@@ -8,40 +8,50 @@ use \Meetingroom\Entity\Role\Group;
 abstract class AbstractController extends \Phalcon\Mvc\Controller
 {
     protected $roleFactory = null;
-    
+
     abstract public function indexAction();
-    
     public function initialize()
     {
         $this->view->setTemplateAfter('common');
     }
-    
+
     public function onDenied()
     {
         $role = $this->getRoleFactory()->getRole($this->user);
-        
-        if($role == Group::GUEST) {
+
+        if ($role == Group::GUEST) {
             $this->dispatcher->forward(array('controller' => 'user', 'action' => 'login'));
-        } elseif($role == Group::USER) {
+        } elseif ($role == Group::USER) {
             $response = $this->getDI()->getShared('response');
             $response->resetHeaders()
-                ->setStatusCode(403, null)
-                ->setContent('Denied')
-                ->send();
+                    ->setStatusCode(403, null)
+                    ->setContent('Denied')
+                    ->send();
         }
     }
 
     public function isAllowed($resource, $action, $role = null)
     {
-        if($role === null) {
+        if ($role === null) {
             $role = $this->getRoleFactory()->getRole($this->user);
         }
 
         return $this->acl->isAllowed($role, $resource, $action);
     }
-    
+
     protected function getRoleFactory()
     {
         return $this->roleFactory === null ? new RoleFactory() : $this->roleFactory;
+    }
+
+    protected function sendError($msg)
+    {
+        $this->sendOutput(['msg' => $msg, 'success' => false]);
+    }
+    
+    protected function sendOutput(array $content)
+    {
+        echo json_encode($content);
+        exit;
     }
 }
