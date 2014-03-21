@@ -8,14 +8,23 @@ use \Meetingroom\Entity\Role\Group;
 abstract class AbstractController extends \Phalcon\Mvc\Controller
 {
     protected $roleFactory = null;
-    
+    /**
+     * @var Phalcon\Validation
+     */
+    protected $validator = null;
+
     abstract public function indexAction();
     
     public function initialize()
     {
         $this->view->setTemplateAfter('common');
     }
-    
+
+    public function getFormData(array $fields)
+    {
+        return $this->validator->validate($_REQUEST);
+    }
+
     public function onDenied()
     {
         $role = $this->getRoleFactory()->getRole($this->user);
