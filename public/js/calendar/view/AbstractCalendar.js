@@ -299,7 +299,8 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         var evtsInView = this.store.queryBy(function(rec) {
                 return this.isEventVisible(rec.data);
             },
-            this);
+            this
+        );
 
         for (; w < weeks; w++) {
             this.evtMaxCount[w] = 0;
@@ -312,11 +313,18 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
             for (d = 0; d < this.dayCount; d++) {
                 if (evtsInView.getCount() > 0) {
                     var evts = evtsInView.filterBy(function(rec) {
-                            var startDt = Ext.Date.clearTime(rec.data[Ext.calendar.data.EventMappings.StartDate.name], true),
-                                startsOnDate = dt.getTime() == startDt.getTime(),
-                                spansFromPrevView = (w == 0 && d == 0 && (dt > rec.data[Ext.calendar.data.EventMappings.StartDate.name]));
+                            var startDt,
+                                startsOnDate,
+                                spansFromPrevView;
 
-                            return startsOnDate || spansFromPrevView;
+                            if (rec.data[Ext.calendar.data.EventMappings.IsRepeatable.name]) {
+                                return true;
+                            } else {
+                                startDt = Ext.Date.clearTime(rec.data[Ext.calendar.data.EventMappings.StartDate.name], true);
+                                startsOnDate = dt.getTime() == startDt.getTime();
+                                spansFromPrevView = (w == 0 && d == 0 && (dt > rec.data[Ext.calendar.data.EventMappings.StartDate.name]));
+                                return startsOnDate || spansFromPrevView;
+                            }
                         },
                         this);
 
@@ -644,11 +652,16 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
             data = evt.data || evt,
             start = this.viewStart.getTime(),
             end = this.viewEnd.getTime(),
-            evStart = data[M.StartDate.name].getTime(),
-            evEnd = data[M.EndDate.name].getTime();
-        evEnd = Ext.calendar.util.Date.add(data[M.EndDate.name], {seconds: -1}).getTime();
+            evStart,
+            evEnd;
 
-        return this.rangesOverlap(start, end, evStart, evEnd);
+        if (data[M.IsRepeatable.name]) {
+            return true;
+        } else {
+            evStart = data[M.StartDate.name].getTime();
+            evEnd = Ext.calendar.util.Date.add(data[M.EndDate.name], {seconds: -1}).getTime();
+            return this.rangesOverlap(start, end, evStart, evEnd);
+        }
     },
 
     rangesOverlap: function(start1, end1, start2, end2) {

@@ -233,9 +233,11 @@ Ext.define('Ext.calendar.form.field.DateRange', {
 
         Ext.suspendLayouts();
         repeatOnCombo.setDisabled(!checked).setVisible(checked);
-        if (startDateValue != null) {
+
+        if (checked && startDateValue != null && repeatOnCombo.getValue().length == 0) {
             repeatOnCombo.select(startDateValue.getDay() - 1);
         }
+
         startDate.setDisabled(checked).setVisible(!checked);
         endDate.setDisabled(checked).setVisible(!checked);
         Ext.resumeLayouts(true);

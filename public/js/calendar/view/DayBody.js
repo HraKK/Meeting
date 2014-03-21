@@ -323,8 +323,12 @@ Ext.define('Ext.calendar.view.DayBody', {
 
             if (evt.IsRepeatable == true) {
 
+                if (evts[i].date.getDay()) {
+                    continue;
+                }
+
                 var evtClone,
-                    todayDay = (new Date()).getDay() - 2,
+                    todayDay = (new Date()).getDay() - 1,
                     evtCloneDay,
                     markupClone,
                     timeClone,
@@ -337,7 +341,7 @@ Ext.define('Ext.calendar.view.DayBody', {
                     evtClone.EndDate = Ext.calendar.util.Date.add(evtClone.EndDate, {days: evtCloneDay});
 
                     markupClone = me.getEventTemplate().apply(evtClone);
-                    timeClone = Ext.calendar.util.Date.add(evts[i].date, {days: evtCloneDay});
+                    timeClone = Ext.calendar.util.Date.add(evts[i].date, {days: evtCloneDay - 2});
                     targetClone = me.id + '-day-col-' + Ext.Date.format(timeClone, 'Ymd');
 
                     if (Ext.get(targetClone) != null) {
