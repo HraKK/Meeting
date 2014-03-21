@@ -18,7 +18,6 @@ class AbstractController extends \UnitTestCase
     {
         $controller = new \Meetingroom\Controller\EventController();
         $this->assertEmpty($controller->createAction());
-        
     }
     
     public function testUpdateAction()
@@ -27,6 +26,6 @@ class AbstractController extends \UnitTestCase
     
     public function testDeleteAction()
     {
-    }
     
+    }
 }

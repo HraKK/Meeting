@@ -7,6 +7,8 @@ use \Meetingroom\Entity\Event\EventOptionEntity;
 use \Meetingroom\Entity\Event\EventEntity;
 use \Meetingroom\Entity\Event\Lookupper\EventLookupper;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria;
+use \Meetingroom\Validate\Timestamp\Timestamp;
+use \Meetingroom\Validate\Timestamp\TimestampCompare;
 
 class EventController extends AbstractController
 {
@@ -114,9 +116,13 @@ class EventController extends AbstractController
 
         $lookupper = new EventLookupper($this->di);
         $event = new EventEntity();
-        $time = $this->isValidTimestamp($dateStart, $dateEnd);
-        if($time !== true) {
-            die($time);
+        
+        $start = new Timestamp($dateStart);
+        $end = new Timestamp($dateEnd);
+        $compare = new TimestampCompare($start, $end);
+        
+        if(($start->isValid() && $end->isValid() && $compare->isValid()) == false) {
+            die($compare->getMessage());
         }
         
         $event->bind([
@@ -202,9 +208,12 @@ class EventController extends AbstractController
          
         $lookupper = new EventLookupper($this->di);
         
-        $time = $this->isValidTimestamp($dateStart, $dateEnd);
-        if($time !== true) {
-            die($time);
+        $start = new Timestamp($dateStart);
+        $end = new Timestamp($dateEnd);
+        $compare = new TimestampCompare($start, $end);
+        
+        if(($start->isValid() && $end->isValid() && $compare->isValid()) == false) {
+            die($compare->getMessage());
         }
         
         $event->bind([
@@ -271,30 +280,5 @@ class EventController extends AbstractController
         }
         
         return $event;
-    }
-    
-    protected function isValidTimestamp($dateStart, $dateEnd) 
-    {
-        try {
-            $date1 = new \DateTime($dateStart);
-            $date2 = new \DateTime($dateEnd);
-        } catch (\Exception $exc) {
-            return 'Timestamp format is Y-m-d H:i:s';
-        }
-
-        if(($date1->format('Y-m-d H:i:s') != $dateStart) || 
-            ($date2->format('Y-m-d H:i:s') != $dateEnd)) {
-            return 'Timestamp format is Y-m-d H:i:s';
-        }
-        
-        if($date1->format('Y-m-d') != $date2->format('Y-m-d')) {
-            return 'Event should start and end in same day';
-        }
-        
-        if($date2<=$date1) {
-            return 'Date end should be greater than date start';
-        }
-            
-        return true;
     }
 }
