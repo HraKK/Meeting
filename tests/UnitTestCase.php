@@ -16,6 +16,8 @@ abstract class UnitTestCase extends PhalconTestCase
      */
     protected $_config;
 
+    protected $di;
+
     /**
      * @var bool
      */
@@ -25,11 +27,11 @@ abstract class UnitTestCase extends PhalconTestCase
     {
 
         // Загрузка дополнительных сервисов, которые могут потребоваться во время тестирования
-        $di = DI::getDefault();
+        $this->di = DI::getDefault();
 
         // получаем любые компоненты DI, если у вас есть настройки, не забудьте передать их родителю
 
-        parent::setUp($di);
+        parent::setUp($this->di);
 
         $this->_loaded = true;
     }
