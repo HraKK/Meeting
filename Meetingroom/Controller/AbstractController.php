@@ -16,18 +16,28 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
         $this->view->setTemplateAfter('common');
     }
     
-    public function permitOrDie($resource, $action, $role = null)
+    public function onDenied()
+    {
+        $role = $this->getRoleFactory()->getRole($this->user);
+        
+        if($role == Group::GUEST) {
+            $this->dispatcher->forward(array('controller' => 'user', 'action' => 'login'));
+        } elseif($role == Group::USER) {
+            $response = $this->getDI()->getShared('response');
+            $response->resetHeaders()
+                ->setStatusCode(403, null)
+                ->setContent('Denied')
+                ->send();
+        }
+    }
+
+    public function isAllowed($resource, $action, $role = null)
     {
         if($role === null) {
             $role = $this->getRoleFactory()->getRole($this->user);
         }
 
-        $allow = $this->acl->isAllowed($role, $resource, $action);
-        if(!$allow && $role == Group::GUEST && $resource!='user' && $action!='login') {
-            $this->dispatcher->forward(array('controller' => 'user', 'action' => 'login'));
-        } elseif(!$allow) {
-            die('Not permitted');
-        }
+        return $this->acl->isAllowed($role, $resource, $action);
     }
     
     protected function getRoleFactory()

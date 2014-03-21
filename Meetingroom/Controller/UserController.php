@@ -15,7 +15,9 @@ class UserController extends AbstractController
     
     public function loginAction()
     {
-        $this->permitOrDie('user', 'login');
+        if(!$this->isAllowed('user', 'login')) {
+            $this->onDenied();
+        }
         
         $this->view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_ACTION_VIEW);
         
@@ -64,7 +66,9 @@ class UserController extends AbstractController
     
     public function logoutAction()
     {
-        $this->permitOrDie('user', 'logout');
+        if(!$this->isAllowed('user', 'logout')) {
+            $this->onDenied();
+        }
         
         $this->session->destroy();
         $this->flashSession->error("logged out");
