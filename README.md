@@ -4,5 +4,5 @@
 3. create PostgreSQL db
 
 ### Run tests
-1. Run composer `php composer.phar install` or `update`
-2. Run tests `./vendor/bin/phpunit -c tests/PHPunit.xml`
+1. Run composer `php composer.phar update`
+2. Run tests `php ./vendor/bin/phpunit -c ./tests/PHPunit.xml`
