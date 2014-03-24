@@ -137,16 +137,19 @@ class BaseBootstrapper implements BootstrapperInterface
                 $userResource = new \Phalcon\Acl\Resource("user");
                 $eventResource = new \Phalcon\Acl\Resource("event");
                 $indexResource = new \Phalcon\Acl\Resource("index");
+                $roomResource = new \Phalcon\Acl\Resource("room");
                 
                 $acl->addResource($userResource, ['login', 'logout']);
                 $acl->addResource($eventResource, ['create', 'update', 'delete']);
                 $acl->addResource($indexResource, ['index']);
+                $acl->addResource($roomResource, ['read']);
 
                 $acl->allow("ROLE_GUEST", "user", "login");
                 
                 $acl->allow("ROLE_USER", "user", "logout");
                 $acl->allow("ROLE_USER", "event", "create");
                 $acl->allow("ROLE_USER", "index", "index");
+                $acl->allow("ROLE_USER", "room", "read");
                 
                 $acl->allow("ROLE_OWNER", "event", "delete");
                 $acl->allow("ROLE_OWNER", "event", "update");
