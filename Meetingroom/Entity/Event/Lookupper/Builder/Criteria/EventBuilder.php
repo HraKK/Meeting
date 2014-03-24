@@ -13,24 +13,28 @@ class EventBuilder
 {
 
     /**
-     * @param RoomCriteriaInterface $roomCriteria
+     * @param null|RoomCriteriaInterface $roomCriteria
      * @param PeriodCriteriaInterface $periodCriteria
      * @param array $fields
      * @return string
      */
     public function build(
-        RoomCriteriaInterface $roomCriteria,
+        RoomCriteriaInterface $roomCriteria = null,
         PeriodCriteriaInterface $periodCriteria,
         array $fields = []
     ) {
         $sql = '';
         $baseCriteriaBuilder = new BaseCriteriaBuilder();
-        $roomCriteriaBuilder = new RoomCriteriaBuilder();
-        $periodCriteriaBuilder = new PeriodCriteriaBuilder();
-
-
         $sql .= $baseCriteriaBuilder->build($fields);
-        $sql .= $roomCriteriaBuilder->build($roomCriteria);
+
+        if ($roomCriteria !== null) {
+            $roomCriteriaBuilder = new RoomCriteriaBuilder();
+            $sql .= $roomCriteriaBuilder->build($roomCriteria);
+            $sql .= ' AND ';
+        }
+
+
+        $periodCriteriaBuilder = new PeriodCriteriaBuilder();
         $sql .= ' AND ';
         $sql .= $periodCriteriaBuilder->build($periodCriteria);
 
