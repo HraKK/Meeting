@@ -14,6 +14,12 @@ class RoomManager
     protected $roomModel;
 
     /**
+     * @var \Meetingroom\Entity\Room\RoomEntity
+     */
+    protected $roomEntity;
+
+    
+    /**
      * lazy initialization RoomModel
      * @return \Meetingroom\Model\Room\RoomModel
      */
@@ -26,6 +32,19 @@ class RoomManager
         return $this->roomModel;
     }
 
+    /**
+     * lazy initialization RoomModel
+     * @return \Meetingroom\Model\Room\RoomModel
+     */
+    public function getRoomEntity()
+    {
+        if ($this->roomEntity == null) {
+            $this->roomEntity = new \Meetingroom\Entity\Room\RoomEntity();
+        }
+
+        return $this->roomEntity;
+    }
+    
     /**
      * lazy initialization RoomModel
      * @return \Meetingroom\Model\Room\RoomModel
@@ -46,7 +65,7 @@ class RoomManager
         $rooms = $this->getRoomModel()->getAll();
         $roomsObj = [];
         foreach ($rooms as $room) {
-            $roomsObj[] = (new RoomEntity())->bind($room);
+            $roomsObj[] = $this->getRoomEntity()->bind($room);
         }
 
         return $roomsObj;
