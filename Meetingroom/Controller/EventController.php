@@ -51,6 +51,14 @@ class EventController extends AbstractController
             ))
         );
 
+        $filter = new \Phalcon\Filter();
+        $filter->add(
+            'boolean',
+            function ($value) {
+                return (bool)$value;
+            }
+        );
+
 
         $this->validator->setFilters("day", "int");
         $this->validator->setFilters("month", "int");
@@ -71,8 +79,9 @@ class EventController extends AbstractController
         $this->validator->setFilters("fri", "int");
         $this->validator->setFilters("sat", "int");
         $this->validator->setFilters("sun", "int");
-        
-        $this->validator->setFilters("weekly", "boolean");
+
+
+        $this->validator->setFilters("weekly", $filter);
 
         $this->formData = $this->getFormData(true);
     }
@@ -83,12 +92,11 @@ class EventController extends AbstractController
      */
     public function test_validationAction()
     {
-        $msg = new  \Phalcon\Mvc\Model\Message('message', 'field');
-        var_dump($msg);
+//        $msg = new  \Phalcon\Mvc\Model\Message('message', 'field');
+        //      var_dump($msg);
         var_dump($this->formData);
-        var_dump($this->getData('room_id2'));
-        var_dump($this->getFormErrors());
-
+//        var_dump($this->getData('room_id2'));
+//        var_dump($this->getFormErrors());
 
         die();
     }
