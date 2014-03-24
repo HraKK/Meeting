@@ -51,14 +51,6 @@ class EventController extends AbstractController
             ))
         );
 
-        $filter = new \Phalcon\Filter();
-        $filter->add(
-            'boolean',
-            function ($value) {
-                return (bool)$value;
-            }
-        );
-
 
         $this->validator->setFilters("day", "int");
         $this->validator->setFilters("month", "int");
@@ -81,7 +73,7 @@ class EventController extends AbstractController
         $this->validator->setFilters("sun", "int");
 
 
-        $this->validator->setFilters("weekly", $filter);
+        $this->validator->setFilters("weekly", 'int');
 
         $this->formData = $this->getFormData(true);
     }
