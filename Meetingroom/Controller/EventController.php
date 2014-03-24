@@ -12,6 +12,7 @@ use \Meetingroom\Entity\Event\Lookupper\Criteria\WeekPeriodCriteria;
 use \Meetingroom\Validate\Timestamp\Timestamp;
 use \Meetingroom\Validate\Timestamp\TimestampCompare;
 use Phalcon\Validation\Validator\Regex as RegexValidator;
+use Phalcon\Validation\Validator\StringLength as StringLength;
 
 class EventController extends AbstractController
 {
@@ -27,6 +28,16 @@ class EventController extends AbstractController
             new RegexValidator(array(
                 'pattern' => '/^\d*$/',
                 'message' => 'Room id must be integer'
+            ))
+        );
+
+        $this->validator->add(
+            'title',
+            new StringLength(array(
+//                'max' => 5,
+                'min' => 3,
+//                'messageMaximum' => 'We don\'t like really long names',
+                'messageMinimum' => 'Title should be longer'
             ))
         );
 
@@ -61,8 +72,11 @@ class EventController extends AbstractController
      */
     public function test_validationAction()
     {
+
         var_dump($this->formData);
         var_dump($this->getData('room_id2'));
+        var_dump($this->getFormErrors());
+
 
         die();
     }
