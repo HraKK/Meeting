@@ -7,9 +7,12 @@ use \Meetingroom\Entity\Event\EventOptionEntity;
 use \Meetingroom\Entity\Event\EventEntity;
 use \Meetingroom\Entity\Event\Lookupper\EventLookupper;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria;
+use \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria;
+use \Meetingroom\Entity\Event\Lookupper\Criteria\WeekPeriodCriteria;
 use \Meetingroom\Validate\Timestamp\Timestamp;
 use \Meetingroom\Validate\Timestamp\TimestampCompare;
 use Phalcon\Validation\Validator\Regex as RegexValidator;
+use Phalcon\Validation\Validator\StringLength as StringLength;
 
 class EventController extends AbstractController
 {
@@ -27,8 +30,51 @@ class EventController extends AbstractController
                 'message' => 'Room id must be integer'
             ))
         );
+
+        $this->validator->add(
+            'title',
+            new StringLength(array(
+//                'max' => 5,
+                'min' => 3,
+//                'messageMaximum' => 'We don\'t like really long names',
+                'messageMinimum' => 'Title should be longer'
+            ))
+        );
+
+        $this->validator->add(
+            'description',
+            new StringLength(array(
+//                'max' => 5,
+                'min' => 3,
+//                'messageMaximum' => 'We don\'t like really long names',
+                'messageMinimum' => 'Description should be longer'
+            ))
+        );
+
+
+        $this->validator->setFilters("day", "int");
+        $this->validator->setFilters("month", "int");
+        $this->validator->setFilters("year", "int");
+
         $this->validator->setFilters('room_id', 'int');
-//        ..etc
+        $this->validator->setFilters("title", "striptags");
+        $this->validator->setFilters("repeatable", "int");
+        $this->validator->setFilters("date_start", "string");
+        $this->validator->setFilters("date_end", "string");
+        $this->validator->setFilters("description", "striptags");
+        $this->validator->setFilters("attendees", "int");
+
+        $this->validator->setFilters("mon", "int");
+        $this->validator->setFilters("tue", "int");
+        $this->validator->setFilters("wed", "int");
+        $this->validator->setFilters("thu", "int");
+        $this->validator->setFilters("fri", "int");
+        $this->validator->setFilters("sat", "int");
+        $this->validator->setFilters("sun", "int");
+        
+        $this->validator->setFilters("weekly", "boolean");
+
+        $this->formData = $this->getFormData(true);
     }
 
     /**
@@ -37,7 +83,12 @@ class EventController extends AbstractController
      */
     public function test_validationAction()
     {
-        var_dump($this->getFormData()); //['room_id']
+
+        var_dump($this->formData);
+        var_dump($this->getData('room_id2'));
+        var_dump($this->getFormErrors());
+
+
         die();
     }
 
@@ -47,22 +98,30 @@ class EventController extends AbstractController
             $this->onDenied();
         }
 
-        $roomId = $this->request->getPost("room_id", "int");
-        $day = $this->request->getPost("day", "int");
-        $month = $this->request->getPost("month", "int");
-        $year = $this->request->getPost("year", "int");
 
         $roomManager = new RoomManager();
         $rooms = $roomManager->getAll();
 
-        $roomCriteria = new RoomCriteria($id);
-        $periodCriteria = new DayPeriodCriteria($day, $month, $year);
+        $roomCriteria = new RoomCriteria($this->getData('room_id'));
+        $periodCriteria = new DayPeriodCriteria($this->getData('day'), $this->getData('month'), $this->getData('year'));
+        $roomCriteria = new RoomCriteria($this->getData('room_id'));
+
+        if ($this->getData('weekly') == true) {
+            $periodCriteria = new WeekPeriodCriteria($this->getData('day'), $this->getData('month'), $this->getData(
+                'year'
+            ));
+        } else {
+            $periodCriteria = new DayPeriodCriteria($this->getData('day'), $this->getData('month'), $this->getData(
+                'year'
+            ));
+        }
+        
         $lookupper = new EventLookupper($this->di);
 
         $events = $lookupper
             ->setPeriodCriteria($periodCriteria)
             ->setRoomCriteria($roomCriteria)
-            ->setFields(['id', 'title'])
+            ->setFields(['id', 'title', 'date_start', 'date_end', 'description', 'user_id', 'room_id', 'repeatable', 'attendees'])
             ->lookup();
 
         $eventsDTO = [];
@@ -78,66 +137,56 @@ class EventController extends AbstractController
         if(!$this->isAllowed('event', 'create')) {
             $this->onDenied();
         }
-        
-        $title = $this->request->getPost("title", "striptags");
-        $roomId = $this->request->getPost("room_id", "int");
-        $isRepeatable = $this->request->getPost("repeatable", "int");
-        $dateStart = $this->request->getPost("date_start", "string");
-        $dateEnd = $this->request->getPost("date_end", "string");
-        $description = $this->request->getPost("description", "striptags");
-        $attendees = $this->request->getPost("attendees", "int");
-        
-        $mon = $this->request->getPost("mon", "int");
-        $tue = $this->request->getPost("tue", "int");
-        $wed = $this->request->getPost("wed", "int");
-        $thu = $this->request->getPost("thu", "int");
-        $fri = $this->request->getPost("fri", "int");
-        $sat = $this->request->getPost("sat", "int");
-        $sun = $this->request->getPost("sun", "int");
-        
-        if(strlen($title) < 3) {
-            die('Title should be longer');
+
+        if (!empty($this->getFormErrors())) {
+            die(json_encode(
+                [
+                    'success' => false,
+                    'errors' => $this->getFormErrors()
+                ]
+            ));
         }
-        
+
+
         $roomManager = new RoomManager();
-        if(!$roomManager->isRoomExist($roomId)) {
+        if (!$roomManager->isRoomExist($this->getData('room_id'))) {
             $this->sendError('room ain`t exist');
         }
 
         $lookupper = new EventLookupper($this->di);
         $event = new EventEntity();
 
-        $start = strtotime($dateStart);
-        $end = strtotime($dateEnd);
+        $start = strtotime($this->getData('dateStart'));
+        $end = strtotime($this->getData('dateEnd'));
 
         if ($start === false || $end === false || $end <= $start) {
             $this->sendError('wrong date');
         }
         
         $event->bind([
-            'title' => $title,
-            'room_id' => $roomId,
-            'user_id' => $this->user->id,
+                'title' => $this->getData('title'),
+                'room_id' => $this->getData('room_id'),
+                'user_id' => $this->user->id,
                 'date_start' => $start,
                 'date_end' => $end,
-                'description' => $description,
-                'repeatable' => $isRepeatable,
-            'attendees' => $attendees
-        ]);
+                'description' => $this->getData('description'),
+                'repeatable' => $this->getData('isRepeatable'),
+                'attendees' => $this->getData('attendees')
+            ]);
         
         $option = new EventOptionEntity();
-        
-        if($isRepeatable) {
+
+        if ($this->getData('isRepeatable')) {
             $option->bind([
                 'id' => $event->id,
-                'mon' => $mon,
-                'tue' => $tue,
-                'wed' => $wed,
-                'thu' => $thu,
-                'fri' => $fri,
-                'sat' => $sat,
-                'sun' => $sun,
-            ]);
+                    'mon' => $this->getData('mon'),
+                    'tue' => $this->getData('tue'),
+                    'wed' => $this->getData('wed'),
+                    'thu' => $this->getData('thu'),
+                    'fri' => $this->getData('fri'),
+                    'sat' => $this->getData('sat'),
+                    'sun' => $this->getData('sun'),
+                ]);
         }
         
         $conflict = $lookupper->checkIsConflict($event, $option);
@@ -147,8 +196,8 @@ class EventController extends AbstractController
             if(!$eventId){
                 $this->sendError('event not created');
             }
-            
-            if($isRepeatable) {
+
+            if ($this->getData('isRepeatable')) {
                 $option->bind(['id' => $event->id])->insert();
             }
 
@@ -167,74 +216,63 @@ class EventController extends AbstractController
         if(!$this->isAllowed('event', 'update', $role)) {
             $this->onDenied();
         }
-        
-        $title = $this->request->getPost("title", "striptags");
-        $roomId = $this->request->getPost("room_id", "int");
-        $isRepeatable = $this->request->getPost("repeatable", "int");
-        $dateStart = $this->request->getPost("date_start", "string");
-        $dateEnd = $this->request->getPost("date_end", "string");
-        $description = $this->request->getPost("description", "striptags");
-        $attendees = $this->request->getPost("attendees", "int");
-        
-        $mon = $this->request->getPost("mon", "int");
-        $tue = $this->request->getPost("tue", "int");
-        $wed = $this->request->getPost("wed", "int");
-        $thu = $this->request->getPost("thu", "int");
-        $fri = $this->request->getPost("fri", "int");
-        $sat = $this->request->getPost("sat", "int");
-        $sun = $this->request->getPost("sun", "int");
-        
-        if(strlen($title) < 3) {
-            $this->sendError('Title should be longer');
+
+        if (!empty($this->getFormErrors())) {
+            die(json_encode(
+                [
+                    'success' => false,
+                    'errors' => $this->getFormErrors()
+                ]
+            ));
         }
-        
-        if($roomId !== $event->roomId) {
+
+        if ($this->getData('room_id') !== $event->roomId) {
             $roomManager = new RoomManager();
-            if(!$roomManager->isRoomExist($roomId)) {
+            if (!$roomManager->isRoomExist($this->getData('room_id'))) {
                 $this->sendError('room ain`t exist');
             }
         }
          
         $lookupper = new EventLookupper($this->di);
 
-        $start = strtotime($dateStart);
-        $end = strtotime($dateEnd);
+        $start = strtotime($this->getData('dateStart'));
+        $end = strtotime($this->getData('dateEnd'));
 
         if ($start === false || $end === false || $end <= $start) {
             $this->sendError('Wrong date');
         }
         
         $event->bind([
-            'title' => $title,
-            'room_id' => $roomId,
+                'title' => $this->getData('title'),
+                'room_id' => $this->getData('room_id'),
                 'date_start' => $start,
                 'date_end' => $end,
-                'description' => $description,
-                'repeatable' => $isRepeatable,
-            'attendees' => $attendees
-        ]);
+                'description' => $this->getData('description'),
+                'repeatable' => $this->getData('isRepeatable'),
+                'attendees' => $this->getData('attendees')
+            ]);
         
         $option = new EventOptionEntity();
-        
-        if($isRepeatable) {
+
+        if ($this->getData('isRepeatable')) {
             $option->bind([
                 'id' => $event->id,
-                'mon' => $mon,
-                'tue' => $tue,
-                'wed' => $wed,
-                'thu' => $thu,
-                'fri' => $fri,
-                'sat' => $sat,
-                'sun' => $sun
-            ]);
+                    'mon' => $this->getData('mon'),
+                    'tue' => $this->getData('tue'),
+                    'wed' => $this->getData('wed'),
+                    'thu' => $this->getData('thu'),
+                    'fri' => $this->getData('fri'),
+                    'sat' => $this->getData('sat'),
+                    'sun' => $this->getData('sun')
+                ]);
         }
         
         $conflict = $lookupper->checkIsConflict($event, $option);
         
         if(!$conflict) {
             $eventId = $event->save();
-            
-            if($isRepeatable) {
+
+            if ($this->getData('isRepeatable')) {
                 $option->update();
             }
 

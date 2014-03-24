@@ -38,6 +38,10 @@ abstract class AbstractEntity
 
     public function __get($name)
     {
+        if($name == 'fields') {
+            return $this->fields;
+        }
+        
         $this->fieldExist($name);
 
         if ($this->loaded === false) {
@@ -156,12 +160,12 @@ abstract class AbstractEntity
      * @return array fields with data
      * @author Denis Maximovskikh <denkin.syneforge.com>
      */
-    public function getProperties()
+    protected function getProperties()
     {
         $fields_array = [];
         foreach ($this->fields as $bd_field => $class_field) {
-            $fields_array[$class_field] = $this->$class_field;
-        }
+                    $fields_array[$class_field] = $this->$class_field;
+            }
         return $fields_array;
     }
 

@@ -18,5 +18,6 @@ class EventDTO extends \Meetingroom\DTO\AbstractDTO
     public $desription;
     public $repeatable;
     public $attendees;
-
+    public $repeatedOn;
+    public $owner;
 } 
