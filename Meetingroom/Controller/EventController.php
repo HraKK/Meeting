@@ -53,14 +53,14 @@ class EventController extends AbstractController
         $day = (int) $this->request->getPost("day", "int");
         $month = (int) $this->request->getPost("month", "int");
         $year = (int) $this->request->getPost("year", "int");
-        $week = (int) $this->request->getPost("week", "int");
+        $weekly = (bool) $this->request->getPost("weekly", "boolean");
 
         $roomManager = new RoomManager();
         $rooms = $roomManager->getAll();
 
         $roomCriteria = new RoomCriteria($roomId);
         
-        if($week == 1) {
+        if($weekly == true) {
             $periodCriteria = new WeekPeriodCriteria($day, $month, $year);
         } else {
             $periodCriteria = new DayPeriodCriteria($day, $month, $year);
