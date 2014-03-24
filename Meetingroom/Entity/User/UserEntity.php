@@ -83,7 +83,7 @@ class UserEntity
         $session->set('userId', $this->userId);
     }
     
-    protected function createUser()
+    public function createUser()
     {
         $userFactory = $this->getUserFactory();
         $user = $userFactory->getUser($this->username); 

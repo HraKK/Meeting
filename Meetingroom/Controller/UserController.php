@@ -27,13 +27,15 @@ class UserController extends AbstractController
             $password = $this->request->getPost("password", "string");
             
             if($user->isValidCredentials($username, $password) == false) {
-                die('123');
+                $this->flashSession->error('Wrong credentials');
+                header('Location: /user/login');
+                exit;
             }
             
-            if($user->isUserExist() == false) {
-                if($user->createUser() == false) {
-                    die('234');
-                }
+            if($user->isUserExist() == false && $user->createUser() == false) {
+                $this->flashSession->error('User not sugned up');
+                header('Location: /user/login');
+                exit;
             }
             
             $user->startSession();
