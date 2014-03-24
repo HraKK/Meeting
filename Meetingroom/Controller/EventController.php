@@ -83,7 +83,7 @@ class EventController extends AbstractController
      */
     public function test_validationAction()
     {
-        //$msg = Phalcon\Mvc\Model\Message\Message();
+        $msg = new  \Phalcon\Mvc\Model\Message('message', 'field');
         var_dump($msg);
         var_dump($this->formData);
         var_dump($this->getData('room_id2'));
@@ -219,7 +219,8 @@ class EventController extends AbstractController
             $this->onDenied();
         }
 
-        if (!empty($this->getFormErrors())) {
+        $error = $this->getFormErrors();
+        if (!empty($error)) {
             die(json_encode(
                 [
                     'success' => false,
