@@ -83,7 +83,7 @@ class EventController extends AbstractController
      */
     public function test_validationAction()
     {
-        $msg = Phalcon\Mvc\Model\Message\Message();
+        //$msg = Phalcon\Mvc\Model\Message\Message();
         var_dump($msg);
         var_dump($this->formData);
         var_dump($this->getData('room_id2'));
