@@ -7,6 +7,8 @@ use \Meetingroom\Entity\Event\EventOptionEntity;
 use \Meetingroom\Entity\Event\EventEntity;
 use \Meetingroom\Entity\Event\Lookupper\EventLookupper;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria;
+use \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria;
+use \Meetingroom\Entity\Event\Lookupper\Criteria\WeekPeriodCriteria;
 use \Meetingroom\Validate\Timestamp\Timestamp;
 use \Meetingroom\Validate\Timestamp\TimestampCompare;
 use Phalcon\Validation\Validator\Regex as RegexValidator;
@@ -47,22 +49,29 @@ class EventController extends AbstractController
             $this->onDenied();
         }
 
-        $roomId = $this->request->getPost("room_id", "int");
-        $day = $this->request->getPost("day", "int");
-        $month = $this->request->getPost("month", "int");
-        $year = $this->request->getPost("year", "int");
+        $roomId = (int) $this->request->getPost("room_id", "int");
+        $day = (int) $this->request->getPost("day", "int");
+        $month = (int) $this->request->getPost("month", "int");
+        $year = (int) $this->request->getPost("year", "int");
+        $week = (int) $this->request->getPost("week", "int");
 
         $roomManager = new RoomManager();
         $rooms = $roomManager->getAll();
 
-        $roomCriteria = new RoomCriteria($id);
-        $periodCriteria = new DayPeriodCriteria($day, $month, $year);
+        $roomCriteria = new RoomCriteria($roomId);
+        
+        if($week == 1) {
+            $periodCriteria = new WeekPeriodCriteria($day, $month, $year);
+        } else {
+            $periodCriteria = new DayPeriodCriteria($day, $month, $year);
+        }
+        
         $lookupper = new EventLookupper($this->di);
 
         $events = $lookupper
             ->setPeriodCriteria($periodCriteria)
             ->setRoomCriteria($roomCriteria)
-            ->setFields(['id', 'title'])
+            ->setFields(['id', 'title', 'date_start', 'date_end', 'description', 'user_id', 'room_id', 'repeatable', 'attendees'])
             ->lookup();
 
         $eventsDTO = [];

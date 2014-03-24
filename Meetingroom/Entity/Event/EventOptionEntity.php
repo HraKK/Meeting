@@ -5,6 +5,7 @@ namespace Meetingroom\Entity\Event;
 class EventOptionEntity extends \Meetingroom\Entity\AbstractEntity
 {
     protected $modelName = '\Meetingroom\Model\Event\EventOptionModel';
+    protected $DTOName = '\Meetingroom\DTO\Event\EventOptionDTO';
     
     protected $id = null;
     protected $mon = null;
