@@ -7,6 +7,8 @@ use \Meetingroom\Entity\Event\EventOptionEntity;
 use \Meetingroom\Entity\Event\EventEntity;
 use \Meetingroom\Entity\Event\Lookupper\EventLookupper;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria;
+use \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria;
+use \Meetingroom\Entity\Event\Lookupper\Criteria\WeekPeriodCriteria;
 use \Meetingroom\Validate\Timestamp\Timestamp;
 use \Meetingroom\Validate\Timestamp\TimestampCompare;
 use Phalcon\Validation\Validator\Regex as RegexValidator;
@@ -47,6 +49,8 @@ class EventController extends AbstractController
         $this->validator->setFilters("fri", "int");
         $this->validator->setFilters("sat", "int");
         $this->validator->setFilters("sun", "int");
+        
+        $this->validator->setFilters("weekly", "boolean");
 
         $this->formData = $this->getFormData(true);
     }
@@ -72,14 +76,22 @@ class EventController extends AbstractController
         $roomManager = new RoomManager();
         $rooms = $roomManager->getAll();
 
-        $roomCriteria = new RoomCriteria($id);
+        $roomCriteria = new RoomCriteria($this->formData->room_id);
         $periodCriteria = new DayPeriodCriteria($this->formData->day, $this->formData->month, $this->formData->year);
+        $roomCriteria = new RoomCriteria($this->formData->room_id);
+        
+        if($this->formData->weekly == true) {
+            $periodCriteria = new WeekPeriodCriteria($this->formData->day, $this->formData->month, $this->formData->year);
+        } else {
+            $periodCriteria = new DayPeriodCriteria($this->formData->day, $this->formData->month, $this->formData->year);
+        }
+        
         $lookupper = new EventLookupper($this->di);
 
         $events = $lookupper
             ->setPeriodCriteria($periodCriteria)
             ->setRoomCriteria($roomCriteria)
-            ->setFields(['id', 'title'])
+            ->setFields(['id', 'title', 'date_start', 'date_end', 'description', 'user_id', 'room_id', 'repeatable', 'attendees'])
             ->lookup();
 
         $eventsDTO = [];
@@ -102,7 +114,7 @@ class EventController extends AbstractController
         }
         
         $roomManager = new RoomManager();
-        if (!$roomManager->isRoomExist($this->formData->roomId)) {
+        if (!$roomManager->isRoomExist($this->formData->room_id)) {
             $this->sendError('room ain`t exist');
         }
 
@@ -118,7 +130,7 @@ class EventController extends AbstractController
         
         $event->bind([
                 'title' => $this->formData->title,
-                'room_id' => $this->formData->roomId,
+                'room_id' => $this->formData->room_id,
                 'user_id' => $this->user->id,
                 'date_start' => $start,
                 'date_end' => $end,
@@ -174,9 +186,9 @@ class EventController extends AbstractController
             $this->sendError('Title should be longer');
         }
 
-        if ($this->formData->roomId !== $event->roomId) {
+        if ($this->formData->room_id !== $event->roomId) {
             $roomManager = new RoomManager();
-            if (!$roomManager->isRoomExist($this->formData->roomId)) {
+            if (!$roomManager->isRoomExist($this->formData->room_id)) {
                 $this->sendError('room ain`t exist');
             }
         }
@@ -192,7 +204,7 @@ class EventController extends AbstractController
         
         $event->bind([
                 'title' => $this->formData->title,
-                'room_id' => $this->formData->roomId,
+                'room_id' => $this->formData->room_id,
                 'date_start' => $start,
                 'date_end' => $end,
                 'description' => $this->formData->description,
