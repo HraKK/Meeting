@@ -21,6 +21,14 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
         $this->view->setTemplateAfter('common');
     }
 
+    /**
+     * @param string $field
+     * @return string|null
+     */
+    public function getData($field)
+    {
+        return (isset($this->formData->$field)) ? $this->formData->$field : null;
+    }
 
     /**
      * @param bool $obj true for return object

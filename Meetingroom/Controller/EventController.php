@@ -62,6 +62,7 @@ class EventController extends AbstractController
     public function test_validationAction()
     {
         var_dump($this->formData);
+        var_dump($this->getData('room_id2'));
 
         die();
     }
