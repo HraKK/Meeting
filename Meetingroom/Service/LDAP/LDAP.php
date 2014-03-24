@@ -72,9 +72,9 @@ class LDAP implements LDAPInterface
      */
     protected function checkAccess($nickname, $password)
     {
-        return ldap_bind($this->getConnection(), "uid=" . $nickname . "," . $this->filter_str, $password);
-    }
-
+        return @ldap_bind($this->getConnection(), "uid=" . $nickname . "," . $this->filter_str, $password);
+    } 
+        
 
     /**
      * Search user info by nickname
