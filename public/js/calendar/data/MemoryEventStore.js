@@ -32,7 +32,7 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
         },
         actionMethods: {
             create: 'POST',
-            read: 'GET',
+            read: 'POST',
             update: 'POST',
             destroy: 'POST'
         },

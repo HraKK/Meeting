@@ -213,7 +213,7 @@ Ext.define('Ext.calendar.view.DayBody', {
         this.getTemplateEventBox(evt);
 
         data._selectorCls = selector;
-        data._colorCls = 'ext-color-' + (evt['room_id'] || '0');
+        data._colorCls = 'ext-color-' + (evt['id'] || '0');
         data._elId = selector + (evt._weekIndex ? '-' + evt._weekIndex : '');
         data._isRecurring = evt.Recurrence && evt.Recurrence != '';
         var title = evt['title'];

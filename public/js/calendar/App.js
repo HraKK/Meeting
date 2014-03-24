@@ -146,8 +146,8 @@ Ext.define('Ext.calendar.App', {
                                         tabPanel.add({
                                             title: record.get('title'),
                                             tooltip: record.get('description'),
-                                            iconCls: 'room-tab-icon room-tab-icon-' + record.get('room_id'),
-                                            room_id: record.get('room_id')
+                                            iconCls: 'room-tab-icon room-tab-icon-' + record.get('id'),
+                                            room_id: record.get('id')
                                         });
                                     });
 
@@ -367,7 +367,6 @@ Ext.define('Ext.calendar.App', {
                                 var me = this;
                                 rec.data.n = false;
                                 rec.data.owner = Ext.getUser();
-                                rec.data.room_id = Ext.room_id;
                                 this.eventStore.add(rec);
                                 // TODO: sent data should be formatter according to mapping
                                 this.eventStore.sync({

@@ -76,7 +76,7 @@ Ext.define('Ext.calendar.form.field.CalendarCombo', {
     setValue: function(value) {
         if (!value && this.store.getCount() > 0) {
             // ensure that a valid value is always set if possible
-            value = this.store.getAt(0).data['room_id'];
+            value = this.store.getAt(0).data['id'];
         }
 
         if (this.wrap && value) {

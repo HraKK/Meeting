@@ -257,7 +257,7 @@ Ext.define('Ext.calendar.view.Month', {
         return Ext.applyIf(
             {
                 _selectorCls: selector,
-                _colorCls: 'ext-color-' + (evt['room_id'] ? evt['room_id'] : 'default'),
+                _colorCls: 'ext-color-' + (evt['id'] ? evt['id'] : 'default'),
                 _elId: selector + '-' + evt._weekIndex,
                 title: Ext.Date.format(evt['date_start'], 'H:i ') + (!title || title.length == 0 ? '(No title)' : title)
             },

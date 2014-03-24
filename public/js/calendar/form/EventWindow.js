@@ -37,6 +37,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
                     xtype: 'textfield',
                     allowBlank: false,
                     emptyText: 'Event Title',
+                    minLength: 3,
                     anchor: '100%'
                 },
                 {
@@ -59,10 +60,10 @@ Ext.define('Ext.calendar.form.EventWindow', {
                     xtype: 'numberfield',
                     fieldLabel: 'Attendees',
                     labelWidth: 100,
-                    allowBlank: false,
                     value: 3,
                     maxValue: 99,
                     minValue: 0,
+                    name: 'attendees',
                     emptyText: 'Attendees Title',
                     anchor: '50%'
                 },
@@ -78,7 +79,6 @@ Ext.define('Ext.calendar.form.EventWindow', {
                     xtype: 'textfield',
                     fieldLabel: 'Room',
                     name: 'room_id',
-                    labelWidth: 100,
                     hidden: true
                 }
             ]
@@ -251,6 +251,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
             rec.data['date_start'] = start;
             rec.data['date_end'] = end;
             rec.data['owner'] = Ext.getUser();
+            rec.data['attendees'] = 3;
             rec.data['room_id'] = Ext.currentCalendarId;
 
             f.loadRecord(rec);

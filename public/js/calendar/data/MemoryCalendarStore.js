@@ -33,7 +33,7 @@ Ext.define('Ext.calendar.data.MemoryCalendarStore', {
             direction: 'ASC'
         }];
 
-        me.idProperty = me.idProperty || 'room_id';
+        me.idProperty = me.idProperty || 'id';
 
         me.fields = calendarData.CalendarModel.prototype.fields.getRange();
 

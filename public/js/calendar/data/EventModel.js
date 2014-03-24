@@ -19,6 +19,10 @@ Ext.define('Ext.calendar.data.EventModel', {
             type: 'string'
         },
         {
+            name: 'attendees',
+            type: 'int'
+        },
+        {
             name: 'date_start',
             type: 'date',
             dateFormat: 'timestamp'
