@@ -12,4 +12,5 @@ class InputDataDTO extends \Meetingroom\DTO\AbstractDTO
     public $field;
     public $message;
 
+
 } 

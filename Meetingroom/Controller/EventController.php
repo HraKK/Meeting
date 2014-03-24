@@ -41,6 +41,17 @@ class EventController extends AbstractController
             ))
         );
 
+        $this->validator->add(
+            'description',
+            new StringLength(array(
+//                'max' => 5,
+                'min' => 3,
+//                'messageMaximum' => 'We don\'t like really long names',
+                'messageMinimum' => 'Description should be longer'
+            ))
+        );
+
+
         $this->validator->setFilters("day", "int");
         $this->validator->setFilters("month", "int");
         $this->validator->setFilters("year", "int");
@@ -127,11 +138,16 @@ class EventController extends AbstractController
             $this->onDenied();
         }
 
-
-        if (strlen($this->getData('title')) < 3) {
-            die('Title should be longer');
+        if (!empty($this->getFormErrors())) {
+            die(json_encode(
+                [
+                    'success' => false,
+                    'errors' => $this->getFormErrors()
+                ]
+            ));
         }
-        
+
+
         $roomManager = new RoomManager();
         if (!$roomManager->isRoomExist($this->getData('room_id'))) {
             $this->sendError('room ain`t exist');
@@ -201,8 +217,13 @@ class EventController extends AbstractController
             $this->onDenied();
         }
 
-        if (strlen($this->getData('title')) < 3) {
-            $this->sendError('Title should be longer');
+        if (!empty($this->getFormErrors())) {
+            die(json_encode(
+                [
+                    'success' => false,
+                    'errors' => $this->getFormErrors()
+                ]
+            ));
         }
 
         if ($this->getData('room_id') !== $event->roomId) {

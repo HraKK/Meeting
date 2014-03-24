@@ -65,7 +65,7 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
         $return = [];
         if (count($this->formErrors)) {
             foreach ($this->formErrors as $message) {
-                $return = new \Meetingroom\DTO\Errors\InputDataDTO([
+                $return[] = new \Meetingroom\DTO\Errors\InputDataDTO([
                     'field' => $message->getField(),
                     'message' => $message->getMessage()
                 ]);
