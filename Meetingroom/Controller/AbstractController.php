@@ -12,9 +12,10 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
      * @var Phalcon\Validation
      */
     protected $validator = null;
+    protected $formData = null;
 
     abstract public function indexAction();
-    
+
     public function initialize()
     {
         $this->view->setTemplateAfter('common');
@@ -22,10 +23,11 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
 
 
     /**
+     * @param bool $obj true for return object
      * @param array $fields
-     * @return array|\Phalcon\Validation\Message\Group
+     * @return array|stdClass
      */
-    public function getFormData(array $fields = [])
+    public function getFormData($obj = false, array $fields = [])
     {
         $array = $this->validator->validate($_REQUEST);
         $fields = (empty($fields)) ? array_keys($_REQUEST) : $fields;
@@ -34,11 +36,13 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
             $this->validator->getMessages();
         }
 
+        $returnObj = new \stdClass();
         $return = [];
         foreach ($fields as $key => $value) {
             $return[$value] = $this->validator->getValue($value);
+            $returnObj->$value = $return[$value];
         }
-        return $return;
+        return ($obj) ? $returnObj : $return;
     }
 
     public function onDenied()
