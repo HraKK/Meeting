@@ -90,8 +90,8 @@ Ext.define('Ext.calendar.dd.DayDropZone', {
                 end = Ext.calendar.util.Date.max(data.eventStart, curr);
 
                 data.resizeDates = {
-                    StartDate: start,
-                    EndDate: end
+                    date_start: start,
+                    date_end: end
                 };
                 dt = Ext.Date.format(start, 'H:i-') + Ext.Date.format(end, 'H:i');
                 text = this.resizeText;
@@ -100,7 +100,7 @@ Ext.define('Ext.calendar.dd.DayDropZone', {
 
         data.proxy.updateMsg(Ext.util.Format.format(text, dt));
 
-        if (data.IsRepeatable && data.eventStart.getDay() != n.date.getDay()) {
+        if (data.repeatable && data.eventStart.getDay() != n.date.getDay()) {
             return false;
         } else {
             return this.dropAllowed;

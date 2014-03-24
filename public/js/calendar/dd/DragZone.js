@@ -6,8 +6,7 @@ Ext.define('Ext.calendar.dd.DragZone', {
     extend: 'Ext.dd.DragZone',
 
     requires: [
-        'Ext.calendar.dd.StatusProxy',
-        'Ext.calendar.data.EventMappings'
+        'Ext.calendar.dd.StatusProxy'
     ],
 
     ddGroup: 'CalendarDD',
@@ -29,8 +28,8 @@ Ext.define('Ext.calendar.dd.DragZone', {
             return {
                 type: 'eventdrag',
                 ddel: t,
-                eventStart: rec.data[Ext.calendar.data.EventMappings.StartDate.name],
-                eventEnd: rec.data[Ext.calendar.data.EventMappings.EndDate.name],
+                eventStart: rec.data['date_start'],
+                eventEnd: rec.data['date_end'],
                 proxy: this.proxy
             };
         }

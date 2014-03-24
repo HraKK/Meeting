@@ -20,8 +20,7 @@ Ext.define('Ext.calendar.CalendarPanel', {
         'Ext.calendar.view.Day',
         'Ext.calendar.view.Week',
         'Ext.calendar.view.Month',
-        'Ext.calendar.form.EventDetails',
-        'Ext.calendar.data.EventMappings'
+        'Ext.calendar.form.EventDetails'
     ],
 
     /**
@@ -397,7 +396,7 @@ Ext.define('Ext.calendar.CalendarPanel', {
 
     // private
     onEventAdd: function(form, rec) {
-        rec.data[Ext.calendar.data.EventMappings.IsNew.name] = false;
+        rec.data['n'] = false;
         this.hideEditForm();
         this.eventStore.add(rec);
         this.eventStore.sync();

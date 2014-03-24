@@ -251,16 +251,15 @@ Ext.define('Ext.calendar.view.Month', {
 
     // private
     getTemplateEventData: function(evt) {
-        var M = Ext.calendar.data.EventMappings,
-            selector = this.getEventSelectorCls(evt[M.EventId.name]),
-            title = evt[M.Title.name];
+        var selector = this.getEventSelectorCls(evt['id']),
+            title = evt['title'];
 
         return Ext.applyIf(
             {
                 _selectorCls: selector,
-                _colorCls: 'ext-color-' + (evt[M.CalendarId.name] ? evt[M.CalendarId.name] : 'default'),
+                _colorCls: 'ext-color-' + (evt['id'] ? evt['id'] : 'default'),
                 _elId: selector + '-' + evt._weekIndex,
-                Title: Ext.Date.format(evt[M.StartDate.name], 'H:i ') + (!title || title.length == 0 ? '(No title)' : title)
+                title: Ext.Date.format(evt['date_start'], 'H:i ') + (!title || title.length == 0 ? '(No title)' : title)
             },
             evt
         );

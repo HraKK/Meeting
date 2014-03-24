@@ -31,7 +31,6 @@ Ext.define('Ext.calendar.form.EventDetails', {
     requires: [
         'Ext.calendar.form.field.DateRange',
         'Ext.calendar.form.field.ReminderCombo',
-        'Ext.calendar.data.EventMappings',
         'Ext.calendar.form.field.CalendarCombo'
     ],
 
@@ -89,7 +88,7 @@ Ext.define('Ext.calendar.form.EventDetails', {
 
         this.titleField = new Ext.form.Text({
             fieldLabel: 'Title',
-            name: Ext.calendar.data.EventMappings.Title.name,
+            name: 'title',
             emptyText: 'Event Title',
             allowBlank: false,
             anchor: '90%'
@@ -107,7 +106,7 @@ Ext.define('Ext.calendar.form.EventDetails', {
             this.calendarField = new Ext.calendar.form.field.CalendarCombo({
                 store: this.calendarStore,
                 anchor: '70%',
-                name: Ext.calendar.data.EventMappings.CalendarId.name
+                name: 'room_id'
             });
             leftFields.splice(2, 0, this.calendarField);
         }
@@ -161,7 +160,7 @@ Ext.define('Ext.calendar.form.EventDetails', {
 
         if (this.calendarStore) {
             this.form.setValues({
-                'calendar': rec.data[Ext.calendar.data.EventMappings.CalendarId.name]
+                'calendar': rec.data['room_id']
             });
         }
 
@@ -179,7 +178,6 @@ Ext.define('Ext.calendar.form.EventDetails', {
     // inherited docs
     updateRecord: function() {
         var dates = this.dateRangeField.getValue(),
-            M = Ext.calendar.data.EventMappings,
             rec = this.activeRecord,
             fs = rec.fields,
             dirty = false;
@@ -210,8 +208,8 @@ Ext.define('Ext.calendar.form.EventDetails', {
             }
         }, this);
 
-        rec.set(M.StartDate.name, dates[0]);
-        rec.set(M.EndDate.name, dates[1]);
+        rec.set('date_start', dates[0]);
+        rec.set('date_end', dates[1]);
 
         dirty = rec.dirty;
         rec.endEdit();
