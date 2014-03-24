@@ -13,6 +13,10 @@ class RoomController extends AbstractController
     
     public function readAction()
     {
+        if (!$this->isAllowed('room', 'read')) {
+            $this->onDenied();
+        }
+        
         $roomManager = new RoomManager();
         $rooms = $roomManager->getAll();
         $roomsDTO = [];
