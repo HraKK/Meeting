@@ -3,9 +3,6 @@
  */
 Ext.define('Ext.calendar.dd.DayDragZone', {
     extend: 'Ext.calendar.dd.DragZone',
-    requires: [
-        'Ext.calendar.data.EventMappings'
-    ],
 
     ddGroup: 'DayViewDD',
     resizeSelector: '.ext-evt-rsz',
@@ -21,8 +18,8 @@ Ext.define('Ext.calendar.dd.DayDragZone', {
             return {
                 type: 'eventresize',
                 ddel: p.dom,
-                eventStart: rec.data[Ext.calendar.data.EventMappings.StartDate.name],
-                eventEnd: rec.data[Ext.calendar.data.EventMappings.EndDate.name],
+                eventStart: rec.data['date_start'],
+                eventEnd: rec.data['date_end'],
                 proxy: this.proxy
             };
         }
@@ -32,9 +29,9 @@ Ext.define('Ext.calendar.dd.DayDragZone', {
             return {
                 type: 'eventdrag',
                 ddel: t,
-                eventStart: rec.data[Ext.calendar.data.EventMappings.StartDate.name],
-                eventEnd: rec.data[Ext.calendar.data.EventMappings.EndDate.name],
-                IsRepeatable: rec.data[Ext.calendar.data.EventMappings.IsRepeatable.name],
+                eventStart: rec.data['date_start'],
+                eventEnd: rec.data['date_end'],
+                IsRepeatable: rec.data['repeatable'],
                 proxy: this.proxy
             };
         }

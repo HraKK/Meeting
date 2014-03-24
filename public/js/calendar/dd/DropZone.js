@@ -6,8 +6,7 @@ Ext.define('Ext.calendar.dd.DropZone', {
     extend: 'Ext.dd.DropZone',
 
     requires: [
-        'Ext.calendar.util.Date',
-        'Ext.calendar.data.EventMappings'
+        'Ext.calendar.util.Date'
     ],
 
     ddGroup: 'CalendarDD',
@@ -149,7 +148,7 @@ Ext.define('Ext.calendar.dd.DropZone', {
         if (n && data) {
             if (data.type == 'eventdrag') {
                 var rec = this.view.getEventRecordFromEl(data.ddel),
-                    dt = Ext.calendar.util.Date.copyTime(rec.data[Ext.calendar.data.EventMappings.StartDate.name], n.date);
+                    dt = Ext.calendar.util.Date.copyTime(rec.data['date_start'], n.date);
 
                 this.view.onEventDrop(rec, dt);
                 this.onCalendarDragComplete();

@@ -95,8 +95,8 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
                                     //skip non-starting span cells
                                     var item = evt.data || evt.event.data;
                                     item._weekIndex = w;
-                                    item.spanLeft = item[Ext.calendar.data.EventMappings.StartDate.name].getTime() < startOfWeek.getTime();
-                                    item.spanRight = item[Ext.calendar.data.EventMappings.EndDate.name].getTime() > endOfWeek.getTime();
+                                    item.spanLeft = item['date_start'].getTime() < startOfWeek.getTime();
+                                    item.spanRight = item['date_end'].getTime() > endOfWeek.getTime();
                                     item.spanCls = (item.spanLeft ? (item.spanRight ? 'ext-cal-ev-spanboth' : 'ext-cal-ev-spanleft') : (item.spanRight ? 'ext-cal-ev-spanright' : ''));
 
                                     row = this.getEventRow(o.id, w, ev);
@@ -104,7 +104,7 @@ Ext.define('Ext.calendar.util.WeekEventRenderer', {
                                         tag: 'td',
                                         cls: 'ext-cal-ev'
                                     };
-                                    var diff = Ext.calendar.util.Date.diffDays(dt, item[Ext.calendar.data.EventMappings.EndDate.name]) + 1,
+                                    var diff = Ext.calendar.util.Date.diffDays(dt, item['date_end']) + 1,
                                         cspan = Math.min(diff, dayCount - d);
 
                                     if (cspan > 1) {

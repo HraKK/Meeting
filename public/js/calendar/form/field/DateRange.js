@@ -346,10 +346,10 @@ Ext.define('Ext.calendar.form.field.DateRange', {
         } else if (Ext.isDate(v)) {
             this.setDT(v, 'start');
             this.setDT(v, 'end');
-        } else if (v[Ext.calendar.data.EventMappings.StartDate.name]) { //object
-            this.setDT(v[Ext.calendar.data.EventMappings.StartDate.name], 'start');
-            if (!this.setDT(v[Ext.calendar.data.EventMappings.EndDate.name], 'end')) {
-                this.setDT(v[Ext.calendar.data.EventMappings.StartDate.name], 'end');
+        } else if (v['date_start']) { //object
+            this.setDT(v['date_start'], 'start');
+            if (!this.setDT(v['date_end'], 'end')) {
+                this.setDT(v['date_end'], 'end');
             }
         }
     },

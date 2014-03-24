@@ -18,8 +18,7 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
         'Ext.data.proxy.Memory',
         'Ext.data.reader.Json',
         'Ext.data.writer.Json',
-        'Ext.calendar.data.EventModel',
-        'Ext.calendar.data.EventMappings'
+        'Ext.calendar.data.EventModel'
     ],
 
     proxy: {
@@ -38,7 +37,7 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
             destroy: 'POST'
         },
         api: {
-            read: '/',
+            read: '/event/index',
             create: '/event/create',
             update: '/event/update',
             destroy: '/event/delete'
@@ -51,12 +50,12 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
 
         this.sorters = this.sorters || [
             {
-                property: Ext.calendar.data.EventMappings.StartDate.name,
+                property: 'date_start',
                 direction: 'ASC'
             }
         ];
 
-        this.idProperty = this.idProperty || Ext.calendar.data.EventMappings.EventId.mapping || 'id';
+        this.idProperty = this.idProperty || 'id';
         this.fields = Ext.calendar.data.EventModel.prototype.fields.getRange();
         this.onCreateRecords = Ext.Function.createInterceptor(this.onCreateRecords, this.interceptCreateRecords);
         this.initRecs();
@@ -71,7 +70,7 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
                 len = records.length;
 
             for (; i < len; i++) {
-                records[i].data[Ext.calendar.data.EventMappings.EventId.name] = Ext.getRandomId();
+                records[i].data['id'] = Ext.getRandomId();
             }
         }
     },

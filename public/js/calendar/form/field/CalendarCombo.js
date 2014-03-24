@@ -17,9 +17,6 @@
 Ext.define('Ext.calendar.form.field.CalendarCombo', {
     extend: 'Ext.form.field.ComboBox',
     alias: 'widget.calendarpicker',
-    requires: [
-        'Ext.calendar.data.CalendarMappings'
-    ],
 
     fieldLabel: 'Meeting Room',
     triggerAction: 'all',
@@ -33,8 +30,8 @@ Ext.define('Ext.calendar.form.field.CalendarCombo', {
 
     // private
     initComponent: function() {
-        this.valueField = Ext.calendar.data.CalendarMappings.CalendarId.name;
-        this.displayField = Ext.calendar.data.CalendarMappings.Title.name;
+        this.valueField = 'room_id';
+        this.displayField = 'title';
 
         this.listConfig = Ext.apply(this.listConfig || {}, {
             getInnerTpl: this.getListItemTpl
@@ -45,8 +42,7 @@ Ext.define('Ext.calendar.form.field.CalendarCombo', {
 
     // private
     getListItemTpl: function(displayField) {
-        return '<div class="x-combo-list-item ext-color-{' + Ext.calendar.data.CalendarMappings.CalendarId.name +
-            '}"><div class="ext-cal-picker-icon">&#160;</div>{' + displayField + '}</div>';
+        return '<div class="x-combo-list-item ext-color-{room_id}"><div class="ext-cal-picker-icon">&#160;</div>{' + displayField + '}</div>';
     },
 
     // private
@@ -71,7 +67,7 @@ Ext.define('Ext.calendar.form.field.CalendarCombo', {
             if (Ext.isArray(val)) {
                 val = val[0];
             }
-            return 'ext-color-' + (val.data ? val.data[Ext.calendar.data.CalendarMappings.CalendarId.name] : val);
+            return 'ext-color-' + (val.data ? val.data['room_id'] : val);
         }
         return '';
     },
@@ -80,7 +76,7 @@ Ext.define('Ext.calendar.form.field.CalendarCombo', {
     setValue: function(value) {
         if (!value && this.store.getCount() > 0) {
             // ensure that a valid value is always set if possible
-            value = this.store.getAt(0).data[Ext.calendar.data.CalendarMappings.CalendarId.name];
+            value = this.store.getAt(0).data['room_id'];
         }
 
         if (this.wrap && value) {

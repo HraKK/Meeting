@@ -14,8 +14,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     extend: 'Ext.Component',
     alias: 'widget.calendarview',
     requires: [
-        'Ext.calendar.util.Date',
-        'Ext.calendar.data.EventMappings'
+        'Ext.calendar.util.Date'
     ],
     /**
      * @cfg {Number} startDay
@@ -132,7 +131,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     // must be implemented by a subclass
     // private
     initComponent: function () {
-        this.setStartDate(this.startDate || new Date());
+        this.setStartDate(this.date_start || new Date());
 
         this.callParent(arguments);
 
@@ -317,12 +316,12 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
                                 startsOnDate,
                                 spansFromPrevView;
 
-                            if (rec.data[Ext.calendar.data.EventMappings.IsRepeatable.name]) {
+                            if (rec.data['repeatable']) {
                                 return true;
                             } else {
-                                startDt = Ext.Date.clearTime(rec.data[Ext.calendar.data.EventMappings.StartDate.name], true);
+                                startDt = Ext.Date.clearTime(rec.data['date_start'], true);
                                 startsOnDate = dt.getTime() == startDt.getTime();
-                                spansFromPrevView = (w == 0 && d == 0 && (dt > rec.data[Ext.calendar.data.EventMappings.StartDate.name]));
+                                spansFromPrevView = (w == 0 && d == 0 && (dt > rec.data['date_start']));
                                 return startsOnDate || spansFromPrevView;
                             }
                         },
@@ -345,12 +344,11 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
             max = me.maxEventsPerDay ? me.maxEventsPerDay : 999;
 
         evts.each(function (evt) {
-            var M = Ext.calendar.data.EventMappings,
-                days = Ext.calendar.util.Date.diffDays(
-                    Ext.calendar.util.Date.max(me.viewStart, evt.data[M.StartDate.name]),
-                    Ext.calendar.util.Date.min(me.viewEnd, evt.data[M.EndDate.name])) + 1;
+            var days = Ext.calendar.util.Date.diffDays(
+                    Ext.calendar.util.Date.max(me.viewStart, evt.data['date_start']),
+                    Ext.calendar.util.Date.min(me.viewEnd, evt.data['date_end'])) + 1;
 
-            if (days > 1 || Ext.calendar.util.Date.diffDays(evt.data[M.StartDate.name], evt.data[M.EndDate.name]) > 1) {
+            if (days > 1 || Ext.calendar.util.Date.diffDays(evt.data['date_start'], evt.data['date_end']) > 1) {
                 me.prepareEventGridSpans(evt, me.eventGrid, w, d, days);
             } else {
                 row = me.findEmptyRowIndex(w, d);
@@ -458,21 +456,21 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     // private
     onEventDrop: function (rec, dt) {
 
-        if (Ext.calendar.util.Date.compare(rec.data[Ext.calendar.data.EventMappings.StartDate.name], dt) === 0) {
+        if (Ext.calendar.util.Date.compare(rec.data['date_start'], dt) === 0) {
             // no changes
             return;
         }
 
-        var diff = dt.getTime() - rec.data[Ext.calendar.data.EventMappings.StartDate.name].getTime(),
+        var diff = dt.getTime() - rec.data['date_start'].getTime(),
             isWeekView = this.eventGrid[0].length > 1,
             flag = true;
 
-        if (isWeekView && rec.data.IsRepeatable && rec.data[Ext.calendar.data.EventMappings.StartDate.name].getDay() != dt.getDay()) {
+        if (isWeekView && rec.data.repeatable && rec.data['date_start'].getDay() != dt.getDay()) {
             flag = false;
         }
 
-        rec.set(Ext.calendar.data.EventMappings.StartDate.name, dt);
-        rec.set(Ext.calendar.data.EventMappings.EndDate.name, Ext.calendar.util.Date.add(rec.data[Ext.calendar.data.EventMappings.EndDate.name], {millis: diff}));
+        rec.set('date_start', dt);
+        rec.set('date_end', Ext.calendar.util.Date.add(rec.data['date_end'], {millis: diff}));
 
         this.fireEvent('eventmove', this, rec, flag);
 
@@ -486,8 +484,8 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
 
             // have to wait for the user to save or cancel before finalizing the dd interation
             var o = {};
-            o[Ext.calendar.data.EventMappings.StartDate.name] = start;
-            o[Ext.calendar.data.EventMappings.EndDate.name] = end;
+            o['date_start'] = start;
+            o['date_end'] = end;
 
             this.fireEvent('rangeselect', this, o, Ext.bind(this.onCalendarEndDragComplete, this, [onComplete]));
         }
@@ -509,7 +507,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         if (operation == Ext.data.Record.COMMIT) {
             this.refresh();
             if (this.enableFx && this.enableUpdateFx) {
-                this.doUpdateFx(this.getEventEls(rec.data[Ext.calendar.data.EventMappings.EventId.name]), {
+                this.doUpdateFx(this.getEventEls(rec.data['id']), {
                     scope: this
                 });
             }
@@ -530,7 +528,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         this.refresh();
 
         if (this.enableFx && this.enableAddFx) {
-            this.doAddFx(this.getEventEls(rec.data[Ext.calendar.data.EventMappings.EventId.name]), {
+            this.doAddFx(this.getEventEls(rec.data['id']), {
                 scope: this
             });
         }
@@ -548,14 +546,14 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
             return;
         }
         if (this.enableFx && this.enableRemoveFx) {
-            this.doRemoveFx(this.getEventEls(rec.data[Ext.calendar.data.EventMappings.EventId.name]), {
+            this.doRemoveFx(this.getEventEls(rec.data['id']), {
                 remove: true,
                 scope: this,
                 callback: this.refresh
             });
         }
         else {
-            this.getEventEls(rec.data[Ext.calendar.data.EventMappings.EventId.name]).remove();
+            this.getEventEls(rec.data['id']).remove();
             this.refresh();
         }
     },
@@ -658,18 +656,17 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
 
     // private
     isEventVisible: function (evt) {
-        var M = Ext.calendar.data.EventMappings,
-            data = evt.data || evt,
+        var data = evt.data || evt,
             start = this.viewStart.getTime(),
             end = this.viewEnd.getTime(),
             evStart,
             evEnd;
 
-        if (data[M.IsRepeatable.name]) {
+        if (data['repeatable']) {
             return true;
         } else {
-            evStart = data[M.StartDate.name].getTime();
-            evEnd = Ext.calendar.util.Date.add(data[M.EndDate.name], {seconds: -1}).getTime();
+            evStart = data['date_start'].getTime();
+            evEnd = Ext.calendar.util.Date.add(data['date_end'], {seconds: -1}).getTime();
             return this.rangesOverlap(start, end, evStart, evEnd);
         }
     },
@@ -686,11 +683,11 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     isOverlapping: function (evt1, evt2) {
         var ev1 = evt1.data ? evt1.data : evt1,
             ev2 = evt2.data ? evt2.data : evt2,
-            M = Ext.calendar.data.EventMappings,
-            start1 = ev1[M.StartDate.name].getTime(),
-            end1 = Ext.calendar.util.Date.add(ev1[M.EndDate.name], {seconds: -1}).getTime(),
-            start2 = ev2[M.StartDate.name].getTime(),
-            end2 = Ext.calendar.util.Date.add(ev2[M.EndDate.name], {seconds: -1}).getTime();
+
+            start1 = ev1['date_start'].getTime(),
+            end1 = Ext.calendar.util.Date.add(ev1['date_end'], {seconds: -1}).getTime(),
+            start2 = ev2['date_start'].getTime(),
+            end2 = Ext.calendar.util.Date.add(ev2['date_end'], {seconds: -1}).getTime();
 
         if (end1 < start1) {
             end1 = start1;
@@ -798,8 +795,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         }
         evts.sortBy(Ext.bind(function (evtA, evtB) {
             var a = evtA.data,
-                b = evtB.data,
-                M = Ext.calendar.data.EventMappings;
+                b = evtB.data;
 
             if (this.spansHavePriority) {
                 // This logic always weights span events higher than non-span events
@@ -808,29 +804,29 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
                 // visually appealing layout in complex cases, but event order is
                 // not guaranteed to be consistent.
                 var diff = Ext.calendar.util.Date.diffDays;
-                if (diff(a[M.StartDate.name], a[M.EndDate.name]) > 0) {
-                    if (diff(b[M.StartDate.name], b[M.EndDate.name]) > 0) {
+                if (diff(a['date_start'], a['date_end']) > 0) {
+                    if (diff(b['date_start'], b['date_end']) > 0) {
                         // Both events are multi-day
-                        if (a[M.StartDate.name].getTime() == b[M.StartDate.name].getTime()) {
+                        if (a['date_start'].getTime() == b['date_start'].getTime()) {
                             // If both events start at the same time, sort the one
                             // that ends later (potentially longer span bar) first
-                            return b[M.EndDate.name].getTime() - a[M.EndDate.name].getTime();
+                            return b['date_end'].getTime() - a['date_end'].getTime();
                         }
-                        return a[M.StartDate.name].getTime() - b[M.StartDate.name].getTime();
+                        return a['date_start'].getTime() - b['date_start'].getTime();
                     }
                     return -1;
                 }
-                else if (diff(b[M.StartDate.name], b[M.EndDate.name]) > 0) {
+                else if (diff(b['date_start'], b['date_end']) > 0) {
                     return 1;
                 }
-                return a[M.StartDate.name].getTime() - b[M.StartDate.name].getTime();
+                return a['date_start'].getTime() - b['date_start'].getTime();
             }
             else {
                 // Doing this allows span and non-span events to intermingle but
                 // remain sorted sequentially by start time. This seems more proper
                 // but can make for a less visually-compact layout when there are
                 // many such events mixed together closely on the calendar.
-                return a[M.StartDate.name].getTime() - b[M.StartDate.name].getTime();
+                return a['date_start'].getTime() - b['date_start'].getTime();
             }
         }, this));
     },
@@ -929,7 +925,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
     },
 
     getEventRecord: function (id) {
-        var idx = this.store.find(Ext.calendar.data.EventMappings.EventId.name, id);
+        var idx = this.store.find('id', id);
         return this.store.getAt(idx);
     },
 

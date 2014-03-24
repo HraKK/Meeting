@@ -68,12 +68,12 @@ Ext.define('Ext.calendar.view.MonthDayDetail', {
 
             evts = this.store.queryBy(function(rec) {
                     var thisDt = Ext.Date.clearTime(this.date, true).getTime(),
-                        recStart = Ext.Date.clearTime(rec.data[Ext.calendar.data.EventMappings.StartDate.name], true).getTime(),
+                        recStart = Ext.Date.clearTime(rec.data['date_start'], true).getTime(),
                         startsOnDate = (thisDt == recStart),
                         spansDate = false;
 
                     if (!startsOnDate) {
-                        var recEnd = Ext.Date.clearTime(rec.data[Ext.calendar.data.EventMappings.EndDate.name], true).getTime();
+                        var recEnd = Ext.Date.clearTime(rec.data['date_end'], true).getTime();
                         spansDate = recStart < thisDt && recEnd >= thisDt;
                     }
                     return startsOnDate || spansDate;
@@ -81,11 +81,10 @@ Ext.define('Ext.calendar.view.MonthDayDetail', {
                 this);
 
         evts.each(function(evt) {
-                var item = evt.data,
-                    M = Ext.calendar.data.EventMappings;
+                var item = evt.data;
 
-                item.spanLeft = Ext.calendar.util.Date.diffDays(item[M.StartDate.name], this.date) > 0;
-                item.spanRight = Ext.calendar.util.Date.diffDays(this.date, item[M.EndDate.name]) > 0;
+                item.spanLeft = Ext.calendar.util.Date.diffDays(item['date_start'], this.date) > 0;
+                item.spanRight = Ext.calendar.util.Date.diffDays(this.date, item['date_end']) > 0;
                 item.spanCls = (item.spanLeft ? (item.spanRight ? 'ext-cal-ev-spanboth' :
                     'ext-cal-ev-spanleft') : (item.spanRight ? 'ext-cal-ev-spanright' : ''));
 
