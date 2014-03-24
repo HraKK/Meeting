@@ -13,6 +13,10 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
      */
     protected $validator = null;
     protected $formData = null;
+    /**
+     * @var null|\Phalcon\Validation\Message\Group
+     */
+    protected $formErrors = null;
 
     abstract public function indexAction();
 
@@ -41,7 +45,7 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
         $fields = (empty($fields)) ? array_keys($_REQUEST) : $fields;
 
         if (count($array)) {
-            $this->validator->getMessages();
+            $this->formErrors = $array;
         }
 
         $returnObj = new \stdClass();
@@ -52,6 +56,24 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
         }
         return ($obj) ? $returnObj : $return;
     }
+
+    /**
+     * @return array
+     */
+    public function getFormErrors()
+    {
+        $return = [];
+        if (count($this->formErrors)) {
+            foreach ($this->formErrors as $message) {
+                $return = new \Meetingroom\DTO\Errors\InputDataDTO([
+                    'field' => $message->getField(),
+                    'message' => $message->getMessage()
+                ]);
+            }
+        }
+        return $return;
+    }
+
 
     public function onDenied()
     {
