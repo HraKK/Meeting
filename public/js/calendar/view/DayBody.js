@@ -15,7 +15,6 @@ Ext.define('Ext.calendar.view.DayBody', {
     requires: [
         'Ext.XTemplate',
         'Ext.calendar.template.DayBody',
-        'Ext.calendar.data.EventMappings',
         'Ext.calendar.dd.DayDragZone',
         'Ext.calendar.dd.DayDropZone'
     ],
@@ -146,16 +145,16 @@ Ext.define('Ext.calendar.view.DayBody', {
     // private
     onEventResize: function(rec, data) {
         var D = Ext.calendar.util.Date,
-            start = Ext.calendar.data.EventMappings.StartDate.name,
-            end = Ext.calendar.data.EventMappings.EndDate.name;
+            start = 'date_start',
+            end = 'date_end';
 
-        if (D.compare(rec.data[start], data.StartDate) === 0 &&
-            D.compare(rec.data[end], data.EndDate) === 0) {
+        if (D.compare(rec.data[start], data.date_start) === 0 &&
+            D.compare(rec.data[end], data.date_end) === 0) {
             // no changes
             return;
         }
-        rec.set(start, data.StartDate);
-        rec.set(end, data.EndDate);
+        rec.set(start, data.date_start);
+        rec.set(end, data.date_end);
 
         this.fireEvent('eventresize', this, rec);
     },
@@ -180,7 +179,7 @@ Ext.define('Ext.calendar.view.DayBody', {
         if (!this.eventTpl) {
             this.eventTpl = !(Ext.isIE || Ext.isOpera) ?
                 new Ext.XTemplate(
-                    '<div id="{_elId}" class="{_selectorCls} {_colorCls} ext-cal-evt ext-cal-evr is-hidden-{IsHidden}" style="left: 0; width: 100%; top: {_top}px; height: {_height}px;">',
+                    '<div id="{_elId}" class="{_selectorCls} {_colorCls} ext-cal-evt ext-cal-evr is-hidden-{hidden}" style="left: 0; width: 100%; top: {_top}px; height: {_height}px;">',
                         '<div class="ext-evt-bd">', this.getEventBodyMarkup(), '</div>',
                         '<div class="ext-evt-rsz">' +
                             '<div class="ext-evt-rsz-h">&#160;</div>' +
@@ -188,7 +187,7 @@ Ext.define('Ext.calendar.view.DayBody', {
                     '</div>'
                 )
                 : new Ext.XTemplate(
-                '<div id="{_elId}" class="ext-cal-evt {_selectorCls} {_colorCls}-x is-hidden-{IsHidden}" style="left: 0; width: 100%; top: {_top}px;">',
+                '<div id="{_elId}" class="ext-cal-evt {_selectorCls} {_colorCls}-x is-hidden-{hidden}" style="left: 0; width: 100%; top: {_top}px;">',
                     '<div class="ext-cal-evb">&#160;</div>',
                     '<dl style="height: {_height}px;" class="ext-cal-evdm">',
                         '<dd class="ext-evt-bd">',
@@ -208,18 +207,17 @@ Ext.define('Ext.calendar.view.DayBody', {
 
     // private
     getTemplateEventData: function(evt) {
-        var selector = this.getEventSelectorCls(evt[Ext.calendar.data.EventMappings.EventId.name]),
-            data = {},
-            M = Ext.calendar.data.EventMappings;
+        var selector = this.getEventSelectorCls(evt['id']),
+            data = {};
 
         this.getTemplateEventBox(evt);
 
         data._selectorCls = selector;
-        data._colorCls = 'ext-color-' + (evt[M.CalendarId.name] || '0');
+        data._colorCls = 'ext-color-' + (evt['id'] || '0');
         data._elId = selector + (evt._weekIndex ? '-' + evt._weekIndex : '');
         data._isRecurring = evt.Recurrence && evt.Recurrence != '';
-        var title = evt[M.Title.name];
-        data.Title = Ext.Date.format(evt[M.StartDate.name], 'H:i ') + (!title || title.length == 0 ? '(No title)' : title);
+        var title = evt['title'];
+        data.title = Ext.Date.format(evt['date_start'], 'H:i ') + (!title || title.length == 0 ? '(No title)' : title);
 
         return Ext.applyIf(data, evt);
     },
@@ -227,8 +225,8 @@ Ext.define('Ext.calendar.view.DayBody', {
     // private
     getTemplateEventBox: function(evt) {
         var heightFactor = 0.7,
-            start = evt[Ext.calendar.data.EventMappings.StartDate.name],
-            end = evt[Ext.calendar.data.EventMappings.EndDate.name],
+            start = evt['date_start'],
+            end = evt['date_end'],
             startMins = start.getHours() * 60 + start.getMinutes(),
             endMins = end.getHours() * 60 + end.getMinutes(),
             diffMins = endMins - startMins;
@@ -323,7 +321,7 @@ Ext.define('Ext.calendar.view.DayBody', {
                 evt._left = colWidth * evt._overcol;
             }
 
-            if (evt.IsRepeatable == true) {
+            if (evt.repeatable == true) {
 
                 if (isWeekView && evts[i].date.getDay()) {
                     continue;
@@ -339,11 +337,11 @@ Ext.define('Ext.calendar.view.DayBody', {
 
                 if (isWeekView) {
 
-                    for (j = 0; j < evt.RepeatedOn.length; j++) {
-                        evtCloneDay = evt.RepeatedOn[j] - todayDay;
+                    for (j = 0; j < evt.repeated_on.length; j++) {
+                        evtCloneDay = evt.repeated_on[j] - todayDay;
                         evtClone = Ext.clone(evt);
-                        evtClone.StartDate = Ext.calendar.util.Date.add(evtClone.StartDate, {days: evtCloneDay});
-                        evtClone.EndDate = Ext.calendar.util.Date.add(evtClone.EndDate, {days: evtCloneDay});
+                        evtClone.date_start = Ext.calendar.util.Date.add(evtClone.date_start, {days: evtCloneDay});
+                        evtClone.date_end = Ext.calendar.util.Date.add(evtClone.date_end, {days: evtCloneDay});
 
                         markupClone = me.getEventTemplate().apply(evtClone);
                         timeClone = Ext.calendar.util.Date.add(evts[i].date, {days: evtCloneDay - 2});
@@ -356,11 +354,11 @@ Ext.define('Ext.calendar.view.DayBody', {
 
                 } else {
 
-                    for (j = 0; j < evt.RepeatedOn.length; j++) {
+                    for (j = 0; j < evt.repeated_on.length; j++) {
 
                         evtCloneDay = evts[i].date.getDay() - 1;
 
-                        if (evt.RepeatedOn[j] != evtCloneDay) {
+                        if (evt.repeated_on[j] != evtCloneDay) {
                             continue;
                         }
 

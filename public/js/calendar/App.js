@@ -144,10 +144,10 @@ Ext.define('Ext.calendar.App', {
 
                                     this.each(function(record, index) {
                                         tabPanel.add({
-                                            title: record.get('Title'),
-                                            tooltip: record.get('Description'),
-                                            iconCls: 'room-tab-icon room-tab-icon-' + record.get('CalendarId'),
-                                            CalendarId: record.get('CalendarId')
+                                            title: record.get('title'),
+                                            tooltip: record.get('description'),
+                                            iconCls: 'room-tab-icon room-tab-icon-' + record.get('id'),
+                                            room_id: record.get('id')
                                         });
                                     });
 
@@ -163,14 +163,14 @@ Ext.define('Ext.calendar.App', {
                                 var activeItemId = Ext.getCmp('app-calendar').getActiveView().id;
 
                                 scope.eventStore.each(function(record) {
-                                    record.set('IsHidden', (record.get('CalendarId') != newCard.CalendarId));
+                                    record.set('hidden', (record.get('room_id') != newCard.room_id));
                                 });
 
                                 Ext.defer(function() {
                                     Ext.getCmp('app-calendar').setActiveView(activeItemId);
                                 }, 10);
 
-                                Ext.currentCalendarId = newCard.CalendarId;
+                                Ext.currentCalendarId = newCard.room_id;
 
                             }
                         }
@@ -249,13 +249,13 @@ Ext.define('Ext.calendar.App', {
                                             },
                                             'eventadd': {
                                                 fn: function(cp, rec) {
-                                                    this.showMsg('Event ' + rec.data.Title + ' was added');
+                                                    this.showMsg('Event ' + rec.data.title + ' was added');
                                                 },
                                                 scope: this
                                             },
                                             'eventupdate': {
                                                 fn: function(cp, rec) {
-                                                    this.showMsg('Event ' + rec.data.Title + ' was updated');
+                                                    this.showMsg('Event ' + rec.data.title + ' was updated');
                                                 },
                                                 scope: this
                                             },
@@ -291,8 +291,8 @@ Ext.define('Ext.calendar.App', {
                                                     }
 
                                                     this.showEditWindow({
-                                                        StartDate: StartDate,
-                                                        EndDate: EndDate
+                                                        date_start: StartDate,
+                                                        date_end: EndDate
                                                     }, el);
                                                 },
                                                 scope: this
@@ -307,15 +307,14 @@ Ext.define('Ext.calendar.App', {
                                             'eventmove': {
                                                 fn: function(vw, rec, success) {
 
-                                                    var mappings = Ext.calendar.data.EventMappings,
-                                                        time = ' \\a\\t H:i';
+                                                    var time = ' \\a\\t H:i';
 
                                                     if (success) {
                                                         rec.commit();
-                                                        this.showMsg('Event <b>' + rec.data[mappings.Title.name] + '</b> was moved to ' + Ext.Date.format(rec.data[mappings.StartDate.name], ('F jS' + time)));
+                                                        this.showMsg('Event <b>' + rec.data['title'] + '</b> was moved to ' + Ext.Date.format(rec.data['date_start'], ('F jS' + time)));
                                                     } else {
                                                         rec.reject();
-                                                        this.showMsg('Can\' move <b>' + rec.data[mappings.Title.name] + '</b> event because it is repeatable', 'error');
+                                                        this.showMsg('Can\' move <b>' + rec.data['title'] + '</b> event because it is repeatable', 'error');
                                                     }
 
                                                 },
@@ -324,14 +323,14 @@ Ext.define('Ext.calendar.App', {
                                             'eventresize': {
                                                 fn: function(vw, rec) {
                                                     rec.commit();
-                                                    this.showMsg('Event <b>' + rec.data.Title + '</b> was updated');
+                                                    this.showMsg('Event <b>' + rec.data.title + '</b> was updated');
                                                 },
                                                 scope: this
                                             },
                                             'eventdelete': {
                                                 fn: function(win, rec) {
                                                     this.eventStore.remove(rec);
-                                                    this.showMsg('Event <b>' + rec.data.Title + '</b> was deleted');
+                                                    this.showMsg('Event <b>' + rec.data.title + '</b> was deleted');
                                                 },
                                                 scope: this
                                             },
@@ -366,17 +365,17 @@ Ext.define('Ext.calendar.App', {
                         'eventadd': {
                             fn: function(win, rec) {
                                 var me = this;
-                                rec.data.IsNew = false;
-                                rec.data.Owner = Ext.getUser();
-                                rec.data.CalendarId = Ext.currentCalendarId;
+                                rec.data.n = false;
+                                rec.data.owner = Ext.getUser();
                                 this.eventStore.add(rec);
+                                // TODO: sent data should be formatter according to mapping
                                 this.eventStore.sync({
                                     success: function() {
                                         win.hide();
-                                        me.showMsg('Event <b>' + rec.data.Title + '</b> was added');
+                                        me.showMsg('Event <b>' + rec.data.title + '</b> was added');
                                     },
                                     failure: function() {
-                                        me.showMsg('Can\'t create <b>' + rec.data.Title + '</b> event', 'error');
+                                        me.showMsg('Can\'t create <b>' + rec.data.title + '</b> event', 'error');
                                     }
                                 });
 
@@ -387,17 +386,19 @@ Ext.define('Ext.calendar.App', {
                             fn: function(win, rec) {
                                 win.hide();
                                 rec.commit();
-                                this.eventStore.sync();
-                                this.showMsg('Event <b>' + rec.data.Title + '</b> was updated');
+                                // TODO: sent data should be formatter according to mapping
+                                this.eventStore.sync(); // TODO: implement server error handlers
+                                this.showMsg('Event <b>' + rec.data.title + '</b> was updated');
                             },
                             scope: this
                         },
                         'eventdelete': {
                             fn: function(win, rec) {
                                 this.eventStore.remove(rec);
-                                this.eventStore.sync();
+                                // TODO: sent data should be formatter according to mapping
+                                this.eventStore.sync(); // TODO: implement server error handlers
                                 win.hide();
-                                this.showMsg('Event <b>' + rec.data.Title + '</b> was deleted');
+                                this.showMsg('Event <b>' + rec.data.title + '</b> was deleted');
                             },
                             scope: this
                         },

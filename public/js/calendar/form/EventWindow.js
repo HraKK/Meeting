@@ -14,8 +14,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
     requires: [
         'Ext.form.Panel',
         'Ext.calendar.util.Date',
-        'Ext.calendar.data.EventModel',
-        'Ext.calendar.data.EventMappings'
+        'Ext.calendar.data.EventModel'
     ],
 
     constructor: function (config) {
@@ -32,19 +31,21 @@ Ext.define('Ext.calendar.form.EventWindow', {
             items: [
                 {
                     itemId: 'title',
-                    name: Ext.calendar.data.EventMappings.Title.name,
+                    name: 'title',
                     fieldLabel: 'Title',
                     labelWidth: 100,
                     xtype: 'textfield',
                     allowBlank: false,
                     emptyText: 'Event Title',
+                    minLength: 3,
                     anchor: '100%'
                 },
                 {
                     xtype: 'textarea',
                     anchor: '100%',
                     fieldLabel: 'Description',
-                    name: Ext.calendar.data.EventMappings.Description.name,
+                    name: 'description',
+                    emptyText: 'Event Description',
                     labelWidth: 100
                 },
                 {
@@ -59,17 +60,17 @@ Ext.define('Ext.calendar.form.EventWindow', {
                     xtype: 'numberfield',
                     fieldLabel: 'Attendees',
                     labelWidth: 100,
-                    allowBlank: false,
                     value: 3,
                     maxValue: 99,
                     minValue: 0,
+                    name: 'attendees',
                     emptyText: 'Attendees Title',
                     anchor: '50%'
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Owner',
-                    name: Ext.calendar.data.EventMappings.Owner.name,
+                    name: 'owner',
                     labelWidth: 100,
                     readOnly: true,
                     anchor: '50%'
@@ -77,8 +78,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Room',
-                    name: Ext.calendar.data.EventMappings.CalendarId.name,
-                    labelWidth: 100,
+                    name: 'room_id',
                     hidden: true
                 }
             ]
@@ -91,7 +91,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
             formPanelCfg.items.push({
                 xtype: 'calendarpicker',
                 itemId: 'calendar',
-                name: Ext.calendar.data.EventMappings.CalendarId.name,
+                name: 'room_id',
                 labelWidth: 100,
                 anchor: '100%',
                 store: this.calendarStore
@@ -222,14 +222,13 @@ Ext.define('Ext.calendar.form.EventWindow', {
     show: function (o, animateTarget) {
         // Work around the CSS day cell height hack needed for initial render in IE8/strict:
         var me = this,
-            anim = (Ext.isIE8 && Ext.isStrict) ? null : animateTarget,
-            M = Ext.calendar.data.EventMappings;
+            anim = (Ext.isIE8 && Ext.isStrict) ? null : animateTarget;
 
         this.callParent([anim, function () {
             me.titleField.focus(true);
         }]);
 
-        this.deleteButton[o.data && o.data[M.EventId.name] ? 'show' : 'hide']();
+        this.deleteButton[o.data && o.data.id ? 'show' : 'hide']();
 
         var rec,
             f = this.formPanel.form;
@@ -245,20 +244,21 @@ Ext.define('Ext.calendar.form.EventWindow', {
         } else {
             this.setTitle(this.titleTextAdd);
 
-            var start = o[M.StartDate.name],
-                end = o[M.EndDate.name] || Ext.calendar.util.Date.add(start, {hours: 0.5});
+            var start = o['date_start'],
+                end = o['date_end'] || Ext.calendar.util.Date.add(start, {hours: 0.5});
 
             rec = Ext.create('Ext.calendar.data.EventModel');
-            rec.data[M.StartDate.name] = start;
-            rec.data[M.EndDate.name] = end;
-            rec.data[M.Owner.name] = Ext.getUser();
-            rec.data[M.CalendarId.name] = Ext.currentCalendarId;
+            rec.data['date_start'] = start;
+            rec.data['date_end'] = end;
+            rec.data['owner'] = Ext.getUser();
+            rec.data['attendees'] = 3;
+            rec.data['room_id'] = Ext.currentCalendarId;
 
             f.loadRecord(rec);
         }
 
         if (this.calendarStore) {
-            this.calendarField.setValue(rec.data[M.CalendarId.name]);
+            this.calendarField.setValue(rec.data['room_id']);
         }
 
         this.dateRangeField.setValue(rec.data);
@@ -292,7 +292,6 @@ Ext.define('Ext.calendar.form.EventWindow', {
         var fields = record.fields,
             values = this.formPanel.getForm().getValues(),
             name,
-            M = Ext.calendar.data.EventMappings,
             obj = {};
 
         fields.each(function (f) {
@@ -303,8 +302,8 @@ Ext.define('Ext.calendar.form.EventWindow', {
         });
 
         var dates = this.dateRangeField.getValue();
-        obj[M.StartDate.name] = dates[0];
-        obj[M.EndDate.name] = dates[1];
+        obj['date_start'] = dates[0];
+        obj['date_end'] = dates[1];
 
         record.beginEdit();
         record.set(obj);
@@ -328,7 +327,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
             return;
         }
 
-        if (this.activeRecord.data.StartDate.getTime() == this.activeRecord.data.EndDate.getTime()) {
+        if (this.activeRecord.data.date_start.getTime() == this.activeRecord.data.date_end.getTime()) {
             Ext.noty('Wrong time selected', 'error', 1000);
             return;
         }

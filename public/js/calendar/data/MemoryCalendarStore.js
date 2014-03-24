@@ -10,8 +10,7 @@ Ext.define('Ext.calendar.data.MemoryCalendarStore', {
         'Ext.data.proxy.Memory',
         'Ext.data.reader.Json',
         'Ext.data.writer.Json',
-        'Ext.calendar.data.CalendarModel',
-        'Ext.calendar.data.CalendarMappings'
+        'Ext.calendar.data.CalendarModel'
     ],
 
     proxy: {
@@ -30,11 +29,11 @@ Ext.define('Ext.calendar.data.MemoryCalendarStore', {
             calendarData = Ext.calendar.data;
 
         me.sorters = me.sorters || [{
-            property: calendarData.CalendarMappings.Title.name,
+            property: 'title',
             direction: 'ASC'
         }];
 
-        me.idProperty = me.idProperty || calendarData.CalendarMappings.CalendarId.name || 'id';
+        me.idProperty = me.idProperty || 'id';
 
         me.fields = calendarData.CalendarModel.prototype.fields.getRange();
 
