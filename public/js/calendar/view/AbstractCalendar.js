@@ -346,8 +346,9 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         evts.each(function (evt) {
             var days = Ext.calendar.util.Date.diffDays(
                     Ext.calendar.util.Date.max(me.viewStart, evt.data['date_start']),
-                    Ext.calendar.util.Date.min(me.viewEnd, evt.data['date_end'])) + 1;
-
+                    Ext.calendar.util.Date.min(me.viewEnd, evt.data['date_end'])
+            ) + 1;
+            
             if (days > 1 || Ext.calendar.util.Date.diffDays(evt.data['date_start'], evt.data['date_end']) > 1) {
                 me.prepareEventGridSpans(evt, me.eventGrid, w, d, days);
             } else {

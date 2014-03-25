@@ -257,7 +257,10 @@ Ext.define('Ext.calendar.view.DayBody', {
             colWidth,
             evtWidth,
             markup,
-            target;
+            target,
+            dayStore = Ext.create('Ext.calendar.data.Days'),
+            dayName,
+            dayIndex;
 
         for (; day < this.dayCount; day++) {
             ev = emptyCells = skipped = 0;
@@ -335,10 +338,16 @@ Ext.define('Ext.calendar.view.DayBody', {
                     timeClone,
                     targetClone;
 
-                if (isWeekView) {
+                for (j = 0; j < dayStore.length; j++) {
+                    dayName = dayStore[i].get('value');
+                    dayIndex = dayStore[i].get('id');
 
-                    for (j = 0; j < evt.repeated_on.length; j++) { // TODO: #1
-                        evtCloneDay = evt.repeated_on[j] - todayDay; // TODO: #1
+                    if (evt[dayName] == true) {
+                        continue;
+                    }
+
+                    if (isWeekView) {
+                        evtCloneDay = dayIndex - todayDay;
                         evtClone = Ext.clone(evt);
                         evtClone.date_start = Ext.calendar.util.Date.add(evtClone.date_start, {days: evtCloneDay});
                         evtClone.date_end = Ext.calendar.util.Date.add(evtClone.date_end, {days: evtCloneDay});
@@ -350,15 +359,11 @@ Ext.define('Ext.calendar.view.DayBody', {
                         if (Ext.get(targetClone) != null) {
                             Ext.core.DomHelper.append(targetClone, markupClone);
                         }
-                    }
-
-                } else {
-
-                    for (j = 0; j < evt.repeated_on.length; j++) { // TODO: #2
+                    } else {
 
                         evtCloneDay = evts[i].date.getDay() - 1;
 
-                        if (evt.repeated_on[j] != evtCloneDay) { // TODO: #2
+                        if (dayIndex - 1 != evtCloneDay) {
                             continue;
                         }
 
@@ -371,7 +376,6 @@ Ext.define('Ext.calendar.view.DayBody', {
                         }
 
                     }
-
                 }
 
             } else {
