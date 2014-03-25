@@ -4,6 +4,9 @@ namespace Meetingroom\Controller;
 
 use \Meetingroom\Entity\Role\RoleFactory;
 use \Meetingroom\Entity\Role\Group;
+use \Meetingroom\View\Engine\JSONEngine;
+use \Meetingroom\View\Engine\HTMLTemplateEngine;
+use \Meetingroom\View\Render;
 
 abstract class AbstractController extends \Phalcon\Mvc\Controller
 {
@@ -22,7 +25,7 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
 
     public function initialize()
     {
-        $this->view->setTemplateAfter('common');
+//        $this->view->setTemplateAfter('common');
     }
 
     /**
