@@ -11,15 +11,14 @@ use \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\WeekPeriodCriteria;
 use \Meetingroom\Validate\Timestamp\Timestamp;
 use \Meetingroom\Validate\Timestamp\TimestampCompare;
-use Phalcon\Validation\Validator\Regex as RegexValidator;
-use Phalcon\Validation\Validator\StringLength as StringLength;
-use Phalcon\Mvc\Model\Message as Message;
-use \Meetingroom\View\Engine\JSONEngine;
-use \Meetingroom\View\Render;
+use \Phalcon\Validation\Validator\Regex as RegexValidator;
+use \Phalcon\Validation\Validator\StringLength as StringLength;
+use \Phalcon\Mvc\Model\Message as Message;
+use \Meetingroom\Render\View\Engine\JSONEngine;
+use \Meetingroom\Render\View\Render;
 
 class EventController extends AbstractController
 {
-
     public function initialize()
     {
         parent::initialize();
@@ -27,39 +26,35 @@ class EventController extends AbstractController
         $this->validator = new \Phalcon\Validation();
 
         $this->validator->add(
-            'room_id',
-            new RegexValidator(array(
-                'pattern' => '/^\d*$/',
-                'message' => 'Room id must be integer'
-            ))
+                'room_id', new RegexValidator(array(
+            'pattern' => '/^\d*$/',
+            'message' => 'Room id must be integer'
+                ))
         );
 
         $this->validator->add(
-            'title',
-            new StringLength(array(
+                'title', new StringLength(array(
 //                'max' => 5,
-                'min' => 3,
+            'min' => 3,
 //                'messageMaximum' => 'We don\'t like really long names',
-                'messageMinimum' => 'Title should be longer'
-            ))
+            'messageMinimum' => 'Title should be longer'
+                ))
         );
 
         $this->validator->add(
-            'description',
-            new StringLength(array(
+                'description', new StringLength(array(
 //                'max' => 5,
-                'min' => 3,
+            'min' => 3,
 //                'messageMaximum' => 'We don\'t like really long names',
-                'messageMinimum' => 'Description should be longer'
-            ))
+            'messageMinimum' => 'Description should be longer'
+                ))
         );
 
         $filter = $this->di->getShared("filter");
         $filter->add(
-            'boolean',
-            function ($value) {
-                return (bool)$value;
-            }
+                'boolean', function ($value) {
+            return (bool) $value;
+        }
         );
 
         $this->validator->setFilters("day", "int");
@@ -110,7 +105,7 @@ class EventController extends AbstractController
     public function indexAction()
     {
         if (!$this->isAllowed('index', 'index')) {
-            $this->onDenied();
+            return $this->onDenied();
         }
 
 
@@ -123,56 +118,50 @@ class EventController extends AbstractController
 
         if ($this->getData('weekly') == true) {
             $periodCriteria = new WeekPeriodCriteria($this->getData('day'), $this->getData('month'), $this->getData(
-                'year'
+                            'year'
             ));
         } else {
             $periodCriteria = new DayPeriodCriteria($this->getData('day'), $this->getData('month'), $this->getData(
-                'year'
+                            'year'
             ));
         }
-        
+
         $lookupper = new EventLookupper($this->di);
 
         $events = $lookupper
-            ->setPeriodCriteria($periodCriteria)
-            ->setRoomCriteria($roomCriteria)
-            ->setFields(['id', 'title', 'date_start', 'date_end', 'description', 'user_id', 'room_id', 'repeatable', 'attendees'])
-            ->lookup();
+                ->setPeriodCriteria($periodCriteria)
+                ->setRoomCriteria($roomCriteria)
+                ->setFields(['id', 'title', 'date_start', 'date_end', 'description', 'user_id', 'room_id', 'repeatable', 'attendees'])
+                ->lookup();
 
         $eventsDTO = [];
         foreach ($events as $event) {
             $eventsDTO[] = $event->getDTO();
         }
 
-        $this->view->success = true; 
+        $this->view->success = true;
         $this->view->events = $eventsDTO;
-        
-        $engine = new JSONEngine();
-        $render = new Render();
-        
-        return $render->process($this->view, $engine);
+
+        return $this->render();
     }
-    
+
     public function createAction()
     {
-        if(!$this->isAllowed('event', 'create')) {
-            $this->onDenied();
+        if (!$this->isAllowed('event', 'create')) {
+            return $this->onDenied();
         }
+
+        $this->view->success = false;
 
         $errors = $this->getFormErrors();
         if (!empty($errors)) {
-            die(json_encode(
-                [
-                    'success' => false,
-                    'errors' => $this->getFormErrors()
-                ]
-            ));
+            $this->view->errors = $errors;
+            return $this->render();
         }
-
 
         $roomManager = new RoomManager();
         if (!$roomManager->isRoomExist($this->getData('room_id'))) {
-            $this->sendError(new Message('room ain`t exist'));
+            return $this->sendError(new Message('room ain`t exist'));
         }
 
         $lookupper = new EventLookupper($this->di);
@@ -182,153 +171,156 @@ class EventController extends AbstractController
         $end = strtotime($this->getData('dateEnd'));
 
         if ($start === false || $end === false || $end <= $start) {
-            $this->sendError(new Message('wrong date'));
+            return $this->sendError(new Message('wrong date'));
         }
-        
+
         $event->bind([
-                'title' => $this->getData('title'),
-                'room_id' => $this->getData('room_id'),
-                'user_id' => $this->user->id,
-                'date_start' => $start,
-                'date_end' => $end,
-                'description' => $this->getData('description'),
-                'repeatable' => $this->getData('isRepeatable'),
-                'attendees' => $this->getData('attendees')
-            ]);
-        
+            'title' => $this->getData('title'),
+            'room_id' => $this->getData('room_id'),
+            'user_id' => $this->user->id,
+            'date_start' => $start,
+            'date_end' => $end,
+            'description' => $this->getData('description'),
+            'repeatable' => $this->getData('isRepeatable'),
+            'attendees' => $this->getData('attendees')
+        ]);
+
         $option = new EventOptionEntity();
 
         if ($this->getData('isRepeatable')) {
             $option->bind([
                 'id' => $event->id,
-                    'mon' => $this->getData('mon'),
-                    'tue' => $this->getData('tue'),
-                    'wed' => $this->getData('wed'),
-                    'thu' => $this->getData('thu'),
-                    'fri' => $this->getData('fri'),
-                    'sat' => $this->getData('sat'),
-                    'sun' => $this->getData('sun'),
-                ]);
+                'mon' => $this->getData('mon'),
+                'tue' => $this->getData('tue'),
+                'wed' => $this->getData('wed'),
+                'thu' => $this->getData('thu'),
+                'fri' => $this->getData('fri'),
+                'sat' => $this->getData('sat'),
+                'sun' => $this->getData('sun'),
+            ]);
         }
-        
+
         $conflict = $lookupper->checkIsConflict($event, $option);
-        
-        if(!$conflict) {
+
+        if (!$conflict) {
             $eventId = $event->save();
-            if(!$eventId){
-                $this->sendError(new Message('event not created'));
+            if (!$eventId) {
+                return $this->sendError(new Message('event not created'));
             }
 
             if ($this->getData('isRepeatable')) {
                 $option->bind(['id' => $event->id])->insert();
             }
 
-            $this->sendOutput(['success' => true]);
+            $this->view->success = true;
+            $this->view->errors = $errors;
+            return $this->render();
         } else {
-            $this->sendError(new Message('event conflict with other events'));
-            exit;
+            return $this->sendError(new Message('event conflict with other events'));
         }
     }
-    
+
     public function updateAction()
     {
         $event = $this->getEventByRequest();
-        
+        $this->view->success = false;
+
         $role = $this->getRoleFactory()->getRoleInEvent($this->user, $event);
-        if(!$this->isAllowed('event', 'update', $role)) {
-            $this->onDenied();
+        if (!$this->isAllowed('event', 'update', $role)) {
+            return $this->onDenied();
         }
 
-        $error = $this->getFormErrors();
-        if (!empty($error)) {
-            die(json_encode(
-                [
-                    'success' => false,
-                    'errors' => $this->getFormErrors()
-                ]
-            ));
+        $errors = $this->getFormErrors();
+        if (!empty($errors)) {
+            $this->view->errors = $errors;
+            return $this->render();
         }
 
         if ($this->getData('room_id') !== $event->roomId) {
             $roomManager = new RoomManager();
             if (!$roomManager->isRoomExist($this->getData('room_id'))) {
-                $this->sendError(new Message('room ain`t exist'));
+                return $this->sendError(new Message('room ain`t exist'));
             }
         }
-         
+
         $lookupper = new EventLookupper($this->di);
 
         $start = strtotime($this->getData('dateStart'));
         $end = strtotime($this->getData('dateEnd'));
 
         if ($start === false || $end === false || $end <= $start) {
-            $this->sendError(new Message('Wrong date'));
+            return $this->sendError(new Message('Wrong date'));
         }
-        
+
         $event->bind([
-                'title' => $this->getData('title'),
-                'room_id' => $this->getData('room_id'),
-                'date_start' => $start,
-                'date_end' => $end,
-                'description' => $this->getData('description'),
-                'repeatable' => $this->getData('isRepeatable'),
-                'attendees' => $this->getData('attendees')
-            ]);
-        
+            'title' => $this->getData('title'),
+            'room_id' => $this->getData('room_id'),
+            'date_start' => $start,
+            'date_end' => $end,
+            'description' => $this->getData('description'),
+            'repeatable' => $this->getData('isRepeatable'),
+            'attendees' => $this->getData('attendees')
+        ]);
+
         $option = new EventOptionEntity();
 
         if ($this->getData('isRepeatable')) {
             $option->bind([
                 'id' => $event->id,
-                    'mon' => $this->getData('mon'),
-                    'tue' => $this->getData('tue'),
-                    'wed' => $this->getData('wed'),
-                    'thu' => $this->getData('thu'),
-                    'fri' => $this->getData('fri'),
-                    'sat' => $this->getData('sat'),
-                    'sun' => $this->getData('sun')
-                ]);
+                'mon' => $this->getData('mon'),
+                'tue' => $this->getData('tue'),
+                'wed' => $this->getData('wed'),
+                'thu' => $this->getData('thu'),
+                'fri' => $this->getData('fri'),
+                'sat' => $this->getData('sat'),
+                'sun' => $this->getData('sun')
+            ]);
         }
-        
+
         $conflict = $lookupper->checkIsConflict($event, $option);
-        
-        if(!$conflict) {
+
+        if (!$conflict) {
             $eventId = $event->save();
 
             if ($this->getData('isRepeatable')) {
                 $option->update();
             }
 
-            $this->sendOutput(['success' => true]);
+            $this->view->success = true;
+            return $this->render();
         } else {
-            $this->sendError(new Message('event conflict with other events'));
-            exit;
+            return $this->sendError(new Message('event conflict with other events'));
         }
     }
-    
+
     public function deleteAction()
     {
         $event = $this->getEventByRequest();
-        
+        $this->view->success = false;
         $role = $this->getRoleFactory()->getRoleInEvent($this->user, $event);
-        if(!$this->isAllowed('event', 'delete', $role)) {
-            $this->onDenied();
+        if (!$this->isAllowed('event', 'delete', $role)) {
+            return $this->onDenied();
         }
 
-        $event->delete() ? $this->sendOutput(['success' => true]) : $this->sendError(new Message('false'));
-
+        if ($event->delete() == true) {
+            $this->view->success = true;
+            return $this->render();
+        } else {
+            return $this->sendError(new Message('false'));
+        }
     }
-    
+
     protected function getEventByRequest()
     {
         $eventId = $this->request->getPost("event_id", "int");
-        
+
         $event = new EventEntity($eventId);
-        if($event->isLoaded() === false) {
+        if ($event->isLoaded() === false) {
 
             $this->sendError(new Message('event not found'));
         }
-        
+
         return $event;
     }
+
 }

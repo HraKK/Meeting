@@ -4,28 +4,40 @@ namespace Meetingroom\Controller;
 
 use \Meetingroom\Entity\Role\RoleFactory;
 use \Meetingroom\Entity\Role\Group;
-use \Meetingroom\View\Engine\JSONEngine;
-use \Meetingroom\View\Engine\HTMLTemplateEngine;
-use \Meetingroom\View\Render;
+use \Meetingroom\Render\Engine\JSONEngine;
+use \Meetingroom\Render\Engine\EnginableInterface;
+use \Meetingroom\Render\Render;
 
 abstract class AbstractController extends \Phalcon\Mvc\Controller
 {
     protected $roleFactory = null;
+
     /**
      * @var Phalcon\Validation
      */
     protected $validator = null;
     protected $formData = null;
+
     /**
      * @var null|\Phalcon\Validation\Message\Group
      */
     protected $formErrors = null;
 
-    abstract public function indexAction();
+    /**
+     * @var null|\Meetingroom\Render\Engine\EnginableInterface
+     */
+    protected $engine = null;
 
+    /**
+     * @var null|\Meetingroom\Render\Render
+     */
+    protected $render = null;
+
+    abstract public function indexAction();
     public function initialize()
     {
-//        $this->view->setTemplateAfter('common');
+        $this->engine = new JSONEngine();
+        $this->render = new Render();
     }
 
     /**
@@ -77,19 +89,18 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
         return $return;
     }
 
-
     public function onDenied()
     {
         $role = $this->getRoleFactory()->getRole($this->user);
 
         if ($role == Group::GUEST) {
-            $this->dispatcher->forward(array('controller' => 'user', 'action' => 'login'));
+            return $this->dispatcher->forward(array('controller' => 'user', 'action' => 'login'));
         } elseif ($role == Group::USER) {
             $response = $this->getDI()->getShared('response');
             $response->resetHeaders()
-                ->setStatusCode(403, null)
-                ->setContent('Denied')
-                ->send();
+                    ->setStatusCode(403, null)
+                    ->setContent('Denied')
+                    ->send();
         }
     }
 
@@ -124,8 +135,9 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
             ]);
         }
 
-
-        $this->sendOutput(['errors' => $errorsDTO, 'success' => false]);
+        $this->view->success = false;
+        $this->view->errors = $errorsDTO;
+        return $this->render();
     }
 
     protected function sendOutput(array $content)
@@ -133,4 +145,14 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
         echo json_encode($content);
         exit;
     }
+
+    public function render(EnginableInterface $engine = null)
+    {
+        if ($engine == null) {
+            $engine = $this->engine;
+        }
+
+        return $this->render->process($this->view, $engine);
+    }
+
 }

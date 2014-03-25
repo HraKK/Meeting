@@ -1,6 +1,6 @@
 <?php
 
-namespace Meetingroom\View;
+namespace Meetingroom\Render\View;
 
 /**
  * Description of View
@@ -10,12 +10,6 @@ namespace Meetingroom\View;
 class View implements RenderableInterface
 {
     protected $params = [];
-    protected $viewsDir;
-    
-    public function __construct()
-    {
-        
-    }
     
     public function __get($name)
     {
@@ -27,18 +21,8 @@ class View implements RenderableInterface
         $this->params[$name] = $value;
     }
     
-    public function getParamsToView()
+    public function getData()
     {
         return $this->params;
-    }
-    
-    public function setViewsDir($dir)
-    {
-        $this->viewsDir = $dir;
-    }
-    
-    public function getViewsDir()
-    {
-        return $this->viewsDir;
     }
 }

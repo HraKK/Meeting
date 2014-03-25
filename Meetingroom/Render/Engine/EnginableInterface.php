@@ -1,8 +1,8 @@
 <?php
 
-namespace Meetingroom\View\Engine;
+namespace Meetingroom\Render\Engine;
 
-use Meetingroom\View\RenderableInterface;
+use Meetingroom\Render\View\RenderableInterface;
 
 /**
  * Description of EnginableInterface

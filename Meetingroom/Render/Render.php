@@ -1,9 +1,9 @@
 <?php
 
-namespace Meetingroom\View;
+namespace Meetingroom\Render;
 
-use \Meetingroom\View\Engine\EnginableInterface;
-use \Meetingroom\View\RenderableInterface;
+use \Meetingroom\Render\Engine\EnginableInterface;
+use \Meetingroom\Render\View\RenderableInterface;
 
 /**
  * Description of Render

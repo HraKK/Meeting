@@ -3,8 +3,6 @@
 namespace Meetingroom\Controller;
 
 use \Meetingroom\Entity\Room\RoomManager;
-use \Meetingroom\View\Engine\JSONEngine;
-use \Meetingroom\View\Render;
 
 class RoomController extends AbstractController
 {
@@ -16,7 +14,7 @@ class RoomController extends AbstractController
     public function readAction()
     {
         if (!$this->isAllowed('room', 'read')) {
-            $this->onDenied();
+            return $this->onDenied();
         }
         
         $roomManager = new RoomManager();
@@ -28,10 +26,6 @@ class RoomController extends AbstractController
         }
         
         $this->view->rooms = $roomsDTO;
-        
-        $engine = new JSONEngine();
-        $render = new Render();
-        
-        return $render->process($this->view, $engine);
+        return $this->render();
     }
 }

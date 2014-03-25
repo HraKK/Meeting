@@ -1,6 +1,6 @@
 <?php
 
-namespace Meetingroom\View;
+namespace Meetingroom\Render\View;
 
 /**
  *
@@ -8,5 +8,5 @@ namespace Meetingroom\View;
  */
 interface RenderableInterface
 {
-    public function getParamsToView();
+    public function getData();
 }

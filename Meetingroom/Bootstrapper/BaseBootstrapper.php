@@ -99,9 +99,7 @@ class BaseBootstrapper implements BootstrapperInterface
         $this->di->set(
             'view',
             function() {
-                $view = new \Meetingroom\View\View();
-                $view->setViewsDir(__DIR__ . '/../View/Resource/');
-                return $view;
+                return new \Meetingroom\Render\View\View();
             }, true
         );
     }
@@ -139,12 +137,13 @@ class BaseBootstrapper implements BootstrapperInterface
                 $indexResource = new \Phalcon\Acl\Resource("index");
                 $roomResource = new \Phalcon\Acl\Resource("room");
                 
-                $acl->addResource($userResource, ['login', 'logout']);
+                $acl->addResource($userResource, ['login', 'logout', 'loginAjax']);
                 $acl->addResource($eventResource, ['create', 'update', 'delete']);
                 $acl->addResource($indexResource, ['index']);
                 $acl->addResource($roomResource, ['read']);
 
                 $acl->allow("ROLE_GUEST", "user", "login");
+                $acl->allow("ROLE_GUEST", "user", "loginAjax");
                 
                 $acl->allow("ROLE_USER", "user", "logout");
                 $acl->allow("ROLE_USER", "event", "create");
