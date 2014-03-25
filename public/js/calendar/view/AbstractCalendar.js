@@ -730,8 +730,10 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
         this.setViewBounds(start);
         this.store.load({
             params: {
-                date_start: Ext.Date.format(this.viewStart, 'm-d-Y'),
-                date_end: Ext.Date.format(this.viewEnd, 'm-d-Y')
+                day: Ext.Date.format(this.viewStart, 'd'),
+                month: Ext.Date.format(this.viewStart, 'm'),
+                year: Ext.Date.format(this.viewStart, 'Y'),
+                weekly: true
             }
         });
         if (refresh === true) {

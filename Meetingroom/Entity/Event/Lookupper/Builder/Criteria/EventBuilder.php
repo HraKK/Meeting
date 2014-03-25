@@ -27,7 +27,7 @@ class EventBuilder
         $baseCriteriaBuilder = new BaseCriteriaBuilder();
         $sql .= $baseCriteriaBuilder->build($fields);
 
-        if ($roomCriteria !== null) {
+        if ($roomCriteria !== null || $roomCriteria->getId() == 0) {
             $roomCriteriaBuilder = new RoomCriteriaBuilder();
             $sql .= $roomCriteriaBuilder->build($roomCriteria);
             $sql .= ' AND ';

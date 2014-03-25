@@ -107,9 +107,25 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
         return $this->roleFactory === null ? new RoleFactory() : $this->roleFactory;
     }
 
-    protected function sendError($msg)
+    /**
+     * @param array|\Phalcon\Mvc\Model\Message
+     */
+    protected function sendError($errors)
     {
-        $this->sendOutput(['msg' => $msg, 'success' => false]);
+        $errorsDTO = [];
+        if ($errors instanceof \Phalcon\Mvc\Model\Message) {
+            $errors = [$errors];
+        }
+
+        foreach ($errors as $error) {
+            $errorsDTO[] = new \Meetingroom\DTO\Errors\InputDataDTO([
+                'message' => $error->getMessage(),
+                'field' => $error->getField()
+            ]);
+        }
+
+
+        $this->sendOutput(['errors' => $errorsDTO, 'success' => false]);
     }
 
     protected function sendOutput(array $content)
