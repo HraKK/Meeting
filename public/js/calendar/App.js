@@ -122,7 +122,10 @@ Ext.define('Ext.calendar.App', {
                             },
                             {
                                 xtype: 'button',
-                                text: 'Logout'
+                                text: 'Logout',
+                                handler: function() {
+                                    window.location.href = 'user/logout';
+                                }
                             }
                         ]
                     },
