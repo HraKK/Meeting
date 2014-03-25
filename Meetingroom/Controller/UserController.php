@@ -39,8 +39,14 @@ class UserController extends AbstractController
 
             $user->startSession();
             return $this->response->redirect();
-        } elseif ($auth) {
-            return $this->response->redirect();
+        } elseif ($auth ) {
+            if($this->request->isAjax() == false) {
+                return $this->response->redirect();
+            } else {
+                $this->view->success = false;
+                $this->view->auth = false;
+                return $this->render();
+            }
         }
 
         $engine = new HTMLTemplateEngine();
@@ -59,7 +65,7 @@ class UserController extends AbstractController
         $auth = $this->session->has('auth');
         
         if($auth == true) {
-            $this->view->status = true;
+            $this->view->success = true;
             $this->view->auth = true;
             return $this->render();
         }
@@ -78,7 +84,7 @@ class UserController extends AbstractController
 
         $user->startSession();
         
-        $this->view->status = true;
+        $this->view->success = true;
         $this->view->auth = true;
         return $this->render();
     }
@@ -87,7 +93,7 @@ class UserController extends AbstractController
     {
         $this->session->destroy();
         if ($this->request->isAjax() == true) {
-            $this->view->status = true;
+            $this->view->success = true;
             $this->view->auth = false;
             return $this->render();
         } else {
