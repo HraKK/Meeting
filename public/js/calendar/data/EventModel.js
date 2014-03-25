@@ -45,7 +45,32 @@ Ext.define('Ext.calendar.data.EventModel', {
             type: 'boolean'
         },
         {
-            name: 'repeated_on'
+            name: 'mon',
+            type: 'boolean'
+        },
+        {
+            name: 'tue',
+            type: 'boolean'
+        },
+        {
+            name: 'wed',
+            type: 'boolean'
+        },
+        {
+            name: 'thu',
+            type: 'boolean'
+        },
+        {
+            name: 'fri',
+            type: 'boolean'
+        },
+        {
+            name: 'sat',
+            type: 'boolean'
+        },
+        {
+            name: 'sun',
+            type: 'boolean'
         }
     ]
 });

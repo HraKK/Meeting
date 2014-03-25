@@ -3,15 +3,16 @@ Ext.define('Ext.calendar.data.Days', {
 
     fields: [
         {name: 'name'},
-        {name: 'value'}
+        {name: 'value'},
+        {name: 'id'}
     ],
     data: [
-        {name: 'Monday', value: 0},
-        {name: 'Tuesday', value: 1},
-        {name: 'Wednesday', value: 2},
-        {name: 'Thursday', value: 3},
-        {name: 'Friday', value: 4},
-        {name: 'Saturday', value: 5},
-        {name: 'Sunday', value: 6}
+        {name: 'Monday', value: 'mon', id: 0},
+        {name: 'Tuesday', value: 'tue', id: 1},
+        {name: 'Wednesday', value: 'wed', id: 2},
+        {name: 'Thursday', value: 'thu', id: 3},
+        {name: 'Friday', value: 'fri', id: 4},
+        {name: 'Saturday', value: 'sat', id: 5},
+        {name: 'Sunday', value: 'sun', id: 6}
     ]
 });

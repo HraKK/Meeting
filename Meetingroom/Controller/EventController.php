@@ -109,11 +109,6 @@ class EventController extends AbstractController
         }
 
 
-        $roomManager = new RoomManager();
-        $rooms = $roomManager->getAll();
-
-        $roomCriteria = new RoomCriteria($this->getData('room_id'));
-        $periodCriteria = new DayPeriodCriteria($this->getData('day'), $this->getData('month'), $this->getData('year'));
         $roomCriteria = new RoomCriteria($this->getData('room_id'));
 
         if ($this->getData('weekly') == true) {
