@@ -7,6 +7,7 @@ use \Meetingroom\Entity\Role\Group;
 use \Meetingroom\Render\Engine\JSONEngine;
 use \Meetingroom\Render\Engine\EnginableInterface;
 use \Meetingroom\Render\Render;
+use Phalcon\Http\Client\Exception;
 
 abstract class AbstractController extends \Phalcon\Mvc\Controller
 {
