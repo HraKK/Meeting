@@ -7,7 +7,7 @@ namespace Meetingroom\Render\View;
  *
  * @author Alexandr Gureev <barif@syneforge.com>
  */
-class ViewWithTemplate implements LayoutableInterface, RenderableInterface
+class ViewWithTemplate implements LayoutableInterface
 {
     protected $viewsDir;
     protected $layout = 'index';

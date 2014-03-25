@@ -3,6 +3,7 @@
 namespace Meetingroom\Render\Engine;
 
 use \Meetingroom\Render\View\RenderableInterface;
+use \Meetingroom\Render\View\LayoutableInterface;
 
 /**
  * Description of HTMLTemplateEngine
@@ -12,6 +13,13 @@ use \Meetingroom\Render\View\RenderableInterface;
 class HTMLTemplateEngine implements EnginableInterface
 {
     public function render(RenderableInterface $view)
+    {
+        $layout = $this->includeLayout($view);
+
+        return $layout;
+    }
+
+    protected function includeLayout(LayoutableInterface $view)
     {
         extract($view->getData(), EXTR_SKIP);
         ob_start();
@@ -23,5 +31,6 @@ class HTMLTemplateEngine implements EnginableInterface
 
         return $content;
     }
+
 
 }
