@@ -114,11 +114,6 @@ class EventController extends AbstractController
         }
 
 
-        $roomManager = new RoomManager();
-        $rooms = $roomManager->getAll();
-
-        $roomCriteria = new RoomCriteria($this->getData('room_id'));
-        $periodCriteria = new DayPeriodCriteria($this->getData('day'), $this->getData('month'), $this->getData('year'));
         $roomCriteria = new RoomCriteria($this->getData('room_id'));
 
         if ($this->getData('weekly') == true) {
@@ -315,8 +310,11 @@ class EventController extends AbstractController
             $this->onDenied();
         }
 
-        $event->delete() ? $this->sendOutput(['success' => true]) : $this->sendError(new Message('false'));
-
+        if ($event->delete()) {
+            $this->sendOutput(['success' => true]);
+        } else {
+            $this->sendError(new Message('false'));
+        }
     }
     
     protected function getEventByRequest()

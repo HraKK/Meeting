@@ -7,6 +7,7 @@ use \Meetingroom\Entity\Role\Group;
 use \Meetingroom\View\Engine\JSONEngine;
 use \Meetingroom\View\Engine\HTMLTemplateEngine;
 use \Meetingroom\View\Render;
+use Phalcon\Http\Client\Exception;
 
 abstract class AbstractController extends \Phalcon\Mvc\Controller
 {
@@ -16,6 +17,7 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
      */
     protected $validator = null;
     protected $formData = null;
+
     /**
      * @var null|\Phalcon\Validation\Message\Group
      */
@@ -108,16 +110,26 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
     }
 
     /**
-     * @param array|\Phalcon\Mvc\Model\Message
+     * @param \Phalcon\Mvc\Model\Message $error
      */
-    protected function sendError($errors)
+    protected function sendError(\Phalcon\Mvc\Model\Message $error)
+    {
+        $this->sendErrors([$error]);
+    }
+
+    /**
+     * @param array $errors of \Phalcon\Mvc\Model\Message
+     * @throws \Phalcon\Http\Client\Exception
+     */
+    protected function sendErrors(array $errors)
     {
         $errorsDTO = [];
-        if ($errors instanceof \Phalcon\Mvc\Model\Message) {
-            $errors = [$errors];
-        }
 
         foreach ($errors as $error) {
+            if (!($error instanceof \Phalcon\Mvc\Model\Message)) {
+                throw new Exception('message must be istanceof \Phalcon\Mvc\Model\Message');
+            }
+
             $errorsDTO[] = new \Meetingroom\DTO\Errors\InputDataDTO([
                 'message' => $error->getMessage(),
                 'field' => $error->getField()
