@@ -7,7 +7,7 @@
                 method: 'POST',
                 url: '/user/login',
                 success: function() {
-                    window.location.reload();
+                    window.location.href = '/';
                 },
                 failure: function(form, action) {
                     Ext.Msg.alert('Failure', action.result.msg);

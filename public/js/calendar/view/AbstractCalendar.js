@@ -735,7 +735,13 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
                 month: Ext.Date.format(this.viewStart, 'm'),
                 year: Ext.Date.format(this.viewStart, 'Y'),
                 weekly: true
-            }
+            },
+            callback: function(records, operation, success) {
+                if (!success && this.getProxy().reader.jsonData.auth === false) {
+                    Ext.sessionExpired();
+                }
+            },
+            scope: this
         });
         if (refresh === true) {
             this.refresh();
