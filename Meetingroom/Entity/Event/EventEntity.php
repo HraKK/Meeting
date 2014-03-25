@@ -46,19 +46,19 @@ class EventEntity extends \Meetingroom\Entity\AbstractEntity implements OwnableI
             switch ($class_field) {
                 case 'dateStart':
                 case 'dateEnd':
-                    $fields_array[$class_field] = strtotime($this->$class_field);
+                    $fields_array[$bd_field] = strtotime($this->$class_field);
                     break;
                 case 'userId':
-                    $fields_array[$class_field] = strtotime($this->$class_field);
+                    $fields_array[$bd_field] = strtotime($this->$class_field);
                     $owner = new AuthorizedEntity($this->$class_field);
                     $fields_array['owner'] = $owner->nickname;
                     break;
                 case 'repeatable':
                     $fields_array['repeatable'] = $this->repeatable;
-                    $fields_array['repeatedOn'] = $this->getRepeatables();
+                    $fields_array['repeated_on'] = $this->getRepeatables();
                     break;
                 default:
-                    $fields_array[$class_field] = $this->$class_field;
+                    $fields_array[$bd_field] = $this->$class_field;
                     break;
             }
             

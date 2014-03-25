@@ -164,7 +164,7 @@ abstract class AbstractEntity
     {
         $fields_array = [];
         foreach ($this->fields as $bd_field => $class_field) {
-                    $fields_array[$class_field] = $this->$class_field;
+                    $fields_array[$bd_field] = $this->$class_field;
             }
         return $fields_array;
     }

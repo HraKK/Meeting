@@ -10,14 +10,14 @@ class EventDTO extends \Meetingroom\DTO\AbstractDTO
 {
 
     public $id;
-    public $roomId;
-    public $dateStart;
-    public $dateEnd;
+    public $room_id;
+    public $date_start;
+    public $date_end;
     public $userId;
     public $title;
     public $desription;
     public $repeatable;
     public $attendees;
-    public $repeatedOn;
+    public $repeated_on;
     public $owner;
 } 
