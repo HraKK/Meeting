@@ -13,6 +13,7 @@ use \Meetingroom\Validate\Timestamp\Timestamp;
 use \Meetingroom\Validate\Timestamp\TimestampCompare;
 use Phalcon\Validation\Validator\Regex as RegexValidator;
 use Phalcon\Validation\Validator\StringLength as StringLength;
+use Phalcon\Mvc\Model\Message as Message;
 
 class EventController extends AbstractController
 {
@@ -51,6 +52,13 @@ class EventController extends AbstractController
             ))
         );
 
+        $filter = $this->di->getShared("filter");
+        $filter->add(
+            'boolean',
+            function ($value) {
+                return (bool)$value;
+            }
+        );
 
         $this->validator->setFilters("day", "int");
         $this->validator->setFilters("month", "int");
@@ -72,8 +80,7 @@ class EventController extends AbstractController
         $this->validator->setFilters("sat", "int");
         $this->validator->setFilters("sun", "int");
 
-
-        $this->validator->setFilters("weekly", 'int');
+        $this->validator->setFilters("weekly", 'boolean');
 
         $this->formData = $this->getFormData(true);
     }
@@ -84,11 +91,16 @@ class EventController extends AbstractController
      */
     public function test_validationAction()
     {
-//        $msg = new  \Phalcon\Mvc\Model\Message('message', 'field');
-        //      var_dump($msg);
+        $msg = new Message('message');
+
+        //var_dump($msg->getMessage());
+
+        $this->sendError(new Message('message'));
+
+
         var_dump($this->formData);
 //        var_dump($this->getData('room_id2'));
-//        var_dump($this->getFormErrors());
+        var_dump($this->getFormErrors());
 
         die();
     }
@@ -152,7 +164,7 @@ class EventController extends AbstractController
 
         $roomManager = new RoomManager();
         if (!$roomManager->isRoomExist($this->getData('room_id'))) {
-            $this->sendError('room ain`t exist');
+            $this->sendError(new Message('room ain`t exist'));
         }
 
         $lookupper = new EventLookupper($this->di);
@@ -162,7 +174,7 @@ class EventController extends AbstractController
         $end = strtotime($this->getData('dateEnd'));
 
         if ($start === false || $end === false || $end <= $start) {
-            $this->sendError('wrong date');
+            $this->sendError(new Message('wrong date'));
         }
         
         $event->bind([
@@ -196,7 +208,7 @@ class EventController extends AbstractController
         if(!$conflict) {
             $eventId = $event->save();
             if(!$eventId){
-                $this->sendError('event not created');
+                $this->sendError(new Message('event not created'));
             }
 
             if ($this->getData('isRepeatable')) {
@@ -205,7 +217,7 @@ class EventController extends AbstractController
 
             $this->sendOutput(['success' => true]);
         } else {
-            $this->sendError('event conflict with other events');
+            $this->sendError(new Message('event conflict with other events'));
             exit;
         }
     }
@@ -232,7 +244,7 @@ class EventController extends AbstractController
         if ($this->getData('room_id') !== $event->roomId) {
             $roomManager = new RoomManager();
             if (!$roomManager->isRoomExist($this->getData('room_id'))) {
-                $this->sendError('room ain`t exist');
+                $this->sendError(new Message('room ain`t exist'));
             }
         }
          
@@ -242,7 +254,7 @@ class EventController extends AbstractController
         $end = strtotime($this->getData('dateEnd'));
 
         if ($start === false || $end === false || $end <= $start) {
-            $this->sendError('Wrong date');
+            $this->sendError(new Message('Wrong date'));
         }
         
         $event->bind([
@@ -281,7 +293,7 @@ class EventController extends AbstractController
 
             $this->sendOutput(['success' => true]);
         } else {
-            $this->sendError('event conflict with other events');
+            $this->sendError(new Message('event conflict with other events'));
             exit;
         }
     }
@@ -295,7 +307,8 @@ class EventController extends AbstractController
             $this->onDenied();
         }
 
-        $event->delete() ? $this->sendOutput(['success' => true]) : $this->sendError('false');
+        $event->delete() ? $this->sendOutput(['success' => true]) : $this->sendError(new Message('false'));
+
     }
     
     protected function getEventByRequest()
@@ -304,7 +317,8 @@ class EventController extends AbstractController
         
         $event = new EventEntity($eventId);
         if($event->isLoaded() === false) {
-            $this->sendError('event not found');
+
+            $this->sendError(new Message('event not found'));
         }
         
         return $event;
