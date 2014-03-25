@@ -29,7 +29,7 @@ try {
     $application = new \Phalcon\Mvc\Application($di);
     $bootstrapper = new \Meetingroom\Bootstrapper\BaseBootstrapper();
     $bootstrapper->bootstrap($application);
-
+    $application->useImplicitView(false);
 
     echo $application->handle()->getContent();
 } catch (\Phalcon\Exception $e) {

@@ -3,6 +3,8 @@
 namespace Meetingroom\Controller;
 
 use \Meetingroom\Entity\Room\RoomManager;
+use \Meetingroom\View\Engine\JSONEngine;
+use \Meetingroom\View\Render;
 
 class RoomController extends AbstractController
 {
@@ -25,6 +27,11 @@ class RoomController extends AbstractController
             $roomsDTO[] = $room->getDTO();
         }
         
-        echo json_encode($roomsDTO); exit;
+        $this->view->rooms = $roomsDTO;
+        
+        $engine = new JSONEngine();
+        $render = new Render();
+        
+        return $render->process($this->view, $engine);
     }
 }

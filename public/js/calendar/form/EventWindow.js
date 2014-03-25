@@ -334,9 +334,6 @@ Ext.define('Ext.calendar.form.EventWindow', {
 
         this.fireEvent(this.activeRecord.phantom ? 'eventadd' : 'eventupdate', this, this.activeRecord, this.animateTarget);
 
-        // Clear phantom and modified states.
-        this.activeRecord.commit();
-
     },
 
     // private

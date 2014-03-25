@@ -14,6 +14,8 @@ use \Meetingroom\Validate\Timestamp\TimestampCompare;
 use Phalcon\Validation\Validator\Regex as RegexValidator;
 use Phalcon\Validation\Validator\StringLength as StringLength;
 use Phalcon\Mvc\Model\Message as Message;
+use \Meetingroom\View\Engine\JSONEngine;
+use \Meetingroom\View\Render;
 
 class EventController extends AbstractController
 {
@@ -142,7 +144,13 @@ class EventController extends AbstractController
             $eventsDTO[] = $event->getDTO();
         }
 
-        $this->sendOutput(['success' => true, 'events' => $eventsDTO]);
+        $this->view->success = true; 
+        $this->view->events = $eventsDTO;
+        
+        $engine = new JSONEngine();
+        $render = new Render();
+        
+        return $render->process($this->view, $engine);
     }
     
     public function createAction()
