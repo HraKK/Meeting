@@ -17,7 +17,6 @@
     <script type="text/javascript" src="/js/noty/layouts/top.js"></script>
     <script type="text/javascript" src="/js/noty/layouts/topCenter.js"></script>
     <script type="text/javascript" src="/js/noty/layouts/center.js"></script>
-
     <script type="text/javascript">
         Ext.Loader.setConfig({
             enabled: true,
