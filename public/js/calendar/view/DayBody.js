@@ -162,7 +162,7 @@ Ext.define('Ext.calendar.view.DayBody', {
     // inherited docs
     getEventBodyMarkup: function() {
         if (!this.eventBodyMarkup) {
-            this.eventBodyMarkup = ['{Title}',
+            this.eventBodyMarkup = ['{title}',
                 '<tpl if="_isReminder">',
                     '<i class="ext-cal-ic ext-cal-ic-rem">&#160;</i>',
                 '</tpl>',

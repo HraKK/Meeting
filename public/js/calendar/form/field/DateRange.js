@@ -194,7 +194,7 @@ Ext.define('Ext.calendar.form.field.DateRange', {
         return [
             {
                 xtype: 'checkbox',
-                name: 'IsRepeatable',
+                name: 'repeatable',
                 boxLabel: this.isRepeatableText,
                 margins: {
                     top: 2,
@@ -209,7 +209,7 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             },
             {
                 xtype: 'combo',
-                name: 'RepeatedOn',
+                name: 'repeated_on',
                 flex: 1,
                 disabled: true,
                 editable: false,

@@ -226,3 +226,10 @@ INSERT INTO rooms VALUES (1, 'Yellow room', 'big ', 10);
 INSERT INTO rooms VALUES (2, 'Green room', 'small', 5);
 
 INSERT INTO repeating_options VALUES (1, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
+
+
+-- ANOTHER TEST DATA
+INSERT INTO events
+VALUES (6, 2, '2014-03-27 10:00:00', '2014-03-27 11:30:00', 1, 'zzsdfas', 'asdfcvxcz cv zxcvxz v', FALSE, 7);
+INSERT INTO events
+VALUES (7, 2, '2014-03-27 16:00:00', '2014-03-27 16:30:00', 1, 'meeting', 'meeting desc', TRUE, 3);
