@@ -178,7 +178,7 @@ class EventController extends AbstractController
                 'date_start' => date('c', $start),
                 'date_end' => date('c', $end),
                 'description' => $this->getData('description'),
-            'repeatable' => $this->getData('isRepeatable'),
+                'repeatable' => $this->getData('isRepeatable'),
             'attendees' => $this->getData('attendees')
         ]);
 
@@ -242,8 +242,8 @@ class EventController extends AbstractController
 
         $lookupper = new EventLookupper($this->di);
 
-        $start = strtotime($this->getData('dateStart'));
-        $end = strtotime($this->getData('dateEnd'));
+        $start = strtotime($this->getData('date_start'));
+        $end = strtotime($this->getData('date_end'));
 
         if ($start === false || $end === false || $end <= $start) {
             return $this->sendError(new Message('Wrong date'));
@@ -252,9 +252,9 @@ class EventController extends AbstractController
         $event->bind([
             'title' => $this->getData('title'),
             'room_id' => $this->getData('room_id'),
-            'date_start' => $start,
-            'date_end' => $end,
-            'description' => $this->getData('description'),
+                'date_start' => date('c', $start),
+                'date_end' => date('c', $end),
+                'description' => $this->getData('description'),
             'repeatable' => $this->getData('isRepeatable'),
             'attendees' => $this->getData('attendees')
         ]);
