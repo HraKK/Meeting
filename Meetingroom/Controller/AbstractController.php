@@ -17,6 +17,7 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
      */
     protected $validator = null;
     protected $formData = null;
+
     /**
      * @var null|\Phalcon\Validation\Message\Group
      */
