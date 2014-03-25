@@ -311,10 +311,10 @@ Ext.define('Ext.calendar.App', {
 
                                                     if (success) {
                                                         rec.commit();
-                                                        this.showMsg('Event <b>' + rec.data['title'] + '</b> was moved to ' + Ext.Date.format(rec.data['date_start'], ('F jS' + time)));
+                                                        this.showMsg('Event <strong>' + rec.data['title'] + '</strong> was moved to ' + Ext.Date.format(rec.data['date_start'], ('F jS' + time)));
                                                     } else {
                                                         rec.reject();
-                                                        this.showMsg('Can\' move <b>' + rec.data['title'] + '</b> event because it is repeatable', 'error');
+                                                        this.showMsg('Can\' move <strong>' + rec.data['title'] + '</strong> event because it is repeatable', 'error');
                                                     }
 
                                                 },
@@ -323,14 +323,14 @@ Ext.define('Ext.calendar.App', {
                                             'eventresize': {
                                                 fn: function(vw, rec) {
                                                     rec.commit();
-                                                    this.showMsg('Event <b>' + rec.data.title + '</b> was updated');
+                                                    this.showMsg('Event <strong>' + rec.data.title + '</strong> was updated');
                                                 },
                                                 scope: this
                                             },
                                             'eventdelete': {
                                                 fn: function(win, rec) {
                                                     this.eventStore.remove(rec);
-                                                    this.showMsg('Event <b>' + rec.data.title + '</b> was deleted');
+                                                    this.showMsg('Event <strong>' + rec.data.title + '</strong> was deleted');
                                                 },
                                                 scope: this
                                             },
@@ -367,46 +367,67 @@ Ext.define('Ext.calendar.App', {
                                 var me = this;
                                 rec.data.n = false;
                                 rec.data.owner = Ext.getUser();
-                                this.eventStore.add(rec);
-                                // TODO: sent data should be formatter according to mapping
-                                this.eventStore.sync({
+                                me.eventStore.add(rec);
+                                me.eventStore.sync({
                                     success: function() {
                                         win.hide();
-                                        me.showMsg('Event <b>' + rec.data.title + '</b> was added');
+                                        rec.commit();
+                                        me.showMsg('Event <strong>' + rec.data.title + '</strong> was added');
                                     },
-                                    failure: function() {
-                                        me.showMsg('Can\'t create <b>' + rec.data.title + '</b> event', 'error');
+                                    failure: function(batch) {
+                                        if (batch.proxy.reader.jsonData.success == false) {
+                                            var error;
+                                            for (var i in batch.proxy.reader.jsonData.errors) {
+                                                error = batch.proxy.reader.jsonData.errors[i];
+                                                me.showMsg('Field <strong>' + error.field + '</strong> is not valid.<br>' + error.message, 'error', 2000);
+                                            }
+                                        } else {
+                                            me.showMsg('Uncaught server error. Can\'t create <strong>' + rec.data.title + '</strong> event', 'error', 2000);
+                                        }
                                     }
                                 });
-
                             },
                             scope: this
                         },
                         'eventupdate': {
                             fn: function(win, rec) {
-                                win.hide();
-                                rec.commit();
-                                // TODO: sent data should be formatter according to mapping
-                                this.eventStore.sync(); // TODO: implement server error handlers
-                                this.showMsg('Event <b>' + rec.data.title + '</b> was updated');
+                                var me = this;
+                                me.eventStore.sync({
+                                    success: function() {
+                                        win.hide();
+                                        rec.commit();
+                                        me.showMsg('Event <strong>' + rec.data.title + '</strong> was updated');
+                                    },
+                                    failure: function(batch) {
+                                        if (batch.proxy.reader.jsonData.success == false) {
+                                            var error;
+                                            for (var i in batch.proxy.reader.jsonData.errors) {
+                                                error = batch.proxy.reader.jsonData.errors[i];
+                                                me.showMsg('Field <strong>' + error.field + '</strong> is not valid.<br>' + error.message, 'error', 2000);
+                                            }
+                                        } else {
+                                            me.showMsg('Uncaught server error. Can\'t update <strong>' + rec.data.title + '</strong> event', 'error', 2000);
+                                        }
+                                    }
+                                });
                             },
                             scope: this
                         },
                         'eventdelete': {
                             fn: function(win, rec) {
-                                this.eventStore.remove(rec);
-                                // TODO: sent data should be formatter according to mapping
-                                this.eventStore.sync(); // TODO: implement server error handlers
-                                win.hide();
-                                this.showMsg('Event <b>' + rec.data.title + '</b> was deleted');
+                                var me = this;
+                                me.eventStore.remove(rec);
+                                me.eventStore.sync({
+                                    success: function() {
+                                        win.hide();
+                                        me.showMsg('Event <strong>' + rec.data.title + '</strong> was deleted');
+                                    },
+                                    failure: function(batch) {
+                                        me.showMsg('Server error. Can\'t delete <strong>' + rec.data.title + '</strong> event', 'error', 2000);
+                                    }
+                                });
                             },
                             scope: this
-                        },
-                        'editdetails': {
-                            fn: function(win, rec) {
-                                win.hide();
-                                Ext.getCmp('app-calendar').showEditForm(rec);
-                            }
                         }
                     }
                 });
@@ -448,9 +469,10 @@ Ext.define('Ext.calendar.App', {
         // This is an application-specific way to communicate CalendarPanel event messages back to the user.
         // This could be replaced with a function to do "toast" style messages, growl messages, etc. This will
         // vary based on application requirements, which is why it's not baked into the CalendarPanel.
-        showMsg: function(msg, type) {
+        showMsg: function(msg, type, duration) {
             var msgType = (typeof type == 'undefined') ? 'success' : type;
-            Ext.noty(msg, msgType, 1000)
+            var msgDuration = (typeof duration == 'undefined') ? 1000 : duration;
+            Ext.noty(msg, msgType, msgDuration)
         },
 
         // OSX Lion introduced dynamic scrollbars that do not take up space in the
