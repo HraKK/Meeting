@@ -307,8 +307,11 @@ class EventController extends AbstractController
             $this->onDenied();
         }
 
-        $event->delete() ? $this->sendOutput(['success' => true]) : $this->sendError(new Message('false'));
-
+        if ($event->delete()) {
+            $this->sendOutput(['success' => true]);
+        } else {
+            $this->sendError(new Message('false'));
+        }
     }
     
     protected function getEventByRequest()
