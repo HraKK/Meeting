@@ -5,18 +5,24 @@ namespace Test\Entity;
 class EventTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testEvent()
+    public function testAbstractModelConstructException()
     {
-        //var_dump($this->di);
-        //$dto = new \Meetingroom\DTO\Event\EventDTO([]);
+        $this->setExpectedException('\Phalcon\Exception');
         $event = new \Meetingroom\Entity\Event\EventEntity(1);
-
-        //var_dump();
-
-        $this->assertNotEmpty($event->getProperties());
-
-        $this->assertEmpty($event->getDTO(), "");
-        //var_dump($this->di);
+    }
+    
+    public function testAbstractModelConstruct()
+    {
+        $stub = $this->getMock('\Meetingroom\Entity\Event\EventEntity');
+        
+        $stub->expects($this->any())
+             ->method('doSomething')
+             ->will($this->returnValue('foo'));
+ 
+        $this->assertEquals('foo', $stub->doSomething());
+//        $event = new \Meetingroom\Entity\Event\EventEntity(1);
+//        $this->assertNotEmpty($event->getProperties());
+//        $this->assertEmpty($event->getDTO(), "");
     }
 }
  

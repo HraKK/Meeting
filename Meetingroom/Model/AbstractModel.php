@@ -10,7 +10,12 @@ abstract class AbstractModel
     
     final function __construct()
     {
-        $this->db = \Phalcon\DI::getDefault()->getShared('db');
+        $di = \Phalcon\DI::getDefault();
+        if(!is_object($di)) {
+            throw new \Phalcon\Exception('Cant connect to database');
+        }
+
+        $this->db = $di->getShared('db');
         $this->init();
     }
     
