@@ -98,11 +98,11 @@ class BaseBootstrapper implements BootstrapperInterface
     {
         $this->di->set(
             'view',
-            function () {
-                $view = new \Phalcon\Mvc\View();
-                $view->setViewsDir('../Meetingroom/View/');
+            function() {
+                $view = new \Meetingroom\View\View();
+                $view->setViewsDir(__DIR__ . '/../View/Resource/');
                 return $view;
-            }
+            }, true
         );
     }
 

@@ -11,6 +11,6 @@
         <input type="password" name="password">
         <input type="submit">
     </form>
-    <p><?php $this->flashSession->output() ?></p>
+    <p></p>
 </body>
 </html>

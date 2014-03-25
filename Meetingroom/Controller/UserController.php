@@ -3,6 +3,8 @@
 namespace Meetingroom\Controller;
 
 use \Meetingroom\Entity\User\UserEntity;
+use \Meetingroom\View\Engine\HTMLTemplateEngine;
+use \Meetingroom\View\Render;
 
 class UserController extends AbstractController
 {
@@ -17,8 +19,6 @@ class UserController extends AbstractController
             $this->onDenied();
         }
         
-        $this->view->setRenderLevel(\Phalcon\Mvc\View::LEVEL_ACTION_VIEW);
-        
         $auth = $this->session->has('auth');
 
         if($this->request->isPost()) {
@@ -28,22 +28,26 @@ class UserController extends AbstractController
             
             if($user->isValidCredentials($username, $password) == false) {
                 $this->flashSession->error('Wrong credentials');
-                header('Location: /user/login');
-                exit;
+                return $this->response->redirect('/user/login');
             }
             
             if($user->isUserExist() == false && $user->createUser() == false) {
                 $this->flashSession->error('User not sugned up');
-                header('Location: /user/login');
-                exit;
+                return $this->response->redirect('/user/login');
             }
             
             $user->startSession();
-            $this->response->redirect();
+            return $this->response->redirect();
             
         } elseif($auth) {
-            $this->response->redirect();
+            return $this->response->redirect();
         }
+        
+        $engine = new HTMLTemplateEngine();
+        $engine->setLayer('user/login.php');
+        $render = new Render();
+        
+        return $render->process($this->view, $engine);
     }
     
     

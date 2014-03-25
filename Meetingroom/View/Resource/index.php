@@ -33,11 +33,8 @@
             Ext.create('Ext.calendar.App');
         });
     </script>
-
+    
 </head>
 <body>
-
-<?php //echo $this->getContent() ?>
-
 </body>
 </html>
