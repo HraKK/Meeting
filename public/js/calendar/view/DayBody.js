@@ -257,10 +257,7 @@ Ext.define('Ext.calendar.view.DayBody', {
             colWidth,
             evtWidth,
             markup,
-            target,
-            dayStore = Ext.create('Ext.calendar.data.Days'),
-            dayName,
-            dayIndex;
+            target;
 
         for (; day < this.dayCount; day++) {
             ev = emptyCells = skipped = 0;
@@ -338,16 +335,10 @@ Ext.define('Ext.calendar.view.DayBody', {
                     timeClone,
                     targetClone;
 
-                for (j = 0; j < dayStore.length; j++) {
-                    dayName = dayStore[i].get('value');
-                    dayIndex = dayStore[i].get('id');
+                if (isWeekView) {
 
-                    if (evt[dayName] == true) {
-                        continue;
-                    }
-
-                    if (isWeekView) {
-                        evtCloneDay = dayIndex - todayDay;
+                    for (j = 0; j < evt.repeated_on.length; j++) {
+                        evtCloneDay = evt.repeated_on[j] - todayDay;
                         evtClone = Ext.clone(evt);
                         evtClone.date_start = Ext.calendar.util.Date.add(evtClone.date_start, {days: evtCloneDay});
                         evtClone.date_end = Ext.calendar.util.Date.add(evtClone.date_end, {days: evtCloneDay});
@@ -359,11 +350,15 @@ Ext.define('Ext.calendar.view.DayBody', {
                         if (Ext.get(targetClone) != null) {
                             Ext.core.DomHelper.append(targetClone, markupClone);
                         }
-                    } else {
+                    }
+
+                } else {
+
+                    for (j = 0; j < evt.repeated_on.length; j++) {
 
                         evtCloneDay = evts[i].date.getDay() - 1;
 
-                        if (dayIndex - 1 != evtCloneDay) {
+                        if (evt.repeated_on[j] != evtCloneDay) {
                             continue;
                         }
 
