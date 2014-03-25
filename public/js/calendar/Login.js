@@ -5,7 +5,7 @@
         if (form.isValid()) {
             form.submit({
                 method: 'POST',
-                url: '/user/login',
+                url: '/user/loginAjax',
                 success: function() {
                     window.location.href = '/';
                 },
