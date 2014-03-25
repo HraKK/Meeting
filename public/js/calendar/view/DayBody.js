@@ -337,8 +337,8 @@ Ext.define('Ext.calendar.view.DayBody', {
 
                 if (isWeekView) {
 
-                    for (j = 0; j < evt.repeated_on.length; j++) {
-                        evtCloneDay = evt.repeated_on[j] - todayDay;
+                    for (j = 0; j < evt.repeated_on.length; j++) { // TODO: #1
+                        evtCloneDay = evt.repeated_on[j] - todayDay; // TODO: #1
                         evtClone = Ext.clone(evt);
                         evtClone.date_start = Ext.calendar.util.Date.add(evtClone.date_start, {days: evtCloneDay});
                         evtClone.date_end = Ext.calendar.util.Date.add(evtClone.date_end, {days: evtCloneDay});
@@ -354,11 +354,11 @@ Ext.define('Ext.calendar.view.DayBody', {
 
                 } else {
 
-                    for (j = 0; j < evt.repeated_on.length; j++) {
+                    for (j = 0; j < evt.repeated_on.length; j++) { // TODO: #2
 
                         evtCloneDay = evts[i].date.getDay() - 1;
 
-                        if (evt.repeated_on[j] != evtCloneDay) {
+                        if (evt.repeated_on[j] != evtCloneDay) { // TODO: #2
                             continue;
                         }
 

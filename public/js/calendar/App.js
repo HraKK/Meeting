@@ -375,6 +375,7 @@ Ext.define('Ext.calendar.App', {
                                         me.showMsg('Event <strong>' + rec.data.title + '</strong> was added');
                                     },
                                     failure: function(batch) {
+                                        me.eventStore.remove(rec);
                                         if (batch.proxy.reader.jsonData.success == false) {
                                             var error;
                                             for (var i in batch.proxy.reader.jsonData.errors) {

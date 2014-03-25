@@ -237,7 +237,9 @@ Ext.define('Ext.calendar.form.field.DateRange', {
         repeatOnCombo.setDisabled(!checked).setVisible(checked);
 
         if (checked && startDateValue != null && repeatOnCombo.getValue().length == 0) {
-            repeatOnCombo.select(startDateValue.getDay() - 1);
+            var dayStore = Ext.create('Ext.calendar.data.Days');
+            var dayName = dayStore.getById(startDateValue.getDay() - 1).get('value');
+            repeatOnCombo.select(dayName);
         }
 
         startDate.setDisabled(checked).setVisible(!checked);
