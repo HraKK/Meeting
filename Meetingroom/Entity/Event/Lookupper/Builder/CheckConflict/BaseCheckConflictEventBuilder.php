@@ -16,10 +16,6 @@ class BaseCheckConflictEventBuilder
     public function build(\Meetingroom\Entity\Event\EventEntity $event)
     {
 
-        $eventStartTime = date("H:i:s", strtotime($event->dateStart));
-        $eventEndTime = date("H:i:s", strtotime($event->dateEnd));
-        $weekday = strtolower(date("D", strtotime($event->dateStart)));
-
         //--Проверка для одноразовых событий
         //-- есть ли события  у которых дата конца между новым событием
         //-- есть ли события у кторых дата начала между новым событием
@@ -40,9 +36,15 @@ class BaseCheckConflictEventBuilder
              " . $exclude_id . "
             (
                 (
-                    (e.date_end BETWEEN '" . $event->dateStart . "' AND '" . $event->dateEnd . "')   OR
-                    (e.date_start BETWEEN '" . $event->dateStart . "' AND '" . $event->dateEnd . "') OR
-                    (e.date_start < '" . $event->dateStart . "' AND e.date_end >'" . $event->dateEnd . "')
+                    (e.date_end BETWEEN '" . $event->dateStart->format(
+                'Y-m-d H:i:s'
+            ) . "' AND '" . $event->dateEnd->format('Y-m-d H:i:s') . "')   OR
+                    (e.date_start BETWEEN '" . $event->dateStart->format(
+                'Y-m-d H:i:s'
+            ) . "' AND '" . $event->dateEnd->format('Y-m-d H:i:s') . "') OR
+                    (e.date_start < '" . $event->dateStart->format(
+                'Y-m-d H:i:s'
+            ) . "' AND e.date_end >'" . $event->dateEnd->format('Y-m-d H:i:s') . "')
 
                 )";
 

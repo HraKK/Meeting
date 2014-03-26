@@ -57,6 +57,7 @@ abstract class AbstractController extends \Phalcon\Mvc\Controller
      */
     public function getFormData($obj = false, array $fields = [])
     {
+
         $array = $this->validator->validate($_REQUEST);
         $fields = (empty($fields)) ? array_keys($_REQUEST) : $fields;
 

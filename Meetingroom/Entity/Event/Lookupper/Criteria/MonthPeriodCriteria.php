@@ -10,15 +10,14 @@ class MonthPeriodCriteria extends AbstractPeriodCriteria
 {
 
     /**
-     * @param integer $month
-     * @param integer $year
+     * @param \DateTime $dateTime
      */
-    public function __construct($month, $year)
+    public function __construct(\Meetingroom\Wrapper\DateTime $dateTime)
     {
-        $unix_start_date = mktime(0, 0, 0, $month, 1, $year);
-        $this->startDate = date('c', $unix_start_date);
-        $day_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-        $this->endDate = date('c', $unix_start_date + (86400 * $day_in_month));
+        $this->setStartDate($dateTime);
+        $dayInMonth = $dateTime->format('t');
+        $nextMonth = $dateTime->add(new \DateInterval('P' . $dayInMonth . 'D'));
+        $this->setEndDate($nextMonth);
     }
 
 } 

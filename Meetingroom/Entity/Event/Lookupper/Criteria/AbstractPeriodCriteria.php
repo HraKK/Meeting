@@ -9,16 +9,16 @@ namespace Meetingroom\Entity\Event\Lookupper\Criteria;
 abstract class AbstractPeriodCriteria implements PeriodCriteriaInterface
 {
     /**
-     * @var string ISO 8601
+     * @var \Meetingroom\Wrapper\DateTime
      */
     protected $startDate;
     /**
-     * @var string ISO 8601
+     * @var \Meetingroom\Wrapper\DateTime
      */
     protected $endDate;
 
     /**
-     * @return string ISO 8601
+     * @return \Meetingroom\Wrapper\DateTime
      */
     public function getEndDate()
     {
@@ -26,11 +26,27 @@ abstract class AbstractPeriodCriteria implements PeriodCriteriaInterface
     }
 
     /**
-     * @return string ISO 8601
+     * @return \Meetingroom\Wrapper\DateTime
      */
     public function getStartDate()
     {
         return $this->startDate;
+    }
+
+    /**
+     * @param \Meetingroom\Wrapper\DateTime $endDate
+     */
+    public function setEndDate(\Meetingroom\Wrapper\DateTime $endDate)
+    {
+        $this->endDate = $endDate;
+    }
+
+    /**
+     * @param \Meetingroom\Wrapper\DateTime $startDate
+     */
+    public function setStartDate(\Meetingroom\Wrapper\DateTime $startDate)
+    {
+        $this->startDate = $startDate;
     }
 
 

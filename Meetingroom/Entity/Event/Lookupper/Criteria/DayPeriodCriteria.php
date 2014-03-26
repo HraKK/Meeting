@@ -10,15 +10,13 @@ namespace Meetingroom\Entity\Event\Lookupper\Criteria;
 class DayPeriodCriteria extends AbstractPeriodCriteria
 {
     /**
-     * @param integer $day
-     * @param integer $month
-     * @param integer $year
+     * @param DateTime $dateTime
      */
-    public function __construct($day, $month, $year)
+    public function __construct(\Meetingroom\Wrapper\DateTime $dateTime)
     {
-        $unix_start_date = mktime(0, 0, 0, $month, $day, $year);
-        $this->startDate = date('c', $unix_start_date);
-        $this->endDate = date('c', $unix_start_date + 86400);
+        $this->setStartDate($dateTime);
+        $nextDay = $dateTime->add(new DateInterval('P1D'));
+        $this->setEndDate($nextDay);
     }
 
 } 

@@ -143,7 +143,7 @@ abstract class AbstractEntity
         $values = [];
         
         foreach ($this->fields as $db => $map) {
-            $values[$db] = $this->$map;
+            $values[$db] = (is_object($this->$map)) ? strval($this->$map) : $this->$map;
         }
         
         return $values;
