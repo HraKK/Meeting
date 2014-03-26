@@ -727,6 +727,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * @param {Date} dt The date used to calculate the new view boundaries
      */
     setStartDate: function (start, refresh) {
+        var isWeekly = this.dayCount > 1 ? true : false;
         this.startDate = Ext.Date.clearTime(start);
         this.setViewBounds(start);
         this.store.load({
@@ -734,7 +735,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
                 day: Ext.Date.format(this.viewStart, 'd'),
                 month: Ext.Date.format(this.viewStart, 'm'),
                 year: Ext.Date.format(this.viewStart, 'Y'),
-                weekly: true
+                weekly: isWeekly
             },
             callback: function(records, operation, success) {
                 if (!success && this.getProxy().reader.jsonData.auth === false) {
