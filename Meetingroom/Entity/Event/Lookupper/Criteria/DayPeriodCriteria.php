@@ -10,12 +10,14 @@ namespace Meetingroom\Entity\Event\Lookupper\Criteria;
 class DayPeriodCriteria extends AbstractPeriodCriteria
 {
     /**
-     * @param DateTime $dateTime
+     * @param \Meetingroom\Wrapper\DateTime $dateTime
      */
     public function __construct(\Meetingroom\Wrapper\DateTime $dateTime)
     {
         $this->setStartDate($dateTime);
-        $nextDay = $dateTime->add(new DateInterval('P1D'));
+        $nextDay = clone $dateTime;
+
+        $nextDay->add(new DateInterval('P1D'));
         $this->setEndDate($nextDay);
     }
 

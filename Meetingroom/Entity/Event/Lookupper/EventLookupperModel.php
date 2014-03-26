@@ -21,7 +21,6 @@ class EventLookupperModel extends \Meetingroom\Model\AbstractModel
         array $fields = []
     ) {
         $sql = $this->buildQuery($roomCriteria, $periodCriteria, $fields);
-
         $result = $this->execute($sql);
 
         $list = [];
