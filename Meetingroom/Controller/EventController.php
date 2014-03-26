@@ -216,6 +216,7 @@ class EventController extends AbstractController
             }
 
             $this->view->success = true;
+            $this->view->id = $eventId;
             $this->view->errors = $errors;
             return $this->render();
         } else {
