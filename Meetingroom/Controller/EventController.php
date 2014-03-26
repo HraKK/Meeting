@@ -123,11 +123,10 @@ class EventController extends AbstractController
             return $this->onDenied();
         }
 
-
         $roomCriteria = new RoomCriteria($this->getData('room_id'));
         $date = new \Meetingroom\Wrapper\DateTime();
         $date->setDate($this->getData('year'), $this->getData('month'), $this->getData('day'));
-
+        $date->setTime(0, 0, 0);
         if ($this->getData('weekly') == true) {
             $periodCriteria = new WeekPeriodCriteria($date);
         } else {
