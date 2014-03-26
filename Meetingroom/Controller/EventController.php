@@ -120,15 +120,13 @@ class EventController extends AbstractController
 
 
         $roomCriteria = new RoomCriteria($this->getData('room_id'));
+        $date = new \Meetingroom\Wrapper\DateTime();
+        $date->setDate($this->getData('year'), $this->getData('month'), $this->getData('day'));
 
         if ($this->getData('weekly') == true) {
-            $periodCriteria = new WeekPeriodCriteria($this->getData('day'), $this->getData('month'), $this->getData(
-                            'year'
-            ));
+            $periodCriteria = new WeekPeriodCriteria($date);
         } else {
-            $periodCriteria = new DayPeriodCriteria($this->getData('day'), $this->getData('month'), $this->getData(
-                            'year'
-            ));
+            $periodCriteria = new DayPeriodCriteria($date);
         }
 
         $lookupper = new EventLookupper($this->di);
