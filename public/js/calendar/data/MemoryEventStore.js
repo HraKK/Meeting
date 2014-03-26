@@ -28,7 +28,9 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
             root: 'events'
         },
         writer: {
-            type: 'json'
+            root: 'jsonData',
+            type: 'json',
+            encode: true
         },
         actionMethods: {
             create: 'POST',
