@@ -28,9 +28,7 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
             root: 'events'
         },
         writer: {
-            root: 'jsonData',
-            type: 'json',
-            encode: true
+            type: 'eventwriter'
         },
         actionMethods: {
             create: 'POST',
@@ -114,5 +112,20 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
 
         me.loading = false;
         me.fireEvent('load', me, records, successful);
+    }
+});
+
+Ext.define('Ext.calendar.writer.MemoryEventStore', {
+    extend: 'Ext.data.writer.Json',
+    alias: 'writer.eventwriter',
+    getRecordData: function (model, operation) {
+
+        var serialized = this.callParent([model, operation]);
+
+        serialized.date_start = parseInt(serialized.date_start, 10);
+        serialized.date_end = parseInt(serialized.date_end, 10);
+
+        return  serialized;
+
     }
 });

@@ -164,11 +164,6 @@ class EventController extends AbstractController
             return $this->render();
         }
 
-        $roomManager = new RoomManager();
-        if (!$roomManager->isRoomExist($this->getData('room_id'))) {
-            return $this->sendError(new Message('room ain`t exist'));
-        }
-
         $lookupper = new EventLookupper($this->di);
         $event = new EventEntity();
 
