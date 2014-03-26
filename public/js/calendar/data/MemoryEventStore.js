@@ -57,22 +57,7 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
 
         this.idProperty = this.idProperty || 'id';
         this.fields = Ext.calendar.data.EventModel.prototype.fields.getRange();
-        this.onCreateRecords = Ext.Function.createInterceptor(this.onCreateRecords, this.interceptCreateRecords);
         this.initRecs();
-    },
-
-    // private - override to make sure that any records added in-memory
-    // still get a unique PK assigned at the data level
-    interceptCreateRecords: function (records, operation, success) {
-        if (success) {
-            var i = 0,
-                rec,
-                len = records.length;
-
-            for (; i < len; i++) {
-                records[i].data['id'] = Ext.getRandomId();
-            }
-        }
     },
 
     // If the store started with preloaded inline data, we have to make sure the records are set up
