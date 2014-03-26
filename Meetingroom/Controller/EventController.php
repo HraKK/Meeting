@@ -189,22 +189,28 @@ class EventController extends AbstractController
                 'date_start' => $startDate,
                 'date_end' => $endDate,
                 'description' => $this->getData('description'),
-                'repeatable' => $this->getData('isRepeatable'),
+                'repeatable' => $this->getData('repeatable'),
             'attendees' => $this->getData('attendees')
         ]);
 
         $option = new EventOptionEntity();
-
-        if ($this->getData('isRepeatable')) {
+        
+        $map = [ 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' ];
+        $repeated = array_flip(array_map(function($repeat) use ($map) {
+            return $map[$repeat];
+        }, $this->getData('repeated_on')));
+        
+        if ($this->getData('repeatable')) {
+            
             $option->bind([
                 'id' => $event->id,
-                'mon' => $this->getData('mon'),
-                'tue' => $this->getData('tue'),
-                'wed' => $this->getData('wed'),
-                'thu' => $this->getData('thu'),
-                'fri' => $this->getData('fri'),
-                'sat' => $this->getData('sat'),
-                'sun' => $this->getData('sun'),
+                'mon' => isset($repeated['mon']) ?: null,
+                'tue' => isset($repeated['tue']) ?: null,
+                'wed' => isset($repeated['wed']) ?: null,
+                'thu' => isset($repeated['thu']) ?: null,
+                'fri' => isset($repeated['fri']) ?: null,
+                'sat' => isset($repeated['sat']) ?: null,
+                'sun' => isset($repeated['sun']) ?: null,
             ]);
         }
 
@@ -216,7 +222,7 @@ class EventController extends AbstractController
                 return $this->sendError(new Message('event not created'));
             }
 
-            if ($this->getData('isRepeatable')) {
+            if ($this->getData('repeatable')) {
                 $option->bind(['id' => $event->id])->insert();
             }
 
@@ -272,13 +278,13 @@ class EventController extends AbstractController
                 'date_start' => $startDate,
                 'date_end' => $endDate,
                 'description' => $this->getData('description'),
-            'repeatable' => $this->getData('isRepeatable'),
+            'repeatable' => $this->getData('repeatable'),
             'attendees' => $this->getData('attendees')
         ]);
 
         $option = new EventOptionEntity();
 
-        if ($this->getData('isRepeatable')) {
+        if ($this->getData('repeatable')) {
             $option->bind([
                 'id' => $event->id,
                 'mon' => $this->getData('mon'),
@@ -296,7 +302,7 @@ class EventController extends AbstractController
         if (!$conflict) {
             $eventId = $event->save();
 
-            if ($this->getData('isRepeatable')) {
+            if ($this->getData('repeatable')) {
                 $option->update();
             }
 
