@@ -6,3 +6,4 @@
 ### Run tests
 1. Run composer `php composer.phar update`
 2. Run tests `php ./vendor/bin/phpunit -c ./tests/PHPunit.xml`
+3. Create alias for tests `alias t="php ./vendor/bin/phpunit -c ./tests/PHPunit.xml"`
