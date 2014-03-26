@@ -194,7 +194,7 @@ Ext.define('Ext.calendar.form.field.DateRange', {
         return [
             {
                 xtype: 'checkbox',
-                name: 'IsRepeatable',
+                name: 'repeatable',
                 boxLabel: this.isRepeatableText,
                 margins: {
                     top: 2,
@@ -209,7 +209,7 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             },
             {
                 xtype: 'combo',
-                name: 'RepeatedOn',
+                name: 'repeated_on',
                 flex: 1,
                 disabled: true,
                 editable: false,
@@ -229,6 +229,7 @@ Ext.define('Ext.calendar.form.field.DateRange', {
 
         var me = this,
             repeatOnCombo = me.down('#' + me.id + '-repeat-on'),
+            repeatOnComboValue = repeatOnCombo.getValue(),
             startDate = me.startDate,
             startDateValue = startDate.getValue(),
             endDate = me.endDate;
@@ -236,10 +237,8 @@ Ext.define('Ext.calendar.form.field.DateRange', {
         Ext.suspendLayouts();
         repeatOnCombo.setDisabled(!checked).setVisible(checked);
 
-        if (checked && startDateValue != null && repeatOnCombo.getValue().length == 0) {
-            var dayStore = Ext.create('Ext.calendar.data.Days');
-            var dayName = dayStore.getById(startDateValue.getDay() - 1).get('value');
-            repeatOnCombo.select(dayName);
+        if (checked && startDateValue != null && (repeatOnComboValue.length == 0 || repeatOnComboValue[0] == '')) {
+            repeatOnCombo.select(startDateValue.getDay() - 1);
         }
 
         startDate.setDisabled(checked).setVisible(!checked);

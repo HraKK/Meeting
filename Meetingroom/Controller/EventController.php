@@ -64,8 +64,8 @@ class EventController extends AbstractController
         $this->validator->setFilters('room_id', 'int');
         $this->validator->setFilters("title", "striptags");
         $this->validator->setFilters("repeatable", "int");
-        $this->validator->setFilters("date_start", "string");
-        $this->validator->setFilters("date_end", "string");
+        $this->validator->setFilters("date_start", "int");
+        $this->validator->setFilters("date_end", "int");
         $this->validator->setFilters("description", "striptags");
         $this->validator->setFilters("attendees", "int");
 
@@ -80,6 +80,7 @@ class EventController extends AbstractController
         $this->validator->setFilters("weekly", 'boolean');
 
         $this->formData = $this->getFormData(true);
+
     }
 
     /**
@@ -88,6 +89,15 @@ class EventController extends AbstractController
      */
     public function test_validationAction()
     {
+
+        $startDate = new \Meetingroom\Wrapper\DateTime();
+        $startDate->setTimestamp(time() + 500);
+
+        $endDate = new \Meetingroom\Wrapper\DateTime();
+        $endDate->setTimestamp(time());
+
+        print($startDate);
+        die();
         $msg = new Message('message');
 
         //var_dump($msg->getMessage());
@@ -162,10 +172,15 @@ class EventController extends AbstractController
         $lookupper = new EventLookupper($this->di);
         $event = new EventEntity();
 
-        $start = strtotime($this->getData('dateStart'));
-        $end = strtotime($this->getData('dateEnd'));
 
-        if ($start === false || $end === false || $end <= $start) {
+        $startDate = new \Meetingroom\Wrapper\DateTime();
+        $startDate->setTimestamp($this->getData('date_start'));
+
+        $endDate = new \Meetingroom\Wrapper\DateTime();
+        $endDate->setTimestamp($this->getData('date_end'));
+
+
+        if ($startDate === false || $endDate === false || $endDate <= $startDate) {
             return $this->sendError(new Message('wrong date'));
         }
 
@@ -173,10 +188,10 @@ class EventController extends AbstractController
             'title' => $this->getData('title'),
             'room_id' => $this->getData('room_id'),
             'user_id' => $this->user->id,
-            'date_start' => $start,
-            'date_end' => $end,
-            'description' => $this->getData('description'),
-            'repeatable' => $this->getData('isRepeatable'),
+                'date_start' => $startDate,
+                'date_end' => $endDate,
+                'description' => $this->getData('description'),
+                'repeatable' => $this->getData('isRepeatable'),
             'attendees' => $this->getData('attendees')
         ]);
 
@@ -240,19 +255,24 @@ class EventController extends AbstractController
 
         $lookupper = new EventLookupper($this->di);
 
-        $start = strtotime($this->getData('dateStart'));
-        $end = strtotime($this->getData('dateEnd'));
+        $startDate = new \Meetingroom\Wrapper\DateTime();
+        $startDate->setTimestamp($this->getData('date_start'));
 
-        if ($start === false || $end === false || $end <= $start) {
-            return $this->sendError(new Message('Wrong date'));
+        $endDate = new \Meetingroom\Wrapper\DateTime();
+        $endDate->setTimestamp($this->getData('date_start'));
+
+        if ($startDate === false || $endDate === false || $endDate <= $startDate) {
+
+            return $this->sendError(new Message('wrong date'));
         }
+
 
         $event->bind([
             'title' => $this->getData('title'),
             'room_id' => $this->getData('room_id'),
-            'date_start' => $start,
-            'date_end' => $end,
-            'description' => $this->getData('description'),
+                'date_start' => $startDate,
+                'date_end' => $endDate,
+                'description' => $this->getData('description'),
             'repeatable' => $this->getData('isRepeatable'),
             'attendees' => $this->getData('attendees')
         ]);

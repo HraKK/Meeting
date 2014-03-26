@@ -5,12 +5,12 @@
         if (form.isValid()) {
             form.submit({
                 method: 'POST',
-                url: '/user/login',
+                url: '/user/loginAjax',
                 success: function() {
                     window.location.href = '/';
                 },
                 failure: function(form, action) {
-                    Ext.Msg.alert('Failure', action.result.msg);
+                    Ext.Msg.alert('Failure', action.result.errors[0].message);
                 }
             });
         }

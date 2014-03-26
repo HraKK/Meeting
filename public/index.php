@@ -1,9 +1,8 @@
 <?php
 ini_set('date.timezone', 'Europe/Kiev');
-ini_set('display_errors',1);
+ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-//print_r($_SERVER['REQUEST_URI'] ); exit;
 try {
 
     $loader = new \Phalcon\Loader();
