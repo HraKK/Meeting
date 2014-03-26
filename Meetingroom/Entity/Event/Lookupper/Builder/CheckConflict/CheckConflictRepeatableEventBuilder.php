@@ -31,8 +31,8 @@ class CheckConflictRepeatableEventBuilder
             }
         }
 
-        $eventStartTime = date("H:i:s", strtotime($event->dateStart));
-        $eventEndTime = date("H:i:s", strtotime($event->dateEnd));
+        $eventStartTime = $event->dateStart->format('H:i:s');
+        $eventEndTime = $event->dateEnd->format('H:i:s');
 
         //--условие для повторяющихся событий
         //--день в который хочет стать событие
@@ -53,7 +53,7 @@ class CheckConflictRepeatableEventBuilder
                     )
                 ) OR
                 (
-                    e.date_start >  '" . $event->dateEnd . "' AND
+                    e.date_start >  '" . $event->dateEnd->format('Y-m-d H:i:s') . "' AND
                     (
                         (e.date_end::time BETWEEN '" . $eventStartTime . "' AND '" . $eventEndTime . "') OR
                         (e.date_start::time BETWEEN '" . $eventStartTime . "' AND '" . $eventEndTime . "') OR

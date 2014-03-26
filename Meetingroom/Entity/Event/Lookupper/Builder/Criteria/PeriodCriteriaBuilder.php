@@ -20,12 +20,14 @@ class PeriodCriteriaBuilder
     {
         $dayCondition = '';
         if ($criteria instanceof DayPeriodCriteria) {
-            $unixStartDate = strtotime($criteria->getStartDate());
-            $weekDay = strtolower(date('D', $unixStartDate));
+            $weekDay = strtolower($criteria->getStartDate()->format('D'));
             $dayCondition = sprintf(' AND repeating_options.%s=TRUE ', $weekDay);
         }
 
-        return " ((events.date_start BETWEEN  '" . $criteria->getStartDate() . "' AND '" . $criteria->getEndDate(
+        return " ((events.date_start BETWEEN  '" . $criteria->getStartDate()->format(
+            'Y-m-d H:i:s'
+        ) . "' AND '" . $criteria->getEndDate()->format(
+            'Y-m-d H:i:s'
         ) . "') OR (events.repeatable=TRUE " . $dayCondition . ")) ";
     }
 
