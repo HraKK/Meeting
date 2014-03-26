@@ -91,6 +91,11 @@ class EventController extends AbstractController
     {
 
         $startDate = new \Meetingroom\Wrapper\DateTime();
+        var_dump($startDate);
+        $nextWeek = $startDate->add(new \DateInterval('P7D'));
+        var_dump($startDate);
+        die();
+
         $startDate->setTimestamp(time() + 500);
 
         $endDate = new \Meetingroom\Wrapper\DateTime();
