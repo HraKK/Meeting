@@ -172,8 +172,8 @@ class EventController extends AbstractController
 
         $startDate = new \Meetingroom\Wrapper\DateTime();
         $endDate = new \Meetingroom\Wrapper\DateTime();
-        $nowDate = new \Meetingroom\Wrapper\DateTime();
-                
+        $nowDate = new \Meetingroom\Wrapper\DateTime(date("Y-m-d"));
+
         $endDate->setTimestamp($this->getData('date_end'));
         $startDate->setTimestamp($this->getData('date_start'));
 
@@ -274,7 +274,7 @@ class EventController extends AbstractController
 
         $startDate = new \Meetingroom\Wrapper\DateTime();
         $endDate = new \Meetingroom\Wrapper\DateTime();
-        $nowDate = new \Meetingroom\Wrapper\DateTime();
+        $nowDate = new \Meetingroom\Wrapper\DateTime(date("Y-m-d"));
         
         $startDate->setTimestamp($this->getData('date_start'));
         $endDate->setTimestamp($this->getData('date_end'));
