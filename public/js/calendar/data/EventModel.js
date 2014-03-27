@@ -46,6 +46,10 @@ Ext.define('Ext.calendar.data.EventModel', {
         },
         {
             name: 'repeated_on'
+        },
+        {
+            name: 'hidden',
+            type: 'boolean'
         }
     ]
 });

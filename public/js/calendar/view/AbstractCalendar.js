@@ -322,7 +322,7 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
                                 startDt = Ext.Date.clearTime(rec.data['date_start'], true);
                                 startsOnDate = dt.getTime() == startDt.getTime();
                                 spansFromPrevView = (w == 0 && d == 0 && (dt > rec.data['date_start']));
-                                return startsOnDate || spansFromPrevView;
+                                return (startsOnDate || spansFromPrevView) && (rec.data['room_id'] == Ext.currentCalendarId);
                             }
                         },
                         this);
