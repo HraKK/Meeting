@@ -314,15 +314,16 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
                     var evts = evtsInView.filterBy(function (rec) {
                             var startDt,
                                 startsOnDate,
-                                spansFromPrevView;
+                                spansFromPrevView,
+                                roomPassed = rec.data['room_id'] == Ext.currentCalendarId;
 
                             if (rec.data['repeatable']) {
-                                return true;
+                                return roomPassed;
                             } else {
                                 startDt = Ext.Date.clearTime(rec.data['date_start'], true);
                                 startsOnDate = dt.getTime() == startDt.getTime();
                                 spansFromPrevView = (w == 0 && d == 0 && (dt > rec.data['date_start']));
-                                return (startsOnDate || spansFromPrevView) && (rec.data['room_id'] == Ext.currentCalendarId);
+                                return (startsOnDate || spansFromPrevView) && roomPassed;
                             }
                         },
                         this);
