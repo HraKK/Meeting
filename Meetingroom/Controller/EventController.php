@@ -9,13 +9,9 @@ use \Meetingroom\Entity\Event\Lookupper\EventLookupper;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\WeekPeriodCriteria;
-use \Meetingroom\Validate\Timestamp\Timestamp;
-use \Meetingroom\Validate\Timestamp\TimestampCompare;
 use \Phalcon\Validation\Validator\Regex as RegexValidator;
 use \Phalcon\Validation\Validator\StringLength as StringLength;
 use \Phalcon\Mvc\Model\Message as Message;
-use \Meetingroom\Render\View\Engine\JSONEngine;
-use \Meetingroom\Render\View\Render;
 
 class EventController extends AbstractController
 {
@@ -175,13 +171,15 @@ class EventController extends AbstractController
         }
 
         $startDate = new \Meetingroom\Wrapper\DateTime();
+        $endDate = new \Meetingroom\Wrapper\DateTime();
+        $nowDate = new \Meetingroom\Wrapper\DateTime();
+                
+        $endDate->setTimestamp($this->getData('date_end'));
         $startDate->setTimestamp($this->getData('date_start'));
 
-        $endDate = new \Meetingroom\Wrapper\DateTime();
-        $endDate->setTimestamp($this->getData('date_end'));
 
-
-        if ($startDate === false || $endDate === false || $endDate <= $startDate) {
+        if ($startDate === false || $endDate === false || $endDate <= $startDate ||
+                ($nowDate > $startDate && $this->getData('repeatable') == false)) {
             return $this->sendError(new Message('wrong date'));
         }
         
@@ -239,6 +237,12 @@ class EventController extends AbstractController
             $this->view->errors = $errors;
             return $this->render();
         } else {
+            $conflicts = [];
+            foreach ($conflict as $event) {
+                $conflicts[] = $event->getDTO();
+            }
+            
+            $this->view->conflicts = $conflicts;
             return $this->sendError(new Message('event conflict with other events'));
         }
     }
@@ -269,16 +273,18 @@ class EventController extends AbstractController
         $lookupper = new EventLookupper($this->di);
 
         $startDate = new \Meetingroom\Wrapper\DateTime();
-        $startDate->setTimestamp($this->getData('date_start'));
-
         $endDate = new \Meetingroom\Wrapper\DateTime();
-        $endDate->setTimestamp($this->getData('date_start'));
+        $nowDate = new \Meetingroom\Wrapper\DateTime();
+        
+        $startDate->setTimestamp($this->getData('date_start'));
+        $endDate->setTimestamp($this->getData('date_end'));
 
-        if ($startDate === false || $endDate === false || $endDate <= $startDate) {
-
+        if ($startDate === false || $endDate === false || $endDate <= $startDate ||
+                ($nowDate > $startDate && $this->getData('repeatable') == false)) {
             return $this->sendError(new Message('wrong date'));
         }
 
+        $needInsertOption = ($event->repeatable != (int) $this->getData('repeatable')) ? true : false;
 
         $event->bind([
             'title' => $this->getData('title'),
@@ -322,12 +328,20 @@ class EventController extends AbstractController
             $eventId = $event->save();
 
             if ($this->getData('repeatable')) {
-                $option->update();
+                $needInsertOption ? $option->insert() : $option->update();
+            } else {
+                $option->delete();
             }
 
             $this->view->success = true;
             return $this->render();
         } else {
+            $conflicts = [];
+            foreach ($conflict as $event) {
+                $conflicts[] = $event->getDTO();
+            }
+            
+            $this->view->conflicts = $conflicts;
             return $this->sendError(new Message('event conflict with other events'));
         }
     }
