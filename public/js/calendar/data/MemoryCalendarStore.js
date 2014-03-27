@@ -19,7 +19,7 @@ Ext.define('Ext.calendar.data.MemoryCalendarStore', {
             type: 'json',
             root: 'rooms'
         },
-        url: '/js/calendar/json/rooms.json'
+        url: '/room/read'
     },
 
     autoLoad: true,

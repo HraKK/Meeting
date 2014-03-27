@@ -65,7 +65,8 @@ class RoomManager
         $rooms = $this->getRoomModel()->getAll();
         $roomsObj = [];
         foreach ($rooms as $room) {
-            $roomsObj[] = $this->getRoomEntity()->bind($room);
+            $roomEntity = new \Meetingroom\Entity\Room\RoomEntity();
+            $roomsObj[] = $roomEntity->bind($room);
         }
 
         return $roomsObj;

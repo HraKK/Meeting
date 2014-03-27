@@ -142,13 +142,16 @@ Ext.define('Ext.calendar.App', {
                         listeners: {
                             afterrender: function(tabPanel) {
 
+                                var tabTooltip;
+
                                 // fill tab
                                 scope.calendarStore.on('load', function() {
 
                                     this.each(function(record, index) {
+                                        tabTooltip = record.get('description') + '<br>Max attendees: <strong>' + record.get('attendees') + '</strong>';
                                         tabPanel.add({
                                             title: record.get('title'),
-                                            tooltip: record.get('description'),
+                                            tooltip: tabTooltip,
                                             iconCls: 'room-tab-icon room-tab-icon-' + record.get('id'),
                                             room_id: record.get('id')
                                         });

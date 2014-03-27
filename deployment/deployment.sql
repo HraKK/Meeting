@@ -205,7 +205,7 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 ALTER TABLE "public"."repeating_options"
 ADD CONSTRAINT "event_id" FOREIGN KEY ("id") REFERENCES "public"."events" ("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
-ALTER TABLE "public"."events" RENAME "rooom_id" TO "room_id";
+-- ALTER TABLE "public"."events" RENAME "rooom_id" TO "room_id";
 
 ALTER TABLE "public"."repeating_options" RENAME "1" TO "mon";
 ALTER TABLE "public"."repeating_options" RENAME "2" TO "tue";
@@ -222,8 +222,11 @@ VALUES (4, 1, '2014-03-18 17:33:38', '2014-03-18 18:33:38', 1, 'zzsdfas', 'asdfc
 INSERT INTO events
 VALUES (1, 1, '2014-03-17 20:40:50.499974', '2014-03-17 21:50:50.499974', 1, 'meeting', 'meeting desc', TRUE, 3);
 
-INSERT INTO rooms VALUES (1, 'Yellow room', 'big ', 10);
-INSERT INTO rooms VALUES (2, 'Green room', 'small', 5);
+INSERT INTO rooms VALUES (1, 'Yellow room', 'Meeting room in the building 2c', 10);
+INSERT INTO rooms VALUES (2, 'Green room', 'Main meeting room on the third floor', 10);
+INSERT INTO rooms VALUES (3, 'Lobby Small Room #1', 'Small meeting room in the lobby', 5);
+INSERT INTO rooms VALUES (4, 'Lobby Small Room #2', 'Small meeting room in the lobby', 5);
+INSERT INTO rooms VALUES (5, 'Lobby Big Room', 'Big meeting room in the lobby', 10);
 
 INSERT INTO repeating_options VALUES (1, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE);
 

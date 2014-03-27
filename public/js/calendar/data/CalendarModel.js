@@ -15,6 +15,10 @@ Ext.define('Ext.calendar.data.CalendarModel', {
             type: 'string'
         },
         {
+            name: 'attendees',
+            type: 'int'
+        },
+        {
             name: 'hidden',
             type: 'boolean'
         }
