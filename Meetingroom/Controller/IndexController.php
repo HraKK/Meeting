@@ -13,6 +13,7 @@ class IndexController extends AbstractController
             return $this->onDenied();
         }
         
+        $this->view->currectUsername = $this->session->get("username");
         $engine = new HTMLTemplateEngine();
         $view = new TemplateView($this->view);
         
