@@ -343,11 +343,11 @@ Ext.define('Ext.calendar.view.DayBody', {
                         evtClone.date_start = Ext.calendar.util.Date.add(evtClone.date_start, {days: evtCloneDay});
                         evtClone.date_end = Ext.calendar.util.Date.add(evtClone.date_end, {days: evtCloneDay});
 
-                        markupClone = me.getEventTemplate().apply(evtClone);
-                        timeClone = Ext.calendar.util.Date.add(evts[i].date, {days: evtCloneDay - 2});
+                        timeClone = Ext.calendar.util.Date.add(evts[i].date, {days: evtCloneDay - todayDay});
                         targetClone = me.id + '-day-col-' + Ext.Date.format(timeClone, 'Ymd');
 
                         if (Ext.get(targetClone) != null) {
+                            markupClone = me.getEventTemplate().apply(evtClone);
                             Ext.core.DomHelper.append(targetClone, markupClone);
                         }
                     }
