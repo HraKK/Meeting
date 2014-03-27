@@ -174,6 +174,19 @@ Ext.define('Ext.calendar.view.DayBody', {
         return this.eventBodyMarkup;
     },
 
+    getResizeEl: function() {
+        if (!this.eventResizeMarkup) {
+            this.eventResizeMarkup = [
+                '<tpl if="owner == Ext.currentUser">',
+                    '<div class="ext-evt-rsz">' +
+                        '<div class="ext-evt-rsz-h">&#160;</div>' +
+                    '</div>',
+                '</tpl>'
+            ].join('');
+        }
+        return this.eventResizeMarkup;
+    },
+
     // inherited docs
     getEventTemplate: function() {
         if (!this.eventTpl) {
@@ -181,9 +194,7 @@ Ext.define('Ext.calendar.view.DayBody', {
                 new Ext.XTemplate(
                     '<div id="{_elId}" class="{_selectorCls} {_colorCls} ext-cal-evt ext-cal-evr is-hidden-{hidden}" style="left: 0; width: 100%; top: {_top}px; height: {_height}px;">',
                         '<div class="ext-evt-bd">', this.getEventBodyMarkup(), '</div>',
-                        '<div class="ext-evt-rsz">' +
-                            '<div class="ext-evt-rsz-h">&#160;</div>' +
-                        '</div>',
+                        this.getResizeEl(),
                     '</div>'
                 )
                 : new Ext.XTemplate(
@@ -193,9 +204,7 @@ Ext.define('Ext.calendar.view.DayBody', {
                         '<dd class="ext-evt-bd">',
                             this.getEventBodyMarkup(),
                         '</dd>',
-                        '<div class="ext-evt-rsz">' +
-                            '<div class="ext-evt-rsz-h">&#160;</div>' +
-                        '</div>',
+                        this.getResizeEl(),
                     '</dl>',
                     '<div class="ext-cal-evb">&#160;</div>',
                 '</div>'
@@ -322,6 +331,8 @@ Ext.define('Ext.calendar.view.DayBody', {
             }
 
             if (evt.repeatable == true) {
+
+
 
                 if (isWeekView && evts[i].date.getDay()) {
                     continue;
