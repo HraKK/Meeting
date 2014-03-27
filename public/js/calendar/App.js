@@ -115,7 +115,7 @@ Ext.define('Ext.calendar.App', {
                                 xtype: 'tbtext',
                                 width: 172,
                                 cls: 'user-name',
-                                text: Ext.getUser()
+                                text: Ext.currentUser
                             },
                             {
                                 xtype: 'tbspacer'
@@ -372,7 +372,7 @@ Ext.define('Ext.calendar.App', {
                             fn: function(win, rec) {
                                 var me = this;
                                 rec.data.n = false;
-                                rec.data.owner = Ext.getUser();
+                                rec.data.owner = Ext.currentUser;
                                 me.eventStore.add(rec);
                                 me.eventStore.sync({
                                     success: function(batch) {
@@ -571,10 +571,6 @@ Ext.define('Ext.calendar.App', {
                 },
                 timeout: duration || 3000
             });
-        };
-
-        Ext.getUser = function() {
-            return 'username';
         };
 
         Ext.sessionExpired = function() {

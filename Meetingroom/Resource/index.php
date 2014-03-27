@@ -19,8 +19,6 @@
     <script type="text/javascript" src="/js/noty/layouts/center.js"></script>
 
     <script type="text/javascript">
-        var currentUser = "<?=$currectUsername?>";
-        
         Ext.Loader.setConfig({
             enabled: true,
             paths: {
@@ -32,6 +30,7 @@
         ]);
         Ext.onReady(function() {
             // launch the app
+            Ext.currentUser = '<?=$currectUsername?>';
             Ext.create('Ext.calendar.App');
         });
     </script>

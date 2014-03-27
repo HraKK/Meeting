@@ -254,7 +254,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
             rec = Ext.create('Ext.calendar.data.EventModel');
             rec.data['date_start'] = start;
             rec.data['date_end'] = end;
-            rec.data['owner'] = Ext.getUser();
+            rec.data['owner'] = Ext.currentUser;
             rec.data['attendees'] = 3;
             rec.data['room_id'] = Ext.currentCalendarId;
 
