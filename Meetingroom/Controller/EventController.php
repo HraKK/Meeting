@@ -180,36 +180,41 @@ class EventController extends AbstractController
         if ($startDate === false || $endDate === false || $endDate <= $startDate) {
             return $this->sendError(new Message('wrong date'));
         }
-
+        
         $event->bind([
             'title' => $this->getData('title'),
             'room_id' => $this->getData('room_id'),
             'user_id' => $this->user->id,
-                'date_start' => $startDate,
-                'date_end' => $endDate,
-                'description' => $this->getData('description'),
-                'repeatable' => $this->getData('repeatable'),
+            'date_start' => $startDate,
+            'date_end' => $endDate,
+            'description' => $this->getData('description'),
+            'repeatable' => (int) $this->getData('repeatable'),
             'attendees' => $this->getData('attendees')
         ]);
 
         $option = new EventOptionEntity();
         
-        $map = [ 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' ];
-        $repeated = array_flip(array_map(function($repeat) use ($map) {
-            return $map[$repeat];
-        }, $this->getData('repeated_on')));
-        
         if ($this->getData('repeatable')) {
+            $repeatedOn = $this->getData('repeated_on');
             
+            if(empty($repeatedOn) == true || is_array($repeatedOn) == false) {
+                return $this->sendError(new Message('Repeated events should have more than one day of week'));
+            }
+            
+            $map = [ 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' ];
+            $repeated = array_flip(array_map(function($repeat) use ($map) {
+                return $map[$repeat];
+            }, $repeatedOn));
+        
             $option->bind([
                 'id' => $event->id,
-                'mon' => isset($repeated['mon']) ?: null,
-                'tue' => isset($repeated['tue']) ?: null,
-                'wed' => isset($repeated['wed']) ?: null,
-                'thu' => isset($repeated['thu']) ?: null,
-                'fri' => isset($repeated['fri']) ?: null,
-                'sat' => isset($repeated['sat']) ?: null,
-                'sun' => isset($repeated['sun']) ?: null,
+                'mon' => isset($repeated['mon']) ? 1 : 0,
+                'tue' => isset($repeated['tue']) ? 1 : 0,
+                'wed' => isset($repeated['wed']) ? 1 : 0,
+                'thu' => isset($repeated['thu']) ? 1 : 0,
+                'fri' => isset($repeated['fri']) ? 1 : 0,
+                'sat' => isset($repeated['sat']) ? 1 : 0,
+                'sun' => isset($repeated['sun']) ? 1 : 0,
             ]);
         }
 
@@ -274,25 +279,36 @@ class EventController extends AbstractController
         $event->bind([
             'title' => $this->getData('title'),
             'room_id' => $this->getData('room_id'),
-                'date_start' => $startDate,
-                'date_end' => $endDate,
-                'description' => $this->getData('description'),
-            'repeatable' => $this->getData('repeatable'),
+            'date_start' => $startDate,
+            'date_end' => $endDate,
+            'description' => $this->getData('description'),
+            'repeatable' => (int) $this->getData('repeatable'),
             'attendees' => $this->getData('attendees')
         ]);
 
         $option = new EventOptionEntity();
 
         if ($this->getData('repeatable')) {
+            $repeatedOn = $this->getData('repeated_on');
+            
+            if(empty($repeatedOn) == true || is_array($repeatedOn) == false) {
+                return $this->sendError(new Message('Repeated events should have more than one day of week'));
+            }
+            
+            $map = [ 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' ];
+            $repeated = array_flip(array_map(function($repeat) use ($map) {
+                return $map[$repeat];
+            }, $repeatedOn));
+        
             $option->bind([
                 'id' => $event->id,
-                'mon' => $this->getData('mon'),
-                'tue' => $this->getData('tue'),
-                'wed' => $this->getData('wed'),
-                'thu' => $this->getData('thu'),
-                'fri' => $this->getData('fri'),
-                'sat' => $this->getData('sat'),
-                'sun' => $this->getData('sun')
+                'mon' => isset($repeated['mon']) ? 1 : 0,
+                'tue' => isset($repeated['tue']) ? 1 : 0,
+                'wed' => isset($repeated['wed']) ? 1 : 0,
+                'thu' => isset($repeated['thu']) ? 1 : 0,
+                'fri' => isset($repeated['fri']) ? 1 : 0,
+                'sat' => isset($repeated['sat']) ? 1 : 0,
+                'sun' => isset($repeated['sun']) ? 1 : 0,
             ]);
         }
 
@@ -331,7 +347,7 @@ class EventController extends AbstractController
 
     protected function getEventByRequest()
     {
-        $eventId = $this->request->getPost("event_id", "int");
+        $eventId = $this->getData("id");
 
         $event = new EventEntity($eventId);
         if ($event->isLoaded() === false) {
