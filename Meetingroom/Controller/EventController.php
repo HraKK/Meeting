@@ -169,6 +169,10 @@ class EventController extends AbstractController
         $lookupper = new EventLookupper($this->di);
         $event = new EventEntity();
 
+        $roomManager = new RoomManager();
+        if (!$roomManager->isRoomExist($this->getData('room_id'))) {
+            return $this->sendError(new Message('room ain\'t exist'));
+        }
 
         $startDate = new \Meetingroom\Wrapper\DateTime();
         $startDate->setTimestamp($this->getData('date_start'));
@@ -193,7 +197,7 @@ class EventController extends AbstractController
         ]);
 
         $option = new EventOptionEntity();
-        
+
         $map = [ 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun' ];
         $repeated = array_flip(array_map(function($repeat) use ($map) {
             return $map[$repeat];
