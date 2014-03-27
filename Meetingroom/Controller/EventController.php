@@ -9,13 +9,9 @@ use \Meetingroom\Entity\Event\Lookupper\EventLookupper;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\DayPeriodCriteria;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\RoomCriteria;
 use \Meetingroom\Entity\Event\Lookupper\Criteria\WeekPeriodCriteria;
-use \Meetingroom\Validate\Timestamp\Timestamp;
-use \Meetingroom\Validate\Timestamp\TimestampCompare;
 use \Phalcon\Validation\Validator\Regex as RegexValidator;
 use \Phalcon\Validation\Validator\StringLength as StringLength;
 use \Phalcon\Mvc\Model\Message as Message;
-use \Meetingroom\Render\View\Engine\JSONEngine;
-use \Meetingroom\Render\View\Render;
 
 class EventController extends AbstractController
 {
@@ -288,6 +284,7 @@ class EventController extends AbstractController
             return $this->sendError(new Message('wrong date'));
         }
 
+        $needInsertOption = ($event->repeatable != (int) $this->getData('repeatable')) ? true : false;
 
         $event->bind([
             'title' => $this->getData('title'),
@@ -331,7 +328,9 @@ class EventController extends AbstractController
             $eventId = $event->save();
 
             if ($this->getData('repeatable')) {
-                $option->update();
+                $needInsertOption ? $option->insert() : $option->update();
+            } else {
+                $option->delete();
             }
 
             $this->view->success = true;
