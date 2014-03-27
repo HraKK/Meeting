@@ -21,6 +21,8 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
         'Ext.calendar.data.EventModel'
     ],
 
+    autoLoad: false,
+
     proxy: {
         type: 'ajax',
         reader: {
@@ -57,22 +59,7 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
 
         this.idProperty = this.idProperty || 'id';
         this.fields = Ext.calendar.data.EventModel.prototype.fields.getRange();
-        this.onCreateRecords = Ext.Function.createInterceptor(this.onCreateRecords, this.interceptCreateRecords);
         this.initRecs();
-    },
-
-    // private - override to make sure that any records added in-memory
-    // still get a unique PK assigned at the data level
-    interceptCreateRecords: function (records, operation, success) {
-        if (success) {
-            var i = 0,
-                rec,
-                len = records.length;
-
-            for (; i < len; i++) {
-                records[i].data['id'] = Ext.getRandomId();
-            }
-        }
     },
 
     // If the store started with preloaded inline data, we have to make sure the records are set up
@@ -82,36 +69,6 @@ Ext.define('Ext.calendar.data.MemoryEventStore', {
             rec.store = this;
             rec.phantom = false;
         }, this);
-    },
-
-    // private - override the default logic for memory storage
-    onProxyLoad: function (operation) {
-        var me = this,
-            records;
-
-        if (me.data && me.data.length > 0) {
-            // this store has already been initially loaded, so do not reload
-            // and lose updates to the store, just use store's latest data
-            me.totalCount = me.data.length;
-            records = me.data.items;
-        } else {
-            // this is the initial load, so defer to the proxy's result
-            var resultSet = operation.getResultSet(),
-                successful = operation.wasSuccessful();
-
-            records = operation.getRecords();
-
-            if (resultSet) {
-                me.totalCount = resultSet.total;
-            }
-
-            if (successful) {
-                me.loadRecords(records, operation);
-            }
-        }
-
-        me.loading = false;
-        me.fireEvent('load', me, records, successful);
     }
 });
 
