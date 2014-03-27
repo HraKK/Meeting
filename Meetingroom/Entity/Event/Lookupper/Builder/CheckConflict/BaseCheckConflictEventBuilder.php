@@ -36,15 +36,9 @@ class BaseCheckConflictEventBuilder
              " . $exclude_id . "
             (
                 (
-                    (e.date_end BETWEEN '" . $event->dateStart->format(
-                'Y-m-d H:i:s'
-            ) . "' AND '" . $event->dateEnd->format('Y-m-d H:i:s') . "')   OR
-                    (e.date_start BETWEEN '" . $event->dateStart->format(
-                'Y-m-d H:i:s'
-            ) . "' AND '" . $event->dateEnd->format('Y-m-d H:i:s') . "') OR
-                    (e.date_start < '" . $event->dateStart->format(
-                'Y-m-d H:i:s'
-            ) . "' AND e.date_end >'" . $event->dateEnd->format('Y-m-d H:i:s') . "')
+                    (e.date_end   > '" . $event->dateStart . "' AND e.date_end   < '" . $event->dateEnd . "')   OR
+                    (e.date_start > '" . $event->dateStart . "' AND e.date_start < '" . $event->dateEnd . "') OR
+                    (e.date_start < '" . $event->dateStart . "' AND e.date_end   > '" . $event->dateEnd . "')
 
                 )";
 

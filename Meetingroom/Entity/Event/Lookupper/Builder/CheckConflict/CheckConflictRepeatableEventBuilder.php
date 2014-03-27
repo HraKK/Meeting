@@ -47,17 +47,17 @@ class CheckConflictRepeatableEventBuilder
                     (" . implode(" OR ", $sql_weekday_part) . ") AND
 
                     (
-                        (e.date_end::time BETWEEN '" . $eventStartTime . "' AND '" . $eventEndTime . "') OR
-                        (e.date_start::time BETWEEN '" . $eventStartTime . "' AND '" . $eventEndTime . "') OR
-                        (e.date_start::time < '" . $eventStartTime . "' AND e.date_end::time >'" . $eventEndTime . "')
+                        (e.date_end::time   > '" . $eventStartTime . "' AND e.date_end::time   < '" . $eventEndTime . "') OR
+                        (e.date_start::time > '" . $eventStartTime . "' AND e.date_start::time < '" . $eventEndTime . "') OR
+                        (e.date_start::time < '" . $eventStartTime . "' AND e.date_end::time   > '" . $eventEndTime . "')
                     )
                 ) OR
                 (
                     e.date_start >  '" . $event->dateEnd->format('Y-m-d H:i:s') . "' AND
                     (
-                        (e.date_end::time BETWEEN '" . $eventStartTime . "' AND '" . $eventEndTime . "') OR
-                        (e.date_start::time BETWEEN '" . $eventStartTime . "' AND '" . $eventEndTime . "') OR
-                        (e.date_start::time < '" . $eventStartTime . "' AND e.date_end::time >'" . $eventEndTime . "')
+                        (e.date_end::time   > '" . $eventStartTime . "' AND e.date_end::time   < '" . $eventEndTime . "') OR
+                        (e.date_start::time > '" . $eventStartTime . "' AND e.date_start::time < '" . $eventEndTime . "') OR
+                        (e.date_start::time < '" . $eventStartTime . "' AND e.date_end::time   > '" . $eventEndTime . "')
                     ) AND
                     EXTRACT(DOW from date_start) IN (" . implode(",", $weekday_arr_int) . ")
                 )

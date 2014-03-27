@@ -27,15 +27,9 @@ class CheckConflictSingleEventBuilder
                     r." . $weekday . " = TRUE AND--день в который хочет стать событие
 
                     (
-                        (e.date_end::time BETWEEN '" . $event->dateStart->format(
-                'H:i:s'
-            ) . "' AND '" . $event->dateEnd->format('H:i:s') . "') OR
-                        (e.date_start::time BETWEEN '" . $event->dateStart->format(
-                'H:i:s'
-            ) . "' AND '" . $event->dateEnd->format('H:i:s') . "') OR
-                        (e.date_start::time < '" . $event->dateStart->format(
-                'H:i:s'
-            ) . "' AND e.date_end::time >'" . $event->dateEnd->format('H:i:s') . "')
+                        (e.date_end::time > '" . $event->dateStart->format('H:i:s') . "' AND e.date_end::time <'" . $event->dateEnd->format('H:i:s') . "') OR
+                        (e.date_start::time > '" . $event->dateStart->format('H:i:s') . "' AND e.date_start::time  < '" . $event->dateEnd->format('H:i:s') . "') OR
+                        (e.date_start::time < '" . $event->dateStart->format('H:i:s') . "' AND e.date_end::time >'" . $event->dateEnd->format('H:i:s') . "')
 
                     )
                 )
