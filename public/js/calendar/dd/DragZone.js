@@ -10,7 +10,7 @@ Ext.define('Ext.calendar.dd.DragZone', {
     ],
 
     ddGroup: 'CalendarDD',
-    eventSelector: '.ext-cal-evt',
+    eventSelector: '.ext-cal-evt-draggable',
 
     constructor: function(el, config) {
         if (!Ext.calendar._statusProxyInstance) {

@@ -462,7 +462,7 @@ td.ext-cal-dtitle-today div {
     border-collapse: separate;
 }
 
-.ext-cal-evt {
+.ext-cal-evt-draggable {
     cursor: pointer;
 }
 
@@ -678,9 +678,9 @@ td.ext-cal-dtitle-today div {
 }
 
 /* Webkit/Gecko: */
-.ext-evt-over,
+.ext-cal-evt-draggable.ext-evt-over,
     /* IE/Opera: */
-.ext-evt-over .ext-cal-evm {
+.ext-cal-evt-draggable.ext-evt-over .ext-cal-evm {
     opacity: .8;
     filter: alpha(opacity=80);
 }
@@ -747,7 +747,7 @@ td.ext-cal-dtitle-today div {
     /* no opacity for ie by default */
 }
 
-.ext-evt-over .ext-evt-rsz-h {
+.ext-cal-evt-draggable.ext-evt-over .ext-evt-rsz-h {
     display: block;
 }
 

@@ -162,12 +162,10 @@ Ext.define('Ext.calendar.view.DayBody', {
     // inherited docs
     getEventBodyMarkup: function() {
         if (!this.eventBodyMarkup) {
-            this.eventBodyMarkup = ['{title}',
-                '<tpl if="_isReminder">',
-                    '<i class="ext-cal-ic ext-cal-ic-rem">&#160;</i>',
-                '</tpl>',
-                '<tpl if="_isRecurring">',
-                    '<i class="ext-cal-ic ext-cal-ic-rcr">&#160;</i>',
+            this.eventBodyMarkup = [
+                '{title}',
+                '<tpl if="owner == Ext.currentUser">',
+                    '<i class="ext-owner-icon"></i>',
                 '</tpl>'
             ].join('');
         }
@@ -178,13 +176,26 @@ Ext.define('Ext.calendar.view.DayBody', {
         if (!this.eventResizeMarkup) {
             this.eventResizeMarkup = [
                 '<tpl if="owner == Ext.currentUser">',
-                    '<div class="ext-evt-rsz">' +
-                        '<div class="ext-evt-rsz-h">&#160;</div>' +
+                    '<div class="ext-evt-rsz">',
+                        '<div class="ext-evt-rsz-h">&#160;</div>',
                     '</div>',
-                '</tpl>'
+                '<tpl else></tpl>'
             ].join('');
         }
         return this.eventResizeMarkup;
+    },
+
+    getDragSelector: function() {
+        if (!this.eventDragSelector) {
+            this.eventDragSelector = [
+                '<tpl if="owner == Ext.currentUser">',
+                    'ext-cal-evt ext-cal-evt-draggable',
+                '<tpl else>',
+                    'ext-cal-evt',
+                '</tpl>'
+            ].join('');
+        }
+        return this.eventDragSelector;
     },
 
     // inherited docs
@@ -192,13 +203,13 @@ Ext.define('Ext.calendar.view.DayBody', {
         if (!this.eventTpl) {
             this.eventTpl = !(Ext.isIE || Ext.isOpera) ?
                 new Ext.XTemplate(
-                    '<div id="{_elId}" class="{_selectorCls} {_colorCls} ext-cal-evt ext-cal-evr is-hidden-{hidden}" style="left: 0; width: 100%; top: {_top}px; height: {_height}px;">',
+                    '<div id="{_elId}" class="{_selectorCls} {_colorCls} ' + this.getDragSelector() + ' ext-cal-evr is-hidden-{hidden}" style="left: 0; width: 100%; top: {_top}px; height: {_height}px;">',
                         '<div class="ext-evt-bd">', this.getEventBodyMarkup(), '</div>',
                         this.getResizeEl(),
                     '</div>'
                 )
                 : new Ext.XTemplate(
-                '<div id="{_elId}" class="ext-cal-evt {_selectorCls} {_colorCls}-x is-hidden-{hidden}" style="left: 0; width: 100%; top: {_top}px;">',
+                '<div id="{_elId}" class="' + this.getDragSelector() + ' {_selectorCls} {_colorCls}-x is-hidden-{hidden}" style="left: 0; width: 100%; top: {_top}px;">',
                     '<div class="ext-cal-evb">&#160;</div>',
                     '<dl style="height: {_height}px;" class="ext-cal-evdm">',
                         '<dd class="ext-evt-bd">',

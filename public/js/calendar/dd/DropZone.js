@@ -10,7 +10,7 @@ Ext.define('Ext.calendar.dd.DropZone', {
     ],
 
     ddGroup: 'CalendarDD',
-    eventSelector: '.ext-cal-evt',
+    eventSelector: '.ext-cal-evt-draggable',
 
     // private
     shims: [],
