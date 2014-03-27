@@ -372,8 +372,9 @@ Ext.define('Ext.calendar.App', {
                                 rec.data.owner = Ext.getUser();
                                 me.eventStore.add(rec);
                                 me.eventStore.sync({
-                                    success: function() {
+                                    success: function(batch) {
                                         win.hide();
+                                        rec.set('id', batch.proxy.reader.jsonData.id);
                                         rec.commit();
                                         me.showMsg('Event <strong>' + rec.data.title + '</strong> was added');
                                     },
