@@ -312,24 +312,65 @@ Ext.define('Ext.calendar.App', {
                                             },
                                             'eventmove': {
                                                 fn: function(vw, rec, success) {
-
                                                     var time = ' \\a\\t H:i';
-
+                                                    var me = this;
                                                     if (success) {
-                                                        rec.commit();
-                                                        this.showMsg('Event <strong>' + rec.data['title'] + '</strong> was moved to ' + Ext.Date.format(rec.data['date_start'], ('F jS' + time)));
+                                                        me.eventStore.sync({
+                                                            success: function() {
+                                                                rec.commit();
+                                                                me.showMsg('Event <strong>' + rec.data['title'] + '</strong> was moved to ' + Ext.Date.format(rec.data['date_start'], ('F jS' + time)));
+                                                            },
+                                                            failure: function(batch) {
+                                                                rec.reject();
+                                                                if (batch.proxy.reader.jsonData.success == false) {
+                                                                    var error,
+                                                                        errorText;
+                                                                    if (batch.proxy.reader.jsonData.auth === false) {
+                                                                        Ext.sessionExpired()
+                                                                    }
+                                                                    for (var i in batch.proxy.reader.jsonData.errors) {
+                                                                        error = batch.proxy.reader.jsonData.errors[i];
+                                                                        errorText = ((error.field != null) ? 'Field <strong>' + error.field + '</strong> is not valid.<br>' : '') + error.message;
+                                                                        me.showMsg(errorText, 'error', 2000);
+                                                                    }
+                                                                } else {
+                                                                    me.showMsg('Uncaught server error. Can\'t move <strong>' + rec.data.title + '</strong> event', 'error', 2000);
+                                                                }
+                                                            }
+                                                        });
                                                     } else {
                                                         rec.reject();
                                                         this.showMsg('Can\' move <strong>' + rec.data['title'] + '</strong> event because it is repeatable', 'error');
                                                     }
-
                                                 },
                                                 scope: this
                                             },
                                             'eventresize': {
                                                 fn: function(vw, rec) {
-                                                    rec.commit();
-                                                    this.showMsg('Event <strong>' + rec.data.title + '</strong> was updated');
+                                                    var me = this;
+                                                    me.eventStore.sync({
+                                                        success: function() {
+                                                            rec.commit();
+                                                            me.showMsg('Event <strong>' + rec.data.title + '</strong> was updated');
+                                                        },
+                                                        failure: function(batch) {
+                                                            rec.reject();
+                                                            if (batch.proxy.reader.jsonData.success == false) {
+                                                                var error,
+                                                                    errorText;
+                                                                if (batch.proxy.reader.jsonData.auth === false) {
+                                                                    Ext.sessionExpired()
+                                                                }
+                                                                for (var i in batch.proxy.reader.jsonData.errors) {
+                                                                    error = batch.proxy.reader.jsonData.errors[i];
+                                                                    errorText = ((error.field != null) ? 'Field <strong>' + error.field + '</strong> is not valid.<br>' : '') + error.message;
+                                                                    me.showMsg(errorText, 'error', 2000);
+                                                                }
+                                                            } else {
+                                                                me.showMsg('Uncaught server error. Can\'t update <strong>' + rec.data.title + '</strong> event', 'error', 2000);
+                                                            }
+                                                        }
+                                                    });
                                                 },
                                                 scope: this
                                             },
@@ -384,13 +425,15 @@ Ext.define('Ext.calendar.App', {
                                     failure: function(batch) {
                                         me.eventStore.remove(rec);
                                         if (batch.proxy.reader.jsonData.success == false) {
-                                            var error;
+                                            var error,
+                                                errorText;
                                             if (batch.proxy.reader.jsonData.auth === false) {
                                                 Ext.sessionExpired()
                                             }
                                             for (var i in batch.proxy.reader.jsonData.errors) {
                                                 error = batch.proxy.reader.jsonData.errors[i];
-                                                me.showMsg('Field <strong>' + error.field + '</strong> is not valid.<br>' + error.message, 'error', 2000);
+                                                errorText = ((error.field != null) ? 'Field <strong>' + error.field + '</strong> is not valid.<br>' : '') + error.message;
+                                                me.showMsg(errorText, 'error', 2000);
                                             }
                                         } else {
                                             me.showMsg('Uncaught server error. Can\'t create <strong>' + rec.data.title + '</strong> event', 'error', 2000);
@@ -411,13 +454,15 @@ Ext.define('Ext.calendar.App', {
                                     },
                                     failure: function(batch) {
                                         if (batch.proxy.reader.jsonData.success == false) {
-                                            var error;
+                                            var error,
+                                                errorText;
                                             if (batch.proxy.reader.jsonData.auth === false) {
                                                 Ext.sessionExpired()
                                             }
                                             for (var i in batch.proxy.reader.jsonData.errors) {
                                                 error = batch.proxy.reader.jsonData.errors[i];
-                                                me.showMsg('Field <strong>' + error.field + '</strong> is not valid.<br>' + error.message, 'error', 2000);
+                                                errorText = ((error.field != null) ? 'Field <strong>' + error.field + '</strong> is not valid.<br>' : '') + error.message;
+                                                me.showMsg(errorText, 'error', 2000);
                                             }
                                         } else {
                                             me.showMsg('Uncaught server error. Can\'t update <strong>' + rec.data.title + '</strong> event', 'error', 2000);
