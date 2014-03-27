@@ -71,6 +71,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
                     xtype: 'textfield',
                     fieldLabel: 'Owner',
                     name: 'owner',
+                    itemId: 'owner',
                     labelWidth: 100,
                     readOnly: true,
                     anchor: '50%'
@@ -205,6 +206,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
         this.el.addCls('ext-cal-event-win');
 
         this.titleField = this.down('#title');
+        this.ownerField = this.down('#owner');
         this.dateRangeField = this.down('#date-range');
         this.calendarField = this.down('#calendar');
         this.deleteButton = this.down('#delete-btn');
@@ -239,10 +241,12 @@ Ext.define('Ext.calendar.form.EventWindow', {
 
             rec = o;
             this.setTitle(rec.phantom ? this.titleTextAdd : this.titleTextEdit);
+            this.ownerField.show();
 
             f.loadRecord(rec);
         } else {
             this.setTitle(this.titleTextAdd);
+            this.ownerField.hide();
 
             var start = o['date_start'],
                 end = o['date_end'] || Ext.calendar.util.Date.add(start, {hours: 0.5});
