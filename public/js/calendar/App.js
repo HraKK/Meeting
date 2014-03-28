@@ -316,7 +316,6 @@ Ext.define('Ext.calendar.App', {
                                                             },
                                                             failure: function(batch) {
                                                                 rec.reject();
-                                                                me.eventStore.load();
                                                                 if (batch.proxy.reader.jsonData.success == false) {
                                                                     var error,
                                                                         errorText;
@@ -350,7 +349,6 @@ Ext.define('Ext.calendar.App', {
                                                         },
                                                         failure: function(batch) {
                                                             rec.reject();
-                                                            me.eventStore.load();
                                                             if (batch.proxy.reader.jsonData.success == false) {
                                                                 var error,
                                                                     errorText;
@@ -420,7 +418,6 @@ Ext.define('Ext.calendar.App', {
                                     },
                                     failure: function(batch) {
                                         me.eventStore.remove(rec);
-                                        me.eventStore.load();
                                         if (batch.proxy.reader.jsonData.success == false) {
                                             var error,
                                                 errorText;
@@ -451,7 +448,6 @@ Ext.define('Ext.calendar.App', {
                                     },
                                     failure: function(batch) {
                                         rec.reject();
-                                        me.eventStore.load();
                                         if (batch.proxy.reader.jsonData.success == false) {
                                             var error,
                                                 errorText;
