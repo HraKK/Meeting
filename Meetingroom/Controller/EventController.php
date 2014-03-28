@@ -83,35 +83,36 @@ class EventController extends AbstractController
      * @example /event/test_validation?room_id=12aa23&aa=bb
      * @todo delete before stage
      */
-    public function test_validationAction()
-    {
-
-        $startDate = new \Meetingroom\Wrapper\DateTime();
-        var_dump($startDate);
-        $nextWeek = $startDate->add(new \DateInterval('P7D'));
-        var_dump($startDate);
-        die();
-
-        $startDate->setTimestamp(time() + 500);
-
-        $endDate = new \Meetingroom\Wrapper\DateTime();
-        $endDate->setTimestamp(time());
-
-        print($startDate);
-        die();
-        $msg = new Message('message');
-
-        //var_dump($msg->getMessage());
-
-        $this->sendError(new Message('message'));
-
-
-        var_dump($this->formData);
-//        var_dump($this->getData('room_id2'));
-        var_dump($this->getFormErrors());
-
-        die();
-    }
+//    public function test_validationAction()
+//    {
+//
+//        $startDate = new \Meetingroom\Wrapper\DateTime();
+//        $startDate->setDate(2013, 10, 15);
+//        var_dump($startDate);
+//        $nextWeek = $startDate->add(new \DateInterval('P7D'));
+//        var_dump($startDate);
+//        die();
+//
+//        $startDate->setTimestamp(time() + 500);
+//
+//        $endDate = new \Meetingroom\Wrapper\DateTime();
+//        $endDate->setTimestamp(time());
+//
+//        print($startDate);
+//        die();
+//        $msg = new Message('message');
+//
+//        //var_dump($msg->getMessage());
+//
+//        $this->sendError(new Message('message'));
+//
+//
+//        var_dump($this->formData);
+////        var_dump($this->getData('room_id2'));
+//        var_dump($this->getFormErrors());
+//
+//        die();
+//    }
 
     public function indexAction()
     {
@@ -121,14 +122,15 @@ class EventController extends AbstractController
 
         $roomCriteria = new RoomCriteria($this->getData('room_id'));
         $date = new \Meetingroom\Wrapper\DateTime();
+
         $date->setDate($this->getData('year'), $this->getData('month'), $this->getData('day'));
         $date->setTime(0, 0, 0);
+
         if ($this->getData('weekly') == true) {
             $periodCriteria = new WeekPeriodCriteria($date);
         } else {
             $periodCriteria = new DayPeriodCriteria($date);
         }
-
         $lookupper = new EventLookupper($this->di);
 
         $events = $lookupper
