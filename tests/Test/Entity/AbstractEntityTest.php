@@ -2,6 +2,38 @@
 
 namespace Test\Entity;
 
+class AbstractEntity extends \Meetingroom\Entity\AbstractEntity
+{
+    protected $model = null;
+    protected $fields = [];
+    protected $id = null;
+
+    public function __construct($id = null, $model = null)
+    {
+        $this->model = $model;
+        parent::__construct($id);
+    }
+    public function setModel($model)
+    {
+        $this->model = $model;
+    }
+    
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    public function setFields(array $fields)
+    {
+        $this->fields = $fields;
+    }
+    
+    public function getProperties()
+    {
+        return parent::getProperties();
+    }
+}
+
 /**
  * Description of AbstractEntityTest
  *
@@ -9,39 +41,162 @@ namespace Test\Entity;
  */
 class AbstractEntityTest extends \PHPUnit_Framework_TestCase
 {
-
-    public function testAbstractEntity()
+    /**
+     * @dataProvider abstractInsertProvider
+     */
+    public function testAbstractInsert($id, $fieldSet, $dataSet)
     {
-//        $mock = $this->getMockBuilder('\Meetingroom\Entity\AbstractEntity')
-//            ->setMethods(['ownerId', 'getNumber', 'getString'])
-//            ->disableOriginalConstructor()
-//            ->getMock();
-//         $mock->expects($this->any())
-//            ->method('ownerId')
-//            ->will($this->returnValue(123));
-//         $mock->expects($this->any())
-//            ->method('getNumber')
-//            ->will($this->returnValue(1));
-//         $mock->expects($this->any())
-//            ->method('getString')
-//            ->will($this->returnValue('string'));
-//         $mock->getString();
-//         var_dump($mock->ownerId());
-//         exit;
-        
-        $mock = $this->getMockBuilder('\Meetingroom\Model\Event\EventModel')
-            ->setMethods(['read'])
+        $model = $this->getMockBuilder('\Meetingroom\Model\AbstractModel')
             ->disableOriginalConstructor()
+            ->setMethods(['read', 'create', 'update'])
             ->getMock();
-                
-        $mock->expects($this->any())
-            ->method('read')
-            ->will($this->returnValue([]));
-
-        $mock->read();
-//        $this->setExpectedException('\Phalcon\Exception');
-//        $event = new \Meetingroom\Entity\Event\EventEntity(1);
-//        $this->assertCount($this->equalTo(0), $event->getProperties());
-//        $this->assertEmpty($event->getDTO(), "");
+        
+        $model->expects($this->never())
+            ->method('read');
+        
+        $model->expects($this->exactly(2))
+            ->method('create')
+            ->with($dataSet)
+            ->will($this->returnValue($id));
+        
+        $model->expects($this->never())
+            ->method('update');
+        
+        $abstractEntity = new AbstractEntity();
+        $abstractEntity->setModel($model);
+        $abstractEntity->setFields($fieldSet);
+        $abstractEntity->fieldTwo = $dataSet['field_two'];
+        $abstractEntity->bind($dataSet);
+        $this->assertEquals($id, $abstractEntity->save());
+        $this->assertEquals($id, $abstractEntity->insert());
     }
+
+    public function abstractInsertProvider()
+    {
+        return [
+            [
+                1, ['field_one' => 'fieldOne', 'field_two' => 'fieldTwo', 'field_three' => 'fieldThree'],
+                ['field_one' => 'fieldOneValue', 'field_two' => 'fieldTwoValue', 'field_three' => 'fieldThreeValue' ]
+            ]
+        ];
+    }
+    
+    /**
+     * @dataProvider abstractBindingProvider
+     * @expectedException        \Meetingroom\Entity\Exception\FieldNotExistException
+     * @expectedExceptionMessage Field with name WRONG_FIELD not exist in class Meetingroom\Entity\AbstractEntity
+     */
+    public function testAbstractBinding($fieldSet, $dataSet)
+    {
+        $abstractEntity = new AbstractEntity();
+        $abstractEntity->setFields($fieldSet);
+        
+        /* Is fields set correctly? */
+        $this->assertEquals($fieldSet, $abstractEntity->fields);
+        
+        /* Test loading flag */
+        $this->assertFalse($abstractEntity->isLoaded());
+        
+        /* Bind should return $this and setup loaded true, anyway */
+        $this->assertSame($abstractEntity, $abstractEntity->bind([]));
+        $this->assertTrue($abstractEntity->isLoaded());
+        
+        /* Test binding with $dataSet*/
+        $this->assertSame($abstractEntity, $abstractEntity->bind($dataSet));
+        
+        /* Check data linking */
+        $this->assertEquals($dataSet['field_one'], $abstractEntity->fieldOne);
+        
+        /* Next assertion should be unequal*/
+//        $this->assertNotEquals($dataSet['fieldOne'], $abstractEntity->fieldOne);
+        
+        $this->assertEquals($dataSet, $abstractEntity->getProperties());
+        
+        /* Test FieldNotExistException, this assertion should be last, because throwing exception */
+        $abstractEntity->WRONG_FIELD;
+    }
+
+    public function abstractBindingProvider()
+    {
+        return [
+            [
+                ['field_one' => 'fieldOne', 'field_two' => 'fieldTwo', 'field_three' => 'fieldThree'],
+                ['field_one' => 'fieldOneValue', 'field_two' => 'fieldTwoValue', 'field_three' => 'f3' ]
+            ]
+        ];
+    }
+    
+    /**
+     * @dataProvider abstractUpdateProvider
+     */
+    public function testAbstractUpdate($id, $fieldSet, $dataSet)
+    {
+        $model = $this->getMockBuilder('\Meetingroom\Model\AbstractModel')
+            ->disableOriginalConstructor()
+            ->setMethods(['read', 'update', 'insert'])
+            ->getMock();
+        
+        $model->expects($this->any())
+            ->method('read')
+            ->with($id)
+            ->will($this->returnValue($dataSet));
+        
+        $model->expects($this->any())
+            ->method('update')
+            ->with($id, $dataSet)
+            ->will($this->returnValue($id));
+        
+        $model->expects($this->never())
+            ->method('insert');
+        
+        $abstractEntity = new AbstractEntity();
+        $abstractEntity->setId($id);
+        $abstractEntity->setModel($model);
+        $abstractEntity->setFields($fieldSet);
+        $this->assertEquals($id, $abstractEntity->save());
+        $this->assertEquals($id, $abstractEntity->update());
+    }
+
+    public function abstractUpdateProvider()
+    {
+        return [
+            [
+                1, ['field_one' => 'fieldOne', 'field_two' => 'fieldTwo', 'field_three' => 'fieldThree'],
+                ['field_one' => 'fieldOneValue', 'field_two' => 'fieldTwoValue', 'field_three' => 'fieldThreeValue' ]
+            ]
+        ];
+    }
+    
+    /**
+     * @dataProvider abstractDeleteProvider
+     */
+    public function testAbstractDelete($id, $return)
+    {
+        $model = $this->getMockBuilder('\Meetingroom\Model\AbstractModel')
+            ->disableOriginalConstructor()
+            ->setMethods(['delete', 'read'])
+            ->getMock();
+        
+        $model->expects($this->once())
+            ->method('delete')
+            ->with($id)
+            ->will($this->returnValue($return));
+        
+        $model->expects($this->any())
+            ->method('read')
+            ->with($id)
+            ->will($this->returnValue([]));
+        
+        $abstractEntity = new AbstractEntity($id, $model);
+        $this->assertEquals($return, $abstractEntity->delete());
+    }
+
+    public function abstractDeleteProvider()
+    {
+        return [
+            [ 1, false],
+            [ 1, true]
+        ];
+    }
+    
 }
