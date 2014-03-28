@@ -49,7 +49,7 @@ class EventEntity extends \Meetingroom\Entity\AbstractEntity implements OwnableI
                     $fields_array[$bd_field] = strtotime($this->$class_field);
                     break;
                 case 'userId':
-                    $fields_array[$bd_field] = strtotime($this->$class_field);
+                    $fields_array[$bd_field] = $this->$class_field;
                     $owner = new AuthorizedEntity($this->$class_field);
                     $fields_array['owner'] = $owner->nickname;
                     break;
