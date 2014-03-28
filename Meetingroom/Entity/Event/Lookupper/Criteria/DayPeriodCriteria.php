@@ -17,7 +17,7 @@ class DayPeriodCriteria extends AbstractPeriodCriteria
         $this->setStartDate($dateTime);
         $nextDay = clone $dateTime;
 
-        $nextDay->add(new DateInterval('P1D'));
+        $nextDay->add(new \DateInterval('P1D'));
         $this->setEndDate($nextDay);
     }
 
