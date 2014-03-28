@@ -99,56 +99,62 @@ Ext.define('Ext.calendar.form.EventWindow', {
             });
         }
 
-        this.callParent([Ext.apply({
-                titleTextAdd: 'Add Event',
-                titleTextEdit: 'Edit Event',
-                width: 620,
-                autocreate: true,
-                border: true,
-                closeAction: 'hide',
-                modal: false,
-                resizable: false,
-                buttonAlign: 'left',
-                savingMessage: 'Saving changes...',
-                deletingMessage: 'Deleting event...',
-                layout: 'fit',
+        this.callParent([
+            Ext.apply({
+                    titleTextAdd: 'Add Event',
+                    titleTextEdit: 'Edit Event',
+                    width: 620,
+                    autocreate: true,
+                    border: true,
+                    style: {
+                        boxShadow: '0 0 48px rgba(0, 33, 56, 0.25)'
+                    },
+                    closeAction: 'hide',
+                    modal: false,
+                    resizable: false,
+                    buttonAlign: 'left',
+                    savingMessage: 'Saving changes...',
+                    deletingMessage: 'Deleting event...',
+                    layout: 'fit',
 
-                defaultFocus: 'title',
-                onEsc: function (key, event) {
-                    event.target.blur(); // Remove the focus to avoid doing the validity checks when the window is shown again.
-                    this.onCancel();
+                    defaultFocus: 'title',
+                    onEsc: function (key, event) {
+                        event.target.blur(); // Remove the focus to avoid doing the validity checks when the window is shown again.
+                        this.onCancel();
+                    },
+
+                    fbar: [
+                        {
+                            xtype: 'tbtext'
+                        },
+                        '->',
+                        {
+                            itemId: 'delete-btn',
+                            text: 'Delete Event',
+                            disabled: false,
+                            handler: this.onDelete,
+                            scope: this,
+                            minWidth: 150,
+                            hideMode: 'offsets'
+                        },
+                        {
+                            text: 'Save',
+                            disabled: false,
+                            handler: this.onSave,
+                            scope: this
+                        },
+                        {
+                            text: 'Cancel',
+                            disabled: false,
+                            handler: this.onCancel,
+                            scope: this
+                        }
+                    ],
+                    items: formPanelCfg
                 },
-
-                fbar: [
-                    {
-                        xtype: 'tbtext'
-                    },
-                    '->',
-                    {
-                        itemId: 'delete-btn',
-                        text: 'Delete Event',
-                        disabled: false,
-                        handler: this.onDelete,
-                        scope: this,
-                        minWidth: 150,
-                        hideMode: 'offsets'
-                    },
-                    {
-                        text: 'Save',
-                        disabled: false,
-                        handler: this.onSave,
-                        scope: this
-                    },
-                    {
-                        text: 'Cancel',
-                        disabled: false,
-                        handler: this.onCancel,
-                        scope: this
-                    }
-                ],
-                items: formPanelCfg
-            },
-            config)]);
+                config
+            )
+        ]);
     },
 
     // private
@@ -224,16 +230,13 @@ Ext.define('Ext.calendar.form.EventWindow', {
     show: function (o, animateTarget) {
         // Work around the CSS day cell height hack needed for initial render in IE8/strict:
         var me = this,
-            anim = (Ext.isIE8 && Ext.isStrict) ? null : animateTarget;
+            anim = (Ext.isIE8 && Ext.isStrict) ? null : animateTarget,
+            rec,
+            f = this.formPanel.form;
 
         this.callParent([anim, function () {
             me.titleField.focus(true);
         }]);
-
-        this.deleteButton[o.data && o.data.id ? 'show' : 'hide']();
-
-        var rec,
-            f = this.formPanel.form;
 
         f.reset();
 
@@ -242,6 +245,12 @@ Ext.define('Ext.calendar.form.EventWindow', {
             rec = o;
             this.setTitle(rec.phantom ? this.titleTextAdd : this.titleTextEdit);
             this.ownerField.show();
+
+            if (rec.data['owner'] == Ext.currentUser) {
+                this.deleteButton.show();
+            } else {
+                this.deleteButton.hide();
+            }
 
             f.loadRecord(rec);
         } else {

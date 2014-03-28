@@ -247,12 +247,6 @@ Ext.define('Ext.calendar.App', {
                                                 },
                                                 scope: this
                                             },
-                                            'eventover': function(vw, rec, el) {
-                                                //console.log('Entered evt rec='+rec.data.Title+', view='+ vw.id +', el='+el.id);
-                                            },
-                                            'eventout': function(vw, rec, el) {
-                                                //console.log('Leaving evt rec='+rec.data.Title+', view='+ vw.id +', el='+el.id);
-                                            },
                                             'eventadd': {
                                                 fn: function(cp, rec) {
                                                     this.showMsg('Event ' + rec.data.title + ' was added');
@@ -322,6 +316,7 @@ Ext.define('Ext.calendar.App', {
                                                             },
                                                             failure: function(batch) {
                                                                 rec.reject();
+                                                                me.eventStore.load();
                                                                 if (batch.proxy.reader.jsonData.success == false) {
                                                                     var error,
                                                                         errorText;
@@ -355,6 +350,7 @@ Ext.define('Ext.calendar.App', {
                                                         },
                                                         failure: function(batch) {
                                                             rec.reject();
+                                                            me.eventStore.load();
                                                             if (batch.proxy.reader.jsonData.success == false) {
                                                                 var error,
                                                                     errorText;
@@ -424,6 +420,7 @@ Ext.define('Ext.calendar.App', {
                                     },
                                     failure: function(batch) {
                                         me.eventStore.remove(rec);
+                                        me.eventStore.load();
                                         if (batch.proxy.reader.jsonData.success == false) {
                                             var error,
                                                 errorText;
@@ -453,6 +450,8 @@ Ext.define('Ext.calendar.App', {
                                         me.showMsg('Event <strong>' + rec.data.title + '</strong> was updated');
                                     },
                                     failure: function(batch) {
+                                        rec.reject();
+                                        me.eventStore.load();
                                         if (batch.proxy.reader.jsonData.success == false) {
                                             var error,
                                                 errorText;
@@ -483,7 +482,7 @@ Ext.define('Ext.calendar.App', {
                                     },
                                     failure: function(batch) {
                                         if (batch.proxy.reader.jsonData.success == false && batch.proxy.reader.jsonData.auth === false) {
-                                            Ext.sessionExpired()
+                                            Ext.sessionExpired();
                                         }
                                         me.showMsg('Server error. Can\'t delete <strong>' + rec.data.title + '</strong> event', 'error', 2000);
                                     }
