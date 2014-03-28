@@ -224,16 +224,14 @@ Ext.define('Ext.calendar.form.EventWindow', {
     show: function (o, animateTarget) {
         // Work around the CSS day cell height hack needed for initial render in IE8/strict:
         var me = this,
-            anim = (Ext.isIE8 && Ext.isStrict) ? null : animateTarget;
+            anim = (Ext.isIE8 && Ext.isStrict) ? null : animateTarget,
+            isNew = o.data && o.data.id,
+            rec,
+            f = this.formPanel.form;
 
         this.callParent([anim, function () {
             me.titleField.focus(true);
         }]);
-
-        this.deleteButton[o.data && o.data.id ? 'show' : 'hide']();
-
-        var rec,
-            f = this.formPanel.form;
 
         f.reset();
 
@@ -242,6 +240,12 @@ Ext.define('Ext.calendar.form.EventWindow', {
             rec = o;
             this.setTitle(rec.phantom ? this.titleTextAdd : this.titleTextEdit);
             this.ownerField.show();
+
+            if (rec.data['owner'] == Ext.currentUser) {
+                this.deleteButton.show();
+            } else {
+                this.deleteButton.hide();
+            }
 
             f.loadRecord(rec);
         } else {
