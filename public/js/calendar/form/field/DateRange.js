@@ -197,6 +197,7 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             {
                 xtype: 'checkbox',
                 name: 'repeatable',
+                itemId: this.id + '-repeat-checkbox',
                 boxLabel: this.isRepeatableText,
                 margins: {
                     top: 2,
@@ -419,5 +420,18 @@ Ext.define('Ext.calendar.form.field.DateRange', {
      * @method setRawValue
      * @hide
      */
-    setRawValue: Ext.emptyFn
+    setRawValue: Ext.emptyFn,
+
+    setReadOnly: function(value) {
+        var me = this,
+            repeatOn = me.down('#' + me.id + '-repeat-on'),
+            repeatCheckbox = me.down('#' + me.id + '-repeat-checkbox');
+
+        me.startDate.setReadOnly(value);
+        me.startTime.setReadOnly(value);
+        me.endTime.setReadOnly(value);
+        me.endDate.setReadOnly(value);
+        repeatOn.setReadOnly(value);
+        repeatCheckbox.setReadOnly(value);
+    }
 });
