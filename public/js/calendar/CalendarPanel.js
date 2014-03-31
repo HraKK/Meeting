@@ -365,8 +365,24 @@ Ext.define('Ext.calendar.CalendarPanel', {
         cfg.listeners.afterrender = {
             fn: function(c) {
                 // relay the view events so that app code only has to handle them in one place
-                this.relayEvents(c, ['eventsrendered', 'eventclick', 'eventover', 'eventout', 'dayclick',
-                    'eventmove', 'datechange', 'rangeselect', 'eventdelete', 'eventresize', 'initdrag']);
+                var eventsArray = [
+                    'eventsrendered',
+                    'eventclick',
+                    'eventover',
+                    'eventout',
+                    'dayclick',
+                    'eventmove',
+                    'datechange',
+                    'rangeselect',
+                    'eventdelete'
+                ];
+
+                if (!Ext.simpleInterface) {
+                    eventsArray.push('eventresize');
+                    eventsArray.push('initdrag');
+                }
+
+                this.relayEvents(c, eventsArray);
             },
             scope: this,
             single: true

@@ -58,13 +58,16 @@ Ext.define('Ext.calendar.dd.DragZone', {
                 // for IE/Opera
                 child.setHeight('auto');
             }
+
             this.proxy.update(ghost);
+
+            this.onStartDrag(x, y);
+        } else if (this.dragData.start) {
             this.onStartDrag(x, y);
         }
-        else if (this.dragData.start) {
-            this.onStartDrag(x, y);
-        }
+
         this.view.onInitDrag();
+
         return true;
     },
 

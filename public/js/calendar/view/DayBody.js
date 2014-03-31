@@ -175,7 +175,7 @@ Ext.define('Ext.calendar.view.DayBody', {
     getResizeEl: function() {
         if (!this.eventResizeMarkup) {
             this.eventResizeMarkup = [
-                '<tpl if="owner == Ext.currentUser">',
+                '<tpl if="owner == Ext.currentUser && !Ext.simpleInterface">',
                     '<div class="ext-evt-rsz">',
                         '<div class="ext-evt-rsz-h">&#160;</div>',
                     '</div>',
@@ -188,7 +188,7 @@ Ext.define('Ext.calendar.view.DayBody', {
     getDragSelector: function() {
         if (!this.eventDragSelector) {
             this.eventDragSelector = [
-                '<tpl if="owner == Ext.currentUser">',
+                '<tpl if="owner == Ext.currentUser && !Ext.simpleInterface">',
                     'ext-cal-evt ext-cal-evt-draggable',
                 '<tpl else>',
                     'ext-cal-evt',
@@ -475,21 +475,26 @@ Ext.define('Ext.calendar.view.DayBody', {
             // The superclass handled the click already so exit
             return;
         }
+
         if (e.getTarget('.ext-cal-day-times', 3) !== null) {
             // ignore clicks on the times-of-day gutter
             return;
         }
+
         var el = e.getTarget('td', 3);
+
         if (el) {
-            if (el.id && el.id.indexOf(this.dayElIdDelimiter) > -1) {
+            if (el.id && el.id.indexOf(this.dayElIdDelimiter) > -1 && Ext.simpleInterface) {
                 var dt = this.getDateFromId(el.id, this.dayElIdDelimiter);
-//                this.fireEvent('dayclick', this, Ext.Date.parseDate(dt, 'Ymd'), false, Ext.get(this.getDayId(dt, true)));
+                this.fireEvent('dayclick', this, Ext.Date.parseDate(dt, 'Ymd'), false, Ext.get(this.getDayId(dt, true)));
                 return;
             }
         }
+
         var day = this.getDayAt(e.getX(), e.getY());
-        if (day && day.date) {
-//            this.fireEvent('dayclick', this, day.date, false, null);
+
+        if (day && day.date && Ext.simpleInterface) {
+            this.fireEvent('dayclick', this, day.date, false, null);
         }
     }
 });

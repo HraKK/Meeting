@@ -25,8 +25,9 @@ Ext.define('Ext.calendar.App', {
 
         constructor: function() {
 
-            var scope = this,
-                simpleInterface = Ext.is.iOS || Ext.is.Tablet || Ext.is.Android || Ext.is.Phone;
+            var scope = this;
+
+            Ext.simpleInterface = Ext.is.iOS || Ext.is.Tablet || Ext.is.Android || Ext.is.Phone;
 
             // Fix ExtJS 4.2 tooltip issue
             if (Ext.isIE10) {
@@ -107,7 +108,7 @@ Ext.define('Ext.calendar.App', {
                                         '<div id="logo-body">' + new Date().getDate() + '</div>' +
                                         '<div class="logo-bottom">&nbsp;</div>' +
                                     '</div>' +
-                                    (simpleInterface ? '' : '<h1>Meeting Room 2.0</h1>')
+                                    (Ext.simpleInterface ? '' : '<h1>Meeting Room 2.0</h1>')
                             },
                             {
                                 xtype: 'tbfill'
@@ -135,7 +136,7 @@ Ext.define('Ext.calendar.App', {
                         region: 'north',
                         cls: 'room-tabs',
                         height: 31,
-                        margin: simpleInterface ? '-31 192 0 50' : '-31 192 0 214',
+                        margin: Ext.simpleInterface ? '-31 192 0 50' : '-31 192 0 214',
                         border: false,
                         bodyStyle: {
                             border: false
@@ -195,7 +196,7 @@ Ext.define('Ext.calendar.App', {
                                 width: 212,
                                 border: false,
                                 margin: '0 1 0 1',
-                                hidden: simpleInterface,
+                                hidden: Ext.simpleInterface,
                                 items: [
                                     {
                                         xtype: 'datepicker',
