@@ -33,13 +33,13 @@ class EventEntity extends \Meetingroom\Entity\AbstractEntity implements OwnableI
         'repeatable' => 'repeatable',
         'attendees' => 'attendees'
     ];
-    
+
     public function getDTO()
     {
         return $this->DTO === null ? new $this->DTOName($this) : $this->DTO;
     }
 
-    public function ownerId()
+    public function getOwnerId()
     {
         return $this->userId;
     }

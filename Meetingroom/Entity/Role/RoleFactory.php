@@ -13,7 +13,7 @@ class RoleFactory
             return Group::GUEST;
         }
         
-        return ($obj->ownerId() === $user->getId()) ? Group::OWNER : Group::USER;
+        return ($obj->getOwnerId() === $user->getId()) ? Group::OWNER : Group::USER;
     }
     
     public function getRole(UserInterface $user)
