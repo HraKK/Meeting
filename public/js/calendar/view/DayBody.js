@@ -483,13 +483,13 @@ Ext.define('Ext.calendar.view.DayBody', {
         if (el) {
             if (el.id && el.id.indexOf(this.dayElIdDelimiter) > -1) {
                 var dt = this.getDateFromId(el.id, this.dayElIdDelimiter);
-                this.fireEvent('dayclick', this, Ext.Date.parseDate(dt, 'Ymd'), false, Ext.get(this.getDayId(dt, true)));
+//                this.fireEvent('dayclick', this, Ext.Date.parseDate(dt, 'Ymd'), false, Ext.get(this.getDayId(dt, true)));
                 return;
             }
         }
         var day = this.getDayAt(e.getX(), e.getY());
         if (day && day.date) {
-            this.fireEvent('dayclick', this, day.date, false, null);
+//            this.fireEvent('dayclick', this, day.date, false, null);
         }
     }
 });

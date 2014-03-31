@@ -104,6 +104,7 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             xtype: 'datefield',
             itemId: this.id + '-start-date',
             format: this.dateFormat,
+            startDay: 1,
             width: 100,
             listeners: {
                 'blur': {
@@ -145,6 +146,7 @@ Ext.define('Ext.calendar.form.field.DateRange', {
             xtype: 'datefield',
             itemId: this.id + '-end-date',
             format: this.dateFormat,
+            startDay: 1,
             hideLabel: true,
             width: 100,
             listeners: {
