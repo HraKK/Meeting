@@ -126,10 +126,6 @@ Ext.define('Ext.calendar.form.EventWindow', {
 
                     fbar: [
                         {
-                            xtype: 'tbtext'
-                        },
-                        '->',
-                        {
                             itemId: 'delete-btn',
                             text: 'Delete Event',
                             disabled: false,
@@ -138,6 +134,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
                             minWidth: 150,
                             hideMode: 'offsets'
                         },
+                        '->',
                         {
                             text: 'Save',
                             itemId: 'save-btn',
@@ -261,6 +258,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
         } else {
             this.setTitle(this.titleTextAdd);
             this.ownerField.hide();
+            this.deleteButton.hide();
             isOwner = true;
 
             var start = o['date_start'],
