@@ -7,7 +7,9 @@ class AbstractEntity extends \Meetingroom\Entity\AbstractEntity
     protected $model = null;
     protected $fields = [];
     protected $id = null;
-
+    protected $DTO = null;
+    protected $DTOName = null;
+    
     public function __construct($id = null, $model = null)
     {
         $this->model = $model;
@@ -31,6 +33,16 @@ class AbstractEntity extends \Meetingroom\Entity\AbstractEntity
     public function getProperties()
     {
         return parent::getProperties();
+    }
+    
+    public function setDTO($dto)
+    {
+        $this->DTO = $dto;
+    }
+
+    public function setDTOName($dto)
+    {
+        $this->DTOName = $dto;
     }
 }
 
@@ -196,6 +208,57 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
         return [
             [ 1, false],
             [ 1, true]
+        ];
+    }
+    
+    
+    /**
+     * @dataProvider abstractBinding2Provider
+     */
+    public function testBind($fieldSet, $dataSet, $expectData)
+    {
+        $abstractEntity = new AbstractEntity();
+        $abstractEntity->setFields($fieldSet);
+        
+        $abstractEntity->bind($dataSet);
+        $abstractEntity->fieldThree = 'f3';
+        
+        $this->assertEquals($expectData, $abstractEntity->getProperties());
+    }
+    
+    public function abstractBinding2Provider()
+    {
+        return [
+            [
+                ['field_one' => 'fieldOne', 'field_two' => 'fieldTwo', 'field_three' => 'fieldThree'],
+                ['field_one' => 'fieldOneValue', 'field_two' => 'fieldTwoValue' ],
+                ['field_one' => 'fieldOneValue', 'field_two' => 'fieldTwoValue', 'field_three' => 'f3' ]
+            ]
+        ];
+    }
+    
+    /**
+     * @dataProvider abstractDTOProvider
+     */
+    public function testDTO($fieldSet, $dataSet, $expectData)
+    {
+        $abstractEntity = new AbstractEntity();
+        $abstractEntity->setFields($fieldSet);
+        
+        $abstractEntity->bind($dataSet);
+        $abstractEntity->fieldThree = 'f3';
+        
+        $this->assertEquals($expectData, $abstractEntity->getProperties());
+    }
+    
+    public function abstractDTOProvider()
+    {
+        return [
+            [
+                ['field_one' => 'fieldOne', 'field_two' => 'fieldTwo', 'field_three' => 'fieldThree'],
+                ['field_one' => 'fieldOneValue', 'field_two' => 'fieldTwoValue' ],
+                ['field_one' => 'fieldOneValue', 'field_two' => 'fieldTwoValue', 'field_three' => 'f3' ]
+            ]
         ];
     }
     
