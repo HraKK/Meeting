@@ -27,7 +27,7 @@ class EventOptionDTO extends \Meetingroom\DTO\AbstractDTO
             if($field == 'id') {
                 continue;
             }
-            if($value == true) {
+            if($value === true) {
                 $this->repeated_on[] = $map[$field];
             }
         }
