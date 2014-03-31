@@ -173,5 +173,9 @@ abstract class AbstractEntity
         }
         return $fields_array;
     }
-
+    
+    public function getFields()
+    {
+        return $this->fields;
+    }
 }

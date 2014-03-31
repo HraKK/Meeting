@@ -1,4 +1,5 @@
 <?php
+
 namespace Meetingroom\DTO\Event;
 
 /**
@@ -8,7 +9,6 @@ namespace Meetingroom\DTO\Event;
  */
 class EventDTO extends \Meetingroom\DTO\AbstractDTO
 {
-
     public $id;
     public $room_id;
     public $date_start;
@@ -19,4 +19,34 @@ class EventDTO extends \Meetingroom\DTO\AbstractDTO
     public $attendees;
     public $repeated_on;
     public $owner;
-} 
+
+    public function __construct($event)
+    {
+        $fields = $event->getFields();
+
+        if ($fields == null) {
+            return;
+        }
+
+        foreach ($fields as $bd_field => $class_field) {
+            switch ($class_field) {
+                case 'dateStart':
+                case 'dateEnd':
+                    $this->$bd_field = strtotime($event->$class_field);
+                    break;
+                case 'userId':
+                    $this->$bd_field = $event->$class_field;
+                    $this->owner = $event->getOwner()->getNickname();
+                    break;
+                case 'repeatable':
+                    $this->repeatable = $event->repeatable;
+                    $this->repeated_on = $event->getRepeatables();
+                    break;
+                default:
+                    $this->$bd_field = $event->$class_field;
+                    break;
+            }
+        }
+    }
+
+}

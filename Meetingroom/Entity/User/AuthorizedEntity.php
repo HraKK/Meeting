@@ -31,4 +31,9 @@ class AuthorizedEntity extends \Meetingroom\Entity\AbstractEntity implements \Me
     {
         return $this->id;
     }
+    
+    public function getNickname()
+    {
+        return $this->nickname;
+    }
 }
