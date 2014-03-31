@@ -135,11 +135,21 @@ class EventEntityTest extends \PHPUnit_Framework_TestCase
     
     public function testEventOptionModel()
     {
+        $model = $this->getMockBuilder('\Meetingroom\Model\AbstractModel')
+            ->disableOriginalConstructor()
+            ->setMethods(['read'])
+            ->getMock();
+        
+        $model->expects($this->any())
+            ->method('read');
+        
         $eventEntity = new ExtendedEventEntity();
         $optionModel = $eventEntity->getOptionsModel();
         $this->assertInstanceOf('\Meetingroom\Entity\Event\EventOptionEntity', $optionModel);
         $owner = $eventEntity->getOwner();
         $this->assertInstanceOf('\Meetingroom\Entity\User\AuthorizedEntity', $owner);
         $this->assertNull($owner->getId());
+        $eventEntity->setModel($model);
+        $this->assertInstanceOf('\Meetingroom\DTO\Event\EventDTO', $eventEntity->getDTO());
     }
 }
