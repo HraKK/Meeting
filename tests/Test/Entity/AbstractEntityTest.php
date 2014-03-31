@@ -8,7 +8,7 @@ class AbstractEntity extends \Meetingroom\Entity\AbstractEntity
     protected $fields = [];
     protected $id = null;
     protected $DTO = null;
-    protected $DTOName = null;
+    protected $DTOName = '\Test\Entity\DTO';
     
     public function __construct($id = null, $model = null)
     {
@@ -44,6 +44,10 @@ class AbstractEntity extends \Meetingroom\Entity\AbstractEntity
     {
         $this->DTOName = $dto;
     }
+}
+
+class DTO extends \Meetingroom\DTO\AbstractDTO
+{
 }
 
 /**
@@ -224,6 +228,11 @@ class AbstractEntityTest extends \PHPUnit_Framework_TestCase
         $abstractEntity->fieldThree = 'f3';
         
         $this->assertEquals($expectData, $abstractEntity->getProperties());
+        $DTO = $abstractEntity->getDTO();
+        $this->assertInstanceOf('\Test\Entity\DTO', $DTO);
+        foreach ($fieldSet as $field => $value) {
+            $this->assertEquals($expectData[$field], $DTO->$field);
+        }
     }
     
     public function abstractBinding2Provider()

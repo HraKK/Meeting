@@ -11,7 +11,8 @@ class AuthorizedEntity extends \Meetingroom\Entity\AbstractEntity implements \Me
     protected $phone;
     protected $position;
     protected $nickname;
-
+    protected $userModel;
+    
     protected $fields = [
         'id' => 'id', 
         'name' => 'name', 
@@ -22,11 +23,15 @@ class AuthorizedEntity extends \Meetingroom\Entity\AbstractEntity implements \Me
     
     public function loadByUsername($username)
     {
-        $model = new \Meetingroom\Model\User\UserModel();
-        $this->id = $model->getIdByUsername($username);
+        $this->id = $this->getUserModel()->getIdByUsername($username);
         return $this;
     }
 
+    public function getUserModel()
+    {
+        return ($this->userModel = $this->userModel === null ? new $this->modelName : $this->userModel);
+    }
+    
     public function getId()
     {
         return $this->id;

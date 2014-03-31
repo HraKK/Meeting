@@ -2,6 +2,7 @@
 
 namespace Meetingroom\DTO\Event;
 
+use Meetingroom\Entity\Event\EventEntity;
 /**
  * Class EventDTO
  * @package Meetingroom\DTO\Event
@@ -20,7 +21,7 @@ class EventDTO extends \Meetingroom\DTO\AbstractDTO
     public $repeated_on;
     public $owner;
 
-    public function __construct($event)
+    public function __construct(EventEntity $event)
     {
         $fields = $event->getFields();
 
