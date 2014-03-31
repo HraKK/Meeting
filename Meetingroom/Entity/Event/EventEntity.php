@@ -21,6 +21,7 @@ class EventEntity extends \Meetingroom\Entity\AbstractEntity implements OwnableI
     protected $repeatable = null;
     protected $attendees = null;
     protected $optionsModel = null;
+    protected $owner = null;
     
     protected $fields = [
         'id' => 'id',
@@ -33,13 +34,13 @@ class EventEntity extends \Meetingroom\Entity\AbstractEntity implements OwnableI
         'repeatable' => 'repeatable',
         'attendees' => 'attendees'
     ];
-    
+
     public function getDTO()
     {
-        return $this->DTO === null ? new $this->DTOName($this) : $this->DTO;
+        return ($this->DTO = $this->DTO === null ? new $this->DTOName($this) : $this->DTO);
     }
 
-    public function ownerId()
+    public function getOwnerId()
     {
         return $this->userId;
     }
@@ -55,11 +56,11 @@ class EventEntity extends \Meetingroom\Entity\AbstractEntity implements OwnableI
             return [];
         }
         
-        $options = $this->getOptionsModel()->getDTO();
-        return $options->repeated_on;
+        $optionsDTO = $this->getOptionsModel()->getDTO();
+        return $optionsDTO->getRepeatedOn();
     }
     
-    protected function getOptionsModel()
+    public function getOptionsModel()
     {
         return ($this->optionsModel = $this->optionsModel === null ? new EventOptionEntity($this->id) : $this->optionsModel);
     }

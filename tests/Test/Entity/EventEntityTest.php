@@ -6,7 +6,7 @@ use Meetingroom\Entity\Event\EventEntity;
 
 class ExtendedEventEntity extends EventEntity
 {
-    protected $authorizedEntity;
+    protected $optionsModel;
     
     public function __construct($id = null, $model = null)
     {
@@ -23,19 +23,9 @@ class ExtendedEventEntity extends EventEntity
         $this->id = $id;
     }
     
-    public function getProperties()
+    public function setOptionsModel($mock)
     {
-        return parent::getProperties();
-    }
-    
-    public function getAuthorizedEntity()
-    {
-        return $this->authorizedEntity;
-    }
-    
-    public function setAuthorizedEntity($entity)
-    {
-        $this->authorizedEntity = $entity;
+        $this->optionsModel = $mock;
     }
 }
 
@@ -47,9 +37,9 @@ class ExtendedEventEntity extends EventEntity
 class EventEntityTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @dataProvider abstractInsertProvider
+     * @dataProvider eventSingleProvider
      */
-    public function testEvent($dataSet, $resultSet)
+    public function testEventSingle($dataSet)
     {
         $model = $this->getMockBuilder('\Meetingroom\Model\AbstractModel')
             ->disableOriginalConstructor()
@@ -59,20 +49,14 @@ class EventEntityTest extends \PHPUnit_Framework_TestCase
         $model->expects($this->any())
             ->method('read');
         
-        $entity = $this->getMockBuilder('\Meetingroom\Entity\User\AuthorizedEntity')
-            ->disableOriginalConstructor()
-            ->setMethods(['read'])
-            ->getMock();
-        
         $eventEntity = new ExtendedEventEntity();
         $eventEntity->setModel($model);
         $eventEntity->bind($dataSet);
-        
-        $eventEntity->id;
-        $eventEntity->getProperties();
+        $this->assertEmpty($eventEntity->getRepeatables());
+        $this->assertEquals($dataSet['user_id'], $eventEntity->getOwnerId());
     }
 
-    public function abstractInsertProvider()
+    public function eventSingleProvider()
     {
         return [
             [
@@ -86,9 +70,86 @@ class EventEntityTest extends \PHPUnit_Framework_TestCase
                     'description' => 'SampleDescription',
                     'repeatable' => 0,
                     'attendees' => 42
-                ],
-                ['field_one' => 'fieldOneValue', 'field_two' => 'fieldTwoValue', 'field_three' => 'fieldThreeValue' ]
+                ]
             ]
         ];
+    }
+    
+    /**
+     * @dataProvider eventRepeatedProvider
+     */
+    public function testEventRepeated($dataSet)
+    {
+        $model = $this->getMockBuilder('\Meetingroom\Model\AbstractModel')
+            ->disableOriginalConstructor()
+            ->setMethods(['read'])
+            ->getMock();
+        
+        $model->expects($this->any())
+            ->method('read');
+        
+        
+        $optionDTO = $this->getMockBuilder('\Meetingroom\DTO\Event\EventOptionDTO')
+            ->disableOriginalConstructor()
+            ->setMethods(['getRepeatedOn'])
+            ->getMock();
+        
+        $optionDTO->expects($this->once())
+            ->method('getRepeatedOn')
+            ->will($this->returnValue(true));
+        
+        $optionModel = $this->getMockBuilder('\Meetingroom\Entity\Event\EventOptionEntity')
+            ->disableOriginalConstructor()
+            ->setMethods(['getDTO'])
+            ->getMock();
+        
+        $optionModel->expects($this->once())
+            ->method('getDTO')
+            ->will($this->returnValue($optionDTO));
+        
+        $eventEntity = new ExtendedEventEntity();
+        $eventEntity->setModel($model);
+        $eventEntity->setOptionsModel($optionModel);
+        $eventEntity->bind($dataSet);
+        $this->assertTrue($eventEntity->getRepeatables());
+    }
+
+    public function eventRepeatedProvider()
+    {
+        return [
+            [
+                [
+                    'id' => 1,
+                    'room_id' => 1,
+                    'date_start' => '2014-01-01 00:00:00',
+                    'date_end' => '2014-01-01 00:00:00',
+                    'user_id' => 1,
+                    'title' => 'SampleTitle',
+                    'description' => 'SampleDescription',
+                    'repeatable' => 1,
+                    'attendees' => 42
+                ]
+            ]
+        ];
+    }
+    
+    public function testEventOptionModel()
+    {
+        $model = $this->getMockBuilder('\Meetingroom\Model\AbstractModel')
+            ->disableOriginalConstructor()
+            ->setMethods(['read'])
+            ->getMock();
+        
+        $model->expects($this->any())
+            ->method('read');
+        
+        $eventEntity = new ExtendedEventEntity();
+        $optionModel = $eventEntity->getOptionsModel();
+        $this->assertInstanceOf('\Meetingroom\Entity\Event\EventOptionEntity', $optionModel);
+        $owner = $eventEntity->getOwner();
+        $this->assertInstanceOf('\Meetingroom\Entity\User\AuthorizedEntity', $owner);
+        $this->assertNull($owner->getId());
+        $eventEntity->setModel($model);
+        $this->assertInstanceOf('\Meetingroom\DTO\Event\EventDTO', $eventEntity->getDTO());
     }
 }
