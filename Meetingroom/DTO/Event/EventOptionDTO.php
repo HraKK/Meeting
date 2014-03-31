@@ -32,4 +32,9 @@ class EventOptionDTO extends \Meetingroom\DTO\AbstractDTO
             }
         }
     }
+    
+    public function getRepeatedOn()
+    {
+        return $this->repeated_on;
+    }
 } 
