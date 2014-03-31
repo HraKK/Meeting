@@ -966,10 +966,14 @@ Ext.define('Ext.calendar.view.AbstractCalendar', {
      * can handle the click (and so the subclass should ignore it) else false.
      */
     onClick: function (e, t) {
-        var el = e.getTarget(this.eventSelector, 5);
+        var el = e.getTarget(this.eventSelector, 5),
+            id,
+            record,
+            isOwner;
         if (el) {
-            var id = this.getEventIdFromEl(el);
-            this.fireEvent('eventclick', this, this.getEventRecord(id), el);
+            id = this.getEventIdFromEl(el);
+            record = this.getEventRecord(id);
+            this.fireEvent('eventclick', this, record, el);
             return true;
         }
     },

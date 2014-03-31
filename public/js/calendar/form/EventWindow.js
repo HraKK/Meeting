@@ -103,6 +103,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
             Ext.apply({
                     titleTextAdd: 'Add Event',
                     titleTextEdit: 'Edit Event',
+                    titleTextPreview: 'Preview Event',
                     width: 620,
                     autocreate: true,
                     border: true,
@@ -125,10 +126,6 @@ Ext.define('Ext.calendar.form.EventWindow', {
 
                     fbar: [
                         {
-                            xtype: 'tbtext'
-                        },
-                        '->',
-                        {
                             itemId: 'delete-btn',
                             text: 'Delete Event',
                             disabled: false,
@@ -137,8 +134,10 @@ Ext.define('Ext.calendar.form.EventWindow', {
                             minWidth: 150,
                             hideMode: 'offsets'
                         },
+                        '->',
                         {
                             text: 'Save',
+                            itemId: 'save-btn',
                             disabled: false,
                             handler: this.onSave,
                             scope: this
@@ -216,6 +215,7 @@ Ext.define('Ext.calendar.form.EventWindow', {
         this.dateRangeField = this.down('#date-range');
         this.calendarField = this.down('#calendar');
         this.deleteButton = this.down('#delete-btn');
+        this.saveButton = this.down('#save-btn');
     },
 
     /**
@@ -232,7 +232,8 @@ Ext.define('Ext.calendar.form.EventWindow', {
         var me = this,
             anim = (Ext.isIE8 && Ext.isStrict) ? null : animateTarget,
             rec,
-            f = this.formPanel.form;
+            f = this.formPanel.form,
+            isOwner;
 
         this.callParent([anim, function () {
             me.titleField.focus(true);
@@ -241,21 +242,24 @@ Ext.define('Ext.calendar.form.EventWindow', {
         f.reset();
 
         if (o.data) {
-
             rec = o;
-            this.setTitle(rec.phantom ? this.titleTextAdd : this.titleTextEdit);
             this.ownerField.show();
+            isOwner = rec.data['owner'] == Ext.currentUser;
 
-            if (rec.data['owner'] == Ext.currentUser) {
+            if (isOwner) {
                 this.deleteButton.show();
+                this.saveButton.show();
+                this.setTitle(rec.phantom ? this.titleTextAdd : this.titleTextEdit);
             } else {
                 this.deleteButton.hide();
+                this.saveButton.hide();
+                this.setTitle(rec.phantom ? this.titleTextAdd : this.titleTextPreview);
             }
-
-            f.loadRecord(rec);
         } else {
             this.setTitle(this.titleTextAdd);
             this.ownerField.hide();
+            this.deleteButton.hide();
+            isOwner = true;
 
             var start = o['date_start'],
                 end = o['date_end'] || Ext.calendar.util.Date.add(start, {hours: 0.5});
@@ -266,9 +270,9 @@ Ext.define('Ext.calendar.form.EventWindow', {
             rec.data['owner'] = Ext.currentUser;
             rec.data['attendees'] = 3;
             rec.data['room_id'] = Ext.currentCalendarId;
-
-            f.loadRecord(rec);
         }
+
+        f.loadRecord(rec);
 
         if (this.calendarStore) {
             this.calendarField.setValue(rec.data['room_id']);
@@ -276,6 +280,14 @@ Ext.define('Ext.calendar.form.EventWindow', {
 
         this.dateRangeField.setValue(rec.data);
         this.activeRecord = rec;
+
+        if (!isOwner) {
+            Ext.Array.each(me.formPanel.items.items, function(el) {
+                if (el.setReadOnly) {
+                    el.setReadOnly(true);
+                }
+            });
+        }
 
         return this;
     },

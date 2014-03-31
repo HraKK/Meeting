@@ -203,7 +203,7 @@ Ext.define('Ext.calendar.view.DayBody', {
         if (!this.eventTpl) {
             this.eventTpl = !(Ext.isIE || Ext.isOpera) ?
                 new Ext.XTemplate(
-                    '<div id="{_elId}" class="{_selectorCls} {_colorCls} ' + this.getDragSelector() + ' ext-cal-evr is-hidden-{hidden}" style="left: 0; width: 100%; top: {_top}px; height: {_height}px;">',
+                    '<div id="{_elId}" class="{_selectorCls} {_colorCls} ' + this.getDragSelector() + ' ext-cal-evr is-hidden-{hidden}" style="left: 0; width: 100%; top: {_top}px; height: {_height}px;" data-qtip="Booked by <strong>{owner}</strong>">',
                         '<div class="ext-evt-bd">', this.getEventBodyMarkup(), '</div>',
                         this.getResizeEl(),
                     '</div>'

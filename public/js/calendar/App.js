@@ -242,8 +242,8 @@ Ext.define('Ext.calendar.App', {
 
                                         listeners: {
                                             'eventclick': {
-                                                fn: function(vw, rec, el) {
-                                                    this.showEditWindow(rec, el);
+                                                fn: function(vw, rec, el, readonly) {
+                                                    this.showEditWindow(rec, el, readonly);
                                                 },
                                                 scope: this
                                             },
