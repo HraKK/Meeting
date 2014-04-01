@@ -38,11 +38,7 @@ class RoomManager
      */
     public function getRoomEntity()
     {
-        if ($this->roomEntity == null) {
-            $this->roomEntity = new \Meetingroom\Entity\Room\RoomEntity();
-        }
-
-        return $this->roomEntity;
+        return new \Meetingroom\Entity\Room\RoomEntity();
     }
     
     /**
@@ -65,7 +61,7 @@ class RoomManager
         $rooms = $this->getRoomModel()->getAll();
         $roomsObj = [];
         foreach ($rooms as $room) {
-            $roomEntity = new \Meetingroom\Entity\Room\RoomEntity();
+            $roomEntity = $this->getRoomEntity();
             $roomsObj[] = $roomEntity->bind($room);
         }
 
