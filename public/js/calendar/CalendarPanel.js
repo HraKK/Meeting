@@ -397,7 +397,6 @@ Ext.define('Ext.calendar.CalendarPanel', {
 
         Ext.defer(function() {
             this.updateNavState();
-            this.fireViewChange();
         }, 10, this);
     },
 

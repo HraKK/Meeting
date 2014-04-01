@@ -8,7 +8,7 @@
     <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?version=1"/>
     <link rel="stylesheet" type="text/css" href="/js/extjs/resources/css/ext-all-neptune.css"/>
     <link rel="stylesheet" type="text/css" href="/css/calendar.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/examples.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/common.css"/>
 
     <script type="text/javascript" src="/js/extjs/ext-all.js"></script>
     <script type="text/javascript" src="/js/jquery-1.11.0.min.js"></script>
