@@ -27,7 +27,7 @@ class UserEntity
         $this->di = $di;
     }
     
-    protected function getLDAP()
+    public function getLDAP()
     {
         if($this->ldap !== null) {
             return $this->ldap;
@@ -37,12 +37,12 @@ class UserEntity
         return $this->ldap;
     }
     
-    protected function getUserManager()
+    public function getUserManager()
     {
         return ($this->userManager = $this->userManager === null ? new UserManager($this->id) : $this->userManager);
     }
     
-    protected function getUserFactory()
+    public function getUserFactory()
     {
         return ($this->userFactory = $this->userFactory === null ? new UserFactory() : $this->userFactory);
     }
@@ -102,4 +102,25 @@ class UserEntity
         $this->userId = $userId;
         return true;
     }
+    
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    public function getNickname()
+    {
+        return $this->nickname;
+    }
 }
+
