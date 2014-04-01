@@ -139,3 +139,13 @@ h1 {
     font-size: 0;
     line-height: 0;
 }
+
+.x-tab .icon-view {
+    background-image: url(../images/view.png);
+    background-position: 0 1px;
+    background-repeat: no-repeat;
+}
+
+.x-tab-active .icon-view {
+    background-position: 0 -25px;
+}
