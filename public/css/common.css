@@ -209,8 +209,10 @@ h1 {
 .meeting-preview tbody {}
 
 .meeting-preview tbody td {
-    padding: 4px 10px;
+    position: relative;
+    padding: 0;
     border: 1px solid #ddd;
+    vertical-align: top;
 }
 
 .meeting-preview tbody td.first {
@@ -221,6 +223,29 @@ h1 {
     background-color: #f6f9fc;
     color: #666;
     text-align: right;
-    font-size: 11px;
     vertical-align: top;
+}
+
+.meeting-preview-event-separator {
+    position: absolute;
+    width: 100%;
+    height: 0;
+    top: 24px;
+    left: 0;
+    border-top: 1px dotted #dfdfdf;
+}
+
+.meeting-preview-event {
+    height: 48px;
+    position: absolute;
+    left: 1px;
+    right: 1px;
+    z-index: 10;
+    padding: 3px 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #3892d7;
+    color: #fff;
+    font-size: 12px;
+    line-height: 18px;
 }
