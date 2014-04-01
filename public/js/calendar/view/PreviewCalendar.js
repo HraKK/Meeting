@@ -14,10 +14,13 @@ Ext.define('Ext.calendar.view.PreviewCalendar', {
 
         var me = this,
             dateFormat = 'd/m/y',
-            today = Ext.Date.format(new Date(), dateFormat),
-            hoursCoeficient = 1000 * 60 * 60;
+            today = new Date();
 
         me.callParent(arguments);
+
+        if (!Ext.simpleInterface) {
+            return;
+        }
 
         function insertTable(dom) {
             me.update('<table class="meeting-preview">' + dom + '</table>');
@@ -50,7 +53,7 @@ Ext.define('Ext.calendar.view.PreviewCalendar', {
             for (var i = 9; i < 20; i++) {
                 rows += '<tr>' +
                     '<td class="first">' + Ext.Date.format(dt, 'H:i') + '</td>' +
-                    getCells(today, dt) +
+                    getCells(dt) +
                     '</tr>';
                 dt = Ext.calendar.util.Date.add(dt, {hours: 1});
             }
@@ -58,33 +61,23 @@ Ext.define('Ext.calendar.view.PreviewCalendar', {
             return '<tbody>' + rows + '</tbody>';
         }
 
-        function getCells(today, dt) {
+        function getCells(dt) {
             var cells = '',
+                todayDate = Ext.Date.format(today, dateFormat),
+                todayDay = today.getDay() - 1,
                 cell;
 
             me.calendarStore.each(function(room) {
                 cell = '<td><div class="meeting-preview-event-separator"></div>';
                 me.eventStore.each(function(event) {
                     var startDate = event.get('date_start'),
-                        endDate = event.get('date_end'),
-                        diff = (endDate.getTime() - startDate.getTime()) / hoursCoeficient,
-                        top = 0,
-                        height = 48;
+                        endDate = event.get('date_end');
 
                     if (event.get('room_id') == room.get('id')) {
-                        if (event.get('repeatable')) {
-                            // TODO check if it is repeatable today using event.get('repeated_on')
-                        } else if (Ext.Date.format(startDate, dateFormat) == today) {
-                            if (dt.getHours() == startDate.getHours()) {
-                                height *= diff;
-                                if (startDate.getMinutes() == 30) {
-                                    top = 24;
-                                }
-                                cell += '<div class="meeting-preview-event" style="height: ' + height + 'px;top: ' + top + 'px;">' +
-                                    '<strong>' + Ext.Date.format(startDate, 'H:i') + '</strong> ' +
-                                    event.get('title') +
-                                    '</div>';
-                            }
+                        if (event.get('repeatable') && Ext.Array.contains(event.get('repeated_on'), todayDay) && dt.getHours() == startDate.getHours()) {
+                            cell += getCell(startDate, endDate, event.get('title'));
+                        } else if (Ext.Date.format(startDate, dateFormat) == todayDate && dt.getHours() == startDate.getHours()) {
+                            cell += getCell(startDate, endDate, event.get('title'));
                         }
                     }
                 });
@@ -93,6 +86,16 @@ Ext.define('Ext.calendar.view.PreviewCalendar', {
             });
 
             return cells;
+        }
+
+        function getCell(startDate, endDate, title) {
+            var top = startDate.getMinutes() == 30 ? 24 : 0,
+                diff = endDate.getHours() + endDate.getMinutes() / 60 - startDate.getHours() - startDate.getMinutes() / 60,
+                height = 48 * diff - 1;
+
+            return '<div class="meeting-preview-event" style="height: ' + height + 'px;top: ' + top + 'px;">' +
+                '<strong>' + Ext.Date.format(startDate, 'H:i') + '</strong> ' + title +
+                '</div>';
         }
 
         me.eventStore.on('load', buildTable);

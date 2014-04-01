@@ -236,11 +236,14 @@ h1 {
 }
 
 .meeting-preview-event {
-    width: 100%;
     height: 48px;
     position: absolute;
+    left: 1px;
+    right: 1px;
     z-index: 10;
     padding: 3px 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
     background-color: #3892d7;
     color: #fff;
     font-size: 12px;
