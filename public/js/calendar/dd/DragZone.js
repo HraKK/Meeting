@@ -17,6 +17,9 @@ Ext.define('Ext.calendar.dd.DragZone', {
             Ext.calendar._statusProxyInstance = new Ext.calendar.dd.StatusProxy();
         }
         this.proxy = Ext.calendar._statusProxyInstance;
+        if (Ext.simpleInterface) {
+            return;
+        }
         this.callParent(arguments);
     },
 
