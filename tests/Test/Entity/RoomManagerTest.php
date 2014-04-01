@@ -96,9 +96,6 @@ class RoomManagerTest extends \PHPUnit_Framework_TestCase
        ];
     }
     
-    /**
-     * @expectedException \Phalcon\Exception
-     */
     public function testGetEntity()
     {
         $manager = new RoomManager();

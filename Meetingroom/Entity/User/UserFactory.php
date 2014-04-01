@@ -6,17 +6,31 @@ class UserFactory
 {
     public function getUser($username)
     {
-        $model = new \Meetingroom\Model\User\UserModel();
+        $model = $this->getUserModel();
         $userId = $model->getIdByUsername($username);
 
         if ($userId === false) {
-            $user = new GuestEntity();
+            $user = $this->getGuestEntity();
         } else {
-            $user = new AuthorizedEntity();
+            $user = $this->getAuthorizedEntity();
             $user->loadByUsername($username);
         }
         
         return $user;
     }
+    
+    public function getGuestEntity()
+    {
+        return new GuestEntity();
+    }
 
+    public function getUserModel()
+    {
+        return new \Meetingroom\Model\User\UserModel();
+    }
+    
+    public function getAuthorizedEntity()
+    {
+        return new AuthorizedEntity();
+    }
 }
