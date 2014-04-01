@@ -33,10 +33,10 @@ Ext.define('Ext.calendar.dd.StatusProxy', {
     // inherit docs
     renderTpl: [
         '<div class="' + Ext.baseCSSPrefix + 'dd-drop-icon"></div>' +
-            '<div class="ext-dd-ghost-ct">' +
+        '<div class="ext-dd-ghost-ct">' +
             '<div id="{id}-ghost" class="' + Ext.baseCSSPrefix + 'dd-drag-ghost"></div>' +
             '<div id="{id}-message" class="' + Ext.baseCSSPrefix + 'dd-msg"></div>' +
-            '</div>'
+        '</div>'
     ],
 
     // inherit docs

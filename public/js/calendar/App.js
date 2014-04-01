@@ -160,7 +160,7 @@ Ext.define('Ext.calendar.App', {
                                     });
 
                                     // set main room active
-                                    tabPanel.setActiveTab(1);
+                                    tabPanel.setActiveTab(2);
 
                                 });
 
@@ -174,14 +174,26 @@ Ext.define('Ext.calendar.App', {
                                     record.set('hidden', (record.get('room_id') != newCard.room_id));
                                 });
 
-                                Ext.defer(function() {
-                                    Ext.getCmp('app-calendar').setActiveView(activeItemId);
-                                }, 10);
-
                                 Ext.currentCalendarId = newCard.room_id;
 
+                                if (typeof newCard.room_id != 'undefined') {
+                                    Ext.defer(function() {
+                                        calendar.show();
+                                        calendar.setActiveView(activeItemId);
+                                    }, 10);
+                                } else {
+                                    calendar.hide();
+                                }
+
                             }
-                        }
+                        },
+                        items: [
+                            {
+                                title: '',
+                                iconCls: 'icon-view',
+                                hidden: Ext.simpleInterface
+                            }
+                        ]
                     },
                     {
                         id: 'app-center',
