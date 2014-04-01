@@ -145,7 +145,8 @@ Ext.define('Ext.calendar.App', {
                             afterrender: function(tabPanel) {
 
                                 var tabTooltip,
-                                    calendar = Ext.getCmp('app-calendar');
+                                    calendar = Ext.getCmp('app-calendar'),
+                                    center = Ext.getCmp('app-center');
 
                                 // fill tab
                                 scope.calendarStore.on('load', function() {
@@ -161,7 +162,8 @@ Ext.define('Ext.calendar.App', {
                                     });
 
                                     if (Ext.simpleInterface) {
-                                        tabPanel.setActiveTab(0);
+                                        tabPanel.setActiveTab(0)
+                                        center.setTitle(Ext.Date.format(new Date(), 'F j, Y'));
                                     } else {
                                         tabPanel.setActiveTab(2);
                                     }
@@ -172,6 +174,7 @@ Ext.define('Ext.calendar.App', {
                             tabchange: function(tabPanel, newCard, oldCard) {
 
                                 var calendar = Ext.getCmp('app-calendar'),
+                                    center = Ext.getCmp('app-center'),
                                     preview = Ext.getCmp('app-preview'),
                                     activeItemId = Ext.getCmp('app-calendar').getActiveView().id;
 
@@ -190,6 +193,7 @@ Ext.define('Ext.calendar.App', {
                                 } else {
                                     calendar.hide();
                                     preview.show();
+                                    center.setTitle(Ext.Date.format(new Date(), 'F j, Y'));
                                 }
 
                             }
@@ -204,7 +208,7 @@ Ext.define('Ext.calendar.App', {
                     },
                     {
                         id: 'app-center',
-                        title: '...', // will be updated to the current view's date range
+                        title: '...',
                         region: 'center',
                         layout: 'border',
                         border: false,
