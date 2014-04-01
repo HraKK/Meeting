@@ -21,6 +21,10 @@ h1 {
     color: #455C6F;
 }
 
+#app-center.simplified .x-panel-header {
+    padding-left: 10px;
+}
+
 #app-west {
     border-right: 1px solid #99BBE8;
 }
@@ -94,6 +98,10 @@ h1 {
     background-color: transparent;
 }
 
+.room-tabs .x-tab {
+    padding: 8px 6px 7px;
+}
+
 .room-tabs .x-panel-body {
     display: none;
 }
@@ -103,8 +111,12 @@ h1 {
 }
 
 .room-tab-icon {
+    display: block;
+    width: 16px;
+    height: 16px;
     -webkit-border-radius: 100%;
     border-radius: 100%;
+    line-height: 16px;
 }
 
 #app-center_header {
@@ -141,11 +153,74 @@ h1 {
 }
 
 .x-tab .icon-view {
-    background-image: url(../images/view.png);
+    background-image: url(../images/preview.png);
     background-position: 0 1px;
     background-repeat: no-repeat;
 }
 
 .x-tab-active .icon-view {
     background-position: 0 -25px;
+}
+
+.meeting-preview {
+    width: 100%;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.meeting-preview th,
+.meeting-preview td {
+    font-size: 12px;
+}
+
+.meeting-preview thead {}
+
+.meeting-preview thead th {
+    width: 256px;
+    height: 16px;
+    padding: 8px 4px;
+    border-right: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    line-height: 16px;
+}
+
+.meeting-preview thead th.first {
+    width: 90px;
+    border-left: none;
+    border-right: none;
+    background-color: #d3e1f1;
+    color: #50749c;
+    font-size: 11px;
+    font-weight: normal;
+    text-align: right;
+}
+
+.meeting-preview thead th:last-child,
+.meeting-preview tbody td:last-child {
+    border-right: none;
+}
+
+.meeting-preview .room-tab-icon {
+    display: inline-block;
+    vertical-align: top;
+    margin: 0 5px 0 0;
+}
+
+.meeting-preview tbody {}
+
+.meeting-preview tbody td {
+    padding: 4px 10px;
+    border: 1px solid #ddd;
+}
+
+.meeting-preview tbody td.first {
+    height: 48px;
+    padding: 4px;
+    border-left: none;
+    border-right: none;
+    background-color: #f6f9fc;
+    color: #666;
+    text-align: right;
+    font-size: 11px;
+    vertical-align: top;
 }

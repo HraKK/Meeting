@@ -20,7 +20,8 @@ Ext.define('Ext.calendar.App', {
             'Ext.calendar.data.MemoryCalendarStore',
             'Ext.calendar.data.MemoryEventStore',
             'Ext.calendar.data.Days',
-            'Ext.calendar.form.EventWindow'
+            'Ext.calendar.form.EventWindow',
+            'Ext.calendar.view.PreviewCalendar'
         ],
 
         constructor: function() {
@@ -43,7 +44,6 @@ Ext.define('Ext.calendar.App', {
 
                     renderTpl: [
                         '{%this.renderBody(out,values)%}',
-
                         '<div id="{ownerId}-clearEl" class="', Ext.baseCSSPrefix, 'clear" role="presentation"></div>'
                     ],
 
@@ -144,7 +144,8 @@ Ext.define('Ext.calendar.App', {
                         listeners: {
                             afterrender: function(tabPanel) {
 
-                                var tabTooltip;
+                                var tabTooltip,
+                                    calendar = Ext.getCmp('app-calendar');
 
                                 // fill tab
                                 scope.calendarStore.on('load', function() {
@@ -159,16 +160,20 @@ Ext.define('Ext.calendar.App', {
                                         });
                                     });
 
-                                    // set main room active
-                                    tabPanel.setActiveTab(2);
+                                    if (Ext.simpleInterface) {
+                                        tabPanel.setActiveTab(0);
+                                    } else {
+                                        tabPanel.setActiveTab(2);
+                                    }
 
                                 });
 
                             },
                             tabchange: function(tabPanel, newCard, oldCard) {
 
-                                var calendar = Ext.getCmp('app-calendar');
-                                var activeItemId = Ext.getCmp('app-calendar').getActiveView().id;
+                                var calendar = Ext.getCmp('app-calendar'),
+                                    preview = Ext.getCmp('app-preview'),
+                                    activeItemId = Ext.getCmp('app-calendar').getActiveView().id;
 
                                 scope.eventStore.each(function(record) {
                                     record.set('hidden', (record.get('room_id') != newCard.room_id));
@@ -179,10 +184,12 @@ Ext.define('Ext.calendar.App', {
                                 if (typeof newCard.room_id != 'undefined') {
                                     Ext.defer(function() {
                                         calendar.show();
+                                        preview.hide();
                                         calendar.setActiveView(activeItemId);
                                     }, 10);
                                 } else {
                                     calendar.hide();
+                                    preview.show();
                                 }
 
                             }
@@ -191,7 +198,7 @@ Ext.define('Ext.calendar.App', {
                             {
                                 title: '',
                                 iconCls: 'icon-view',
-                                hidden: Ext.simpleInterface
+                                hidden: !Ext.simpleInterface
                             }
                         ]
                     },
@@ -201,6 +208,7 @@ Ext.define('Ext.calendar.App', {
                         region: 'center',
                         layout: 'border',
                         border: false,
+                        cls: Ext.simpleInterface ? 'simplified' : '',
                         items: [
                             {
                                 xtype: 'container',
@@ -246,6 +254,7 @@ Ext.define('Ext.calendar.App', {
                                         eventStore: this.eventStore,
                                         calendarStore: this.calendarStore,
                                         border: false,
+                                        hidden: Ext.simpleInterface,
                                         bodyStyle: {
                                             border: false
                                         },
@@ -399,6 +408,14 @@ Ext.define('Ext.calendar.App', {
                                                 scope: this
                                             }
                                         }
+                                    },
+                                    {
+                                        xtype: 'previewcalendar',
+                                        id: 'app-preview',
+                                        flex: 1,
+                                        hidden: !Ext.simpleInterface,
+                                        eventStore: this.eventStore,
+                                        calendarStore: this.calendarStore
                                     }
                                 ]
                             }
