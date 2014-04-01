@@ -25,7 +25,7 @@ class EventDTO extends \Meetingroom\DTO\AbstractDTO
     {
         $fields = $event->getFields();
 
-        if ($fields == null) {
+        if (empty($fields) == true) {
             return;
         }
 
