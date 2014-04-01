@@ -6,7 +6,7 @@ class UserManager
 {
     protected $userModel = null;
 
-    protected function getUserModel()
+    public function getUserModel()
     {
         if ($this->userModel === null) {
             $this->userModel = new \Meetingroom\Model\User\UserModel();
