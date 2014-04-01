@@ -9,7 +9,7 @@ class RoleFactory
 {
     public function getRoleInEvent(UserInterface $user, OwnableInterface $obj)
     {
-        if($user->getId() === null) {
+        if($user->getId() == null) {
             return Group::GUEST;
         }
         
@@ -18,6 +18,6 @@ class RoleFactory
     
     public function getRole(UserInterface $user)
     {
-        return ($user->getId() === null) ? Group::GUEST: Group::USER;
+        return ($user->getId() == null) ? Group::GUEST: Group::USER;
     }
 }
