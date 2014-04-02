@@ -216,7 +216,7 @@ h1 {
 }
 
 .meeting-preview tbody td.first {
-    height: 48px;
+    height: 52px;
     padding: 4px;
     border-left: none;
     border-right: none;
@@ -230,13 +230,13 @@ h1 {
     position: absolute;
     width: 100%;
     height: 0;
-    top: 24px;
+    top: 26px;
     left: 0;
     border-top: 1px dotted #dfdfdf;
 }
 
 .meeting-preview-event {
-    height: 48px;
+    height: 52px;
     position: absolute;
     left: 1px;
     right: 1px;
