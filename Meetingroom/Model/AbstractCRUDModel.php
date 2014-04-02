@@ -21,7 +21,7 @@ abstract class AbstractCRUDModel extends AbstractModel
         return $result ? $insert['id'] : false;
     }
     
-    protected function performInsert($values)
+    protected function performInsert(array $values)
     {
         $insert = [];
         
@@ -56,7 +56,7 @@ abstract class AbstractCRUDModel extends AbstractModel
         return $this->getDB()->fetchOne($sql, \Phalcon\Db::FETCH_ASSOC, [$id]);
     }
     
-    public function update($id, $values) 
+    public function update($id, array $values) 
     {
         if($this->getTable() === null || empty($id) || empty($values)) {
             return false;
