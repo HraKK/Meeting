@@ -58,6 +58,9 @@ class AbstractCRUDModelTest extends \PHPUnit_Framework_TestCase
     {
         $crud = new TestCRUDModel();
         $this->assertFalse($crud->create([]));
+        $this->assertFalse($crud->read(0));
+        $this->assertFalse($crud->update(0, []));
+        $this->assertFalse($crud->delete(0));
     }
     
     public function testCreate3()
