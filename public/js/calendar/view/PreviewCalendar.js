@@ -89,9 +89,9 @@ Ext.define('Ext.calendar.view.PreviewCalendar', {
         }
 
         function getCell(startDate, endDate, title) {
-            var top = startDate.getMinutes() == 30 ? 24 : 0,
+            var top = startDate.getMinutes() == 30 ? 26 : 0,
                 diff = endDate.getHours() + endDate.getMinutes() / 60 - startDate.getHours() - startDate.getMinutes() / 60,
-                height = 48 * diff - 1;
+                height = 52 * diff - 1;
 
             return '<div class="meeting-preview-event" style="height: ' + height + 'px;top: ' + top + 'px;">' +
                 '<strong>' + Ext.Date.format(startDate, 'H:i') + '</strong> ' + title +

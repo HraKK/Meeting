@@ -200,7 +200,7 @@ Ext.define('Ext.calendar.App', {
                         },
                         items: [
                             {
-                                title: '',
+                                title: 'Today',
                                 iconCls: 'icon-view',
                                 hidden: !Ext.simpleInterface
                             }
@@ -253,7 +253,7 @@ Ext.define('Ext.calendar.App', {
                                     {
                                         xtype: 'calendarpanel',
                                         id: 'app-calendar',
-                                        maxHeight: 534,
+//                                        maxHeight: 534, // TODO: calculate againg after cell height change
                                         flex: 1,
                                         eventStore: this.eventStore,
                                         calendarStore: this.calendarStore,
