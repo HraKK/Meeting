@@ -39,14 +39,16 @@ abstract class AbstractCRUDModel extends AbstractModel
     
     public function read($id) 
     {
-        if($this->getTable() === null || empty($id) || empty($this->getFields())) {
+        $fields = $this->getFields();
+        
+        if($this->getTable() === null || empty($id) || empty($fields)) {
             return false;
         }
         
         $connection = $this->getDB();
         $select = implode(', ', array_map(function($item) use ($connection) {
             return $connection->escapeIdentifier($item);
-        }, $this->getFields()));
+        }, $fields));
 
         $sql = sprintf(
             'SELECT ' . $select . ' FROM %s WHERE id = ?',
