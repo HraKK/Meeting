@@ -111,8 +111,7 @@ Ext.define('Ext.calendar.view.DayBody', {
                 this.el.scrollTo('top', y, true);
                 this.scrollReady = true;
             }, 10, this);
-        }
-        else {
+        } else {
             this.el.scrollTo('top', y, true);
             this.scrollReady = true;
         }
@@ -135,7 +134,7 @@ Ext.define('Ext.calendar.view.DayBody', {
 
         this.callParent(arguments);
 
-        // default scroll position to 7am: 7 * 42
+        // default scroll position to 7am: 7 * 48
         this.scrollTo(0);
     },
 
@@ -244,17 +243,16 @@ Ext.define('Ext.calendar.view.DayBody', {
 
     // private
     getTemplateEventBox: function(evt) {
-        var heightFactor = 0.7,
+        var timeCoef = 48 / 60,
             start = evt['date_start'],
             end = evt['date_end'],
             startMins = start.getHours() * 60 + start.getMinutes(),
             endMins = end.getHours() * 60 + end.getMinutes(),
             diffMins = endMins - startMins;
-
         evt._left = 0;
         evt._width = 100;
-        evt._top = Math.round(startMins * heightFactor);
-        evt._height = Math.max((diffMins * heightFactor), 15);
+        evt._top = Math.round(startMins * timeCoef);
+        evt._height = Math.round(diffMins * timeCoef);
     },
 
     // private
@@ -445,7 +443,7 @@ Ext.define('Ext.calendar.view.DayBody', {
         // first avail row, just to calc size
             rowH = row.getHeight() / 2,
         // 30 minute increment since a row is 60 minutes
-            relY = y - viewBox.y - rowH + scroll.top + 378,// 378=42*9
+            relY = y - viewBox.y - rowH + scroll.top + 432,// 432=48*9
             rowIndex = Math.max(0, Math.ceil(relY / rowH)),
             mins = rowIndex * 30,
             dt = Ext.calendar.util.Date.add(this.viewStart, {days: dayIndex, minutes: mins}),
@@ -462,7 +460,7 @@ Ext.define('Ext.calendar.view.DayBody', {
             // this is the box for the specific time block in the day that was clicked on:
             timeBox: {
                 x: timeX,
-                y: (rowIndex * 21) + viewBox.y - scroll.top - 378, // 378=42*9
+                y: (rowIndex * 24) + viewBox.y - scroll.top - 432, // 432=48*9
                 width: daySize.width,
                 height: rowH
             }

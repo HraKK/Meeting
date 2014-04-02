@@ -191,7 +191,7 @@
 }
 
 .ext-cal-dayview .ext-cal-body-ct .ext-cal-bg-tbl {
-    height: 462px; /* 462=42*11 */
+    height: 528px; /* 528=48*11 */
 }
 
 .ext-cal-dayview .ext-cal-bg-tbl {
@@ -218,15 +218,15 @@
 }
 
 .ext-cal-dayview .ext-cal-bg-row {
-    height: 42px;
+    height: 48px;
 }
 
 .ext-cal-dayview .ext-cal-bg-row-div {
     border-bottom: 1px dotted #dfdfdf;
     border-top: 1px solid #ddd;
     font-size: 1px;
-    height: 21px;
-    margin-bottom: 20px;
+    height: 24px;
+    margin-bottom: 23px;
 }
 
 .ext-cal-dayview .ext-row-1 {
@@ -242,7 +242,7 @@
 }
 
 .ext-cal-day-time-inner {
-    height: 42px;
+    height: 48px;
     border-top: 1px solid #ddd;
     padding: 3px 4px 0 0;
 }
@@ -254,13 +254,13 @@
 
 .ext-cal-day-col-inner {
     position: relative;
-    top: -378px;/* 378=42*9 */
+    top: -432px;/* 432=48*9 */
     cursor: default;
 }
 
 .ext-cal-day-col-gutter {
     position: relative;
-    height: 462px; /* 462=42*11 */
+    height: 528px; /* 528=48*11 */
 }
 
 .x-ie6 .ext-cal-day-col-gutter {
@@ -284,7 +284,7 @@
     border: 0;
     overflow: hidden;
     position: absolute;
-    top: 20px;
+    top: 23px;
     width: 100%;
 }
 

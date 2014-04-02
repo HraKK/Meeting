@@ -253,7 +253,7 @@ Ext.define('Ext.calendar.App', {
                                     {
                                         xtype: 'calendarpanel',
                                         id: 'app-calendar',
-//                                        maxHeight: 534, // TODO: calculate againg after cell height change
+                                        maxHeight: 600,
                                         flex: 1,
                                         eventStore: this.eventStore,
                                         calendarStore: this.calendarStore,
