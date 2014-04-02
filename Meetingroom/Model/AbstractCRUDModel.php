@@ -6,14 +6,14 @@ abstract class AbstractCRUDModel extends AbstractModel
 {
     public function create(array $values) 
     {
-        if($this->table === null || empty($values)) {
+        if($this->getTable() === null || empty($values)) {
             return false;
         }
         
         $insert = $this->performInsert($values);
         
-        $result = $this->db->insert(
-            $this->table,
+        $result = $this->getDB()->insert(
+            $this->getTable(),
             array_values($insert),
             array_keys($insert)
         );
@@ -21,11 +21,11 @@ abstract class AbstractCRUDModel extends AbstractModel
         return $result ? $insert['id'] : false;
     }
     
-    protected function performInsert($values)
+    protected function performInsert(array $values)
     {
         $insert = [];
         
-        foreach ($this->fields as $key) {
+        foreach ($this->getFields() as $key) {
             if($key == 'id') {
                 $insert['id'] = isset($values[$key]) ? $values[$key] : $this->getNextId();
                 continue;
@@ -39,31 +39,31 @@ abstract class AbstractCRUDModel extends AbstractModel
     
     public function read($id) 
     {
-        if($this->table === null || empty($id) || empty($this->fields)) {
+        if($this->getTable() === null || empty($id) || empty($this->getFields())) {
             return false;
         }
         
-        $connection = $this->db;
+        $connection = $this->getDB();
         $select = implode(', ', array_map(function($item) use ($connection) {
             return $connection->escapeIdentifier($item);
-        }, $this->fields));
+        }, $this->getFields()));
 
         $sql = sprintf(
             'SELECT ' . $select . ' FROM %s WHERE id = ?',
-            $this->db->escapeIdentifier($this->table)
+            $this->getDB()->escapeIdentifier($this->getTable())
         );
         
-        return $this->db->fetchOne($sql, \Phalcon\Db::FETCH_ASSOC, [$id]);
+        return $this->getDB()->fetchOne($sql, \Phalcon\Db::FETCH_ASSOC, [$id]);
     }
     
-    public function update($id, $values) 
+    public function update($id, array $values) 
     {
-        if($this->table === null || empty($id) || empty($values)) {
+        if($this->getTable() === null || empty($id) || empty($values)) {
             return false;
         }
         
-        return $this->db->update(
-            $this->table,
+        return $this->getDB()->update(
+            $this->getTable(),
             array_keys($values),
             array_values($values),
             "id = " . (int) $id
@@ -72,18 +72,33 @@ abstract class AbstractCRUDModel extends AbstractModel
     
     public function delete($id) 
     {
-        if($this->table === null || empty($id)) {
+        if($this->getTable() === null || empty($id)) {
             return false;
         }
         
-        return $this->db->delete(
-            $this->table,
+        return $this->getDB()->delete(
+            $this->getTable(),
             "id = " . (int) $id
         );
     }
     
     public function getNextId()
     {
-        return (int) $this->db->query("select nextval('" . $this->table . "_id_seq'::regclass)")->fetch()->nextval;
+        return (int) $this->getDB()->query("select nextval('" . $this->getTable() . "_id_seq'::regclass)")->fetch()->nextval;
+    }
+    
+    public function getDB()
+    {
+        return $this->db;
+    }
+    
+    public function getTable()
+    {
+        return $this->table;
+    }
+    
+    public function getFields()
+    {
+        return $this->fields;
     }
 }
